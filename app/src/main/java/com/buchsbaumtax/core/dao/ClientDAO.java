@@ -23,10 +23,10 @@ public interface ClientDAO {
     Client get(@Bind("id") int id);
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO clients (first_name, last_name, current_status) VALUES (:firstName, :lastName, :currentStatus)")
+    @SqlUpdate("INSERT INTO clients (last_name, current_status, periodical, display_name, display_phone) VALUES (:lastName, :currentStatus, :periodical, :displayName, :displayPhone)")
     int create(@BindBean Client client);
 
-    @SqlUpdate("UPDATE clients SET first_name = :firstName, last_name = :lastName, current_status = :currentStatus WHERE id = :id")
+    @SqlUpdate("UPDATE clients SET last_name = :lastName, current_status = :currentStatus, periodical = :periodical, display_name = :displayName, display_phone = :displayPhone WHERE id = :id")
     void update(@BindBean Client client);
 
     @SqlUpdate("DELETE FROM clients WHERE id = :id")

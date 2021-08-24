@@ -1,19 +1,40 @@
 package com.buchsbaumtax.core.model;
 
-import java.util.Date;
-
 public class Client {
 
     private int id;
-    private String firstName;
     private String lastName;
     private String currentStatus;
+    private boolean archived;
+    private String periodical;
+    private String displayName;
+    private String displayPhone;
 
-    public int getId(){return id;}
+    public int getId() {
+        return id;
+    }
 
-    public String getFirstName(){return firstName;}
+    public String getLastName() {
+        return lastName;
+    }
 
-    public String getLastName(){return lastName;}
+    public String getCurrentStatus() {
+        return currentStatus;
+    }
 
-    public String getCurrentStatus(){return currentStatus;}
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public String getPeriodical() {
+        return periodical;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public String getDisplayPhone() {
+        return displayPhone;
+    }
 }
