@@ -8,13 +8,14 @@ public class User implements Principal {
     private int id;
     private String firstName;
     private String lastName;
-    private String email;
-    private String password;
+    private String username;
     private String userType;
     private Date created;
     private Date updated;
 
-    public int getId(){return id;}
+    public int getId() {
+        return id;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -24,12 +25,8 @@ public class User implements Principal {
         return lastName;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword(){
-        return password;
+    public String getUsername() {
+        return username;
     }
 
     public String getUserType() {
@@ -42,10 +39,6 @@ public class User implements Principal {
 
     public Date getUpdated() {
         return updated;
-    }
-
-    public void setPassword(String password){
-        this.password = password;
     }
 
     @Override

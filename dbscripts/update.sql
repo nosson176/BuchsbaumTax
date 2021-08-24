@@ -1,5 +1,3 @@
-UPDATE users SET email = CONCAT(LOWER(first_name), '@buchsbaumtax.com') WHERE first_name IS NOT NULL;
-
 ALTER TABLE users ADD COLUMN password TEXT;
 
 CREATE TABLE sessions (
@@ -7,3 +5,7 @@ CREATE TABLE sessions (
     user_id     INTEGER NOT NULL REFERENCES users ON DELETE CASCADE,
     created     TIMESTAMPTZ DEFAULT NOW()
 );
+
+ALTER TABLE users RENAME COLUMN login to username;
+
+ALTER TABLE users DROP COLUMN email;

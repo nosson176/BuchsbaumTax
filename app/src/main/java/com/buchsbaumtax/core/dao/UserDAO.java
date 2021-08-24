@@ -23,16 +23,16 @@ public interface UserDAO {
     User get(@Bind("id") int id);
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO users (first_name, last_name, email, user_type, created, updated) VALUES (:firstName, :lastName, :email, :userType,:created, :updated)")
+    @SqlUpdate("INSERT INTO users (first_name, last_name, username, user_type, created, updated) VALUES (:firstName, :lastName, :username, :userType,:created, :updated)")
     int create(@BindBean User user);
 
-    @SqlUpdate("UPDATE users SET first_name = :firstName, last_name = :lastName, email = :email, user_type = :userType, updated = now() WHERE id = :id")
+    @SqlUpdate("UPDATE users SET first_name = :firstName, last_name = :lastName, username = :username, user_type = :userType, updated = now() WHERE id = :id")
     void update(@BindBean User user);
 
     @SqlUpdate("DELETE FROM users WHERE id = :id")
     void delete(@Bind("id") int id);
 
     @RegisterFieldMapper(User.class)
-    @SqlQuery("SELECT * FROM users WHERE email = :email")
-    User getByEmail(@Bind("email") String email);
+    @SqlQuery("SELECT * FROM users WHERE username = :username")
+    User getByUsername(@Bind("username") String username);
 }

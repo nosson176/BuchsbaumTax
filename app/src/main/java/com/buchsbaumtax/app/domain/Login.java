@@ -15,9 +15,9 @@ import javax.ws.rs.core.Response;
 
 public class Login {
     public Token login(Credentials credentials) {
-        User user = Database.dao(UserDAO.class).getByEmail(credentials.getEmail());
+        User user = Database.dao(UserDAO.class).getByUsername(credentials.getUsername());
         if (user == null) {
-            throw new WebApplicationException("No user exists for that email address", Response.Status.UNAUTHORIZED);
+            throw new WebApplicationException("No user exists for that username", Response.Status.UNAUTHORIZED);
         }
 
         String correctHash = Database.dao(UserPasswordDAO.class).get(user.getId());
