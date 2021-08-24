@@ -35,4 +35,8 @@ public interface UserDAO {
     @RegisterFieldMapper(User.class)
     @SqlQuery("SELECT * FROM users WHERE username = :username")
     User getByUsername(@Bind("username") String username);
+
+    @RegisterFieldMapper(User.class)
+    @SqlQuery("SELECT u.* FROM users u JOIN sessions t ON (u.id = t.user_id) WHERE t.token = :token")
+    User getByToken(@Bind("token") String token);
 }

@@ -3,10 +3,12 @@ package com.buchsbaumtax.app.resource;
 import com.buchsbaumtax.app.domain.ClientCRUD;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.model.Client;
+import com.sifradigital.framework.auth.Authenticated;
 
 import javax.ws.rs.*;
 import java.util.List;
 
+@Authenticated
 @Path("/clients")
 public class ClientResource {
 
