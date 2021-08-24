@@ -5,6 +5,9 @@ import com.sifradigital.framework.SifraApplication;
 import com.sifradigital.framework.db.Database;
 import com.sifradigital.framework.db.DatabaseConfig;
 
+import javax.ws.rs.ApplicationPath;
+
+@ApplicationPath("/api")
 public class BuchsbaumApplication extends SifraApplication {
 
    public BuchsbaumApplication() {
