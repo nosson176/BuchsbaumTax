@@ -1,4 +1,4 @@
-package com.buchsbaumtax.app.domain.taxYear;
+package com.buchsbaumtax.app.domain.taxyear;
 
 import com.buchsbaumtax.app.dto.TaxYearData;
 import com.buchsbaumtax.core.dao.TaxYearDAO;

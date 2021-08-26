@@ -1,8 +1,8 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.ClientCRUD;
-import com.buchsbaumtax.app.domain.taxYear.CreateTaxYear;
-import com.buchsbaumtax.app.domain.taxYear.GetTaxYearData;
+import com.buchsbaumtax.app.domain.taxyear.CreateTaxYear;
+import com.buchsbaumtax.app.domain.taxyear.GetTaxYearData;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.TaxYearData;
 import com.buchsbaumtax.core.dao.TaxYearDAO;
