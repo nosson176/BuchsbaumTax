@@ -1,8 +1,10 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.ClientCRUD;
-import com.buchsbaumtax.app.domain.CreateTaxYear;
+import com.buchsbaumtax.app.domain.taxYear.CreateTaxYear;
+import com.buchsbaumtax.app.domain.taxYear.GetTaxYearData;
 import com.buchsbaumtax.app.dto.BaseResponse;
+import com.buchsbaumtax.app.dto.TaxYearData;
 import com.buchsbaumtax.core.dao.TaxYearDAO;
 import com.buchsbaumtax.core.model.Client;
 import com.buchsbaumtax.core.model.TaxYear;
@@ -52,8 +54,8 @@ public class ClientResource {
 
     @GET
     @Path("/{clientId}/tax-years")
-    public List<TaxYear> getTaxYearsByClient(@PathParam("clientId") int clientId) {
-        return Database.dao(TaxYearDAO.class).getByClient(clientId);
+    public List<TaxYearData> getTaxYearsByClient(@PathParam("clientId") int clientId) {
+        return new GetTaxYearData().getByClient(clientId);
     }
 
     @DELETE
