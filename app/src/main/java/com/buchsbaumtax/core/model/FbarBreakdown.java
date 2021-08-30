@@ -7,8 +7,14 @@ public class FbarBreakdown {
     private String description;
     private String documents;
     private int frequency;
+    private int currencyId;
     private int amount;
+    private int partId;
+    private int taxTypeId;
+    private int taxGroupId;
+    private int categoryId;
     private boolean archived;
+    private int clientId;
 
     public boolean isInclude() {
         return include;
@@ -30,11 +36,35 @@ public class FbarBreakdown {
         return frequency;
     }
 
+    public int getCurrencyId() {
+        return currencyId;
+    }
+
     public int getAmount() {
         return amount;
     }
 
+    public int getPartId() {
+        return partId;
+    }
+
+    public int getTaxTypeId() {
+        return taxTypeId;
+    }
+
+    public int getTaxGroupId() {
+        return taxGroupId;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
     public boolean isArchived() {
         return archived;
+    }
+
+    public int getClientId() {
+        return clientId;
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 public interface IncomeBreakdownDAO {
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO income_breakdowns (year_ids, year_name, depend, include, exclusion, amount, description, documents, frequency, archived) VALUES (:yearIds, :yearName, :depend, :include, :exclusion, :amount, :description, :documents, :frequency, :archived)")
+    @SqlUpdate("INSERT INTO income_breakdowns (depend, include, client_id, exclusion, amount, description, documents, frequency, currency_id, job_id, tax_type_id, tax_group_id, category_id, archived) VALUES (:depend, :include, :clientId, :exclusion, :amount, :description, :documents, :frequency, :currencyId, :jobId, :taxTypeId, :taxGrouopId, :categoryId, :archived)")
     int create(@BindBean IncomeBreakdown incomeBreakdown);
 
     @RegisterFieldMapper(IncomeBreakdown.class)
@@ -29,7 +29,8 @@ public interface IncomeBreakdownDAO {
     @SqlUpdate("DELETE FROM income_breakdowns WHERE id = :id")
     void delete(@Bind("id") int id);
 
+
     @RegisterFieldMapper(IncomeBreakdown.class)
-    @SqlQuery("SELECT i.* FROM income_breakdowns i JOIN income_breakdown_tax_years i_t ON i.id = i_t.income_breakdown_id WHERE i_t.tax_year_id = :taxYearId")
-    List<IncomeBreakdown> getForTaxYear(@Bind("taxYearId") int taxYearId);
+    @SqlQuery("SELECT * FROM income_breakdowns WHERE client_id = :clientId")
+    List<IncomeBreakdown> getForClient(@Bind("clientId") int clientId);
 }

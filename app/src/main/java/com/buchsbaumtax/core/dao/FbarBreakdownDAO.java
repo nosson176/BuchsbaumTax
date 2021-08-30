@@ -15,7 +15,7 @@ import java.util.List;
 public interface FbarBreakdownDAO {
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO fbar_breakdowns (year_ids, year_name, include, depend, description, documents, frequency, amount, archived) VALUES (:yearIds, :yearName, :include, :depend, :description, :documents, :frequency, :amount, :archived)")
+    @SqlUpdate("INSERT INTO fbar_breakdowns (include, depend, description, documents, frequency, currency_id, amount, part_id, tax_type_id, tax_group_id, category_id, archived, client_id) VALUES (:include, :depend, :description, :documents, :frequency, :currecnyId, :amount, :partId, :taxTypeId, :taxGroupId, :categoryId, :archived, :clientId)")
     int create(@BindBean FbarBreakdown fbarBreakdown);
 
     @RegisterFieldMapper(FbarBreakdown.class)
@@ -30,6 +30,6 @@ public interface FbarBreakdownDAO {
     void delete(@Bind("id") int id);
 
     @RegisterFieldMapper(FbarBreakdown.class)
-    @SqlQuery("SELECT f.* FROM fbar_breakdowns f JOIN fbar_breakdown_tax_years f_t ON f.id = f_t.fbar_breakdown_id WHERE f_t.tax_year_id = :taxYearId")
-    List<FbarBreakdown> getForTaxYear(@Bind("taxYearId") int taxYearId);
+    @SqlQuery("SELECT * FROM fbar_breakdowns WHERE client_id = :clientId")
+    List<FbarBreakdown> getForClient(@Bind("clientId") int clientId);
 }
