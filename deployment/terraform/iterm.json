@@ -1,0 +1,16 @@
+{
+  "Profiles": [
+    {
+      "Tags": [
+        "${project_name}"
+      ],
+      "Working Directory": "\/Users\/shuie",
+      "Command": "ssh -i dev\/certificates\/${key_name}.pem ubuntu@${app_ip}",
+      "Custom Command": "Yes",
+      "Sync Title": true,
+      "Allow Title Setting": false,
+      "Name": "${project_name}-app-${environment_name}",
+      "Guid": "${project_name}-app-${environment_name}"
+    }
+  ]
+}

@@ -50,3 +50,5 @@ overlays/
 *.retry
 
 temp/*
+
+**/ansible/env/*

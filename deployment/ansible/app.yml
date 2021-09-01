@@ -1,0 +1,6 @@
+---
+- name: Provision
+  hosts: app
+  become: yes
+  roles:
+    - sifra-java-app
