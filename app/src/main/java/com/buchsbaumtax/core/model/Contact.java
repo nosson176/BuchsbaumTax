@@ -7,7 +7,7 @@ public class Contact {
     private String secondaryDetail;
     private String mainDetail;
     private String memo;
-    private int contactTypeId;
+    private String contactType;
     private boolean disabled;
     private int clientId;
 
@@ -35,8 +35,8 @@ public class Contact {
         return memo;
     }
 
-    public int getContactTypeId() {
-        return contactTypeId;
+    public String getContactType() {
+        return contactType;
     }
 
     public boolean isDisabled() {

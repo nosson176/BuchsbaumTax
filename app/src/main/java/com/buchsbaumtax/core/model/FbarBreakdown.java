@@ -7,12 +7,12 @@ public class FbarBreakdown {
     private String description;
     private String documents;
     private int frequency;
-    private int currencyId;
+    private String currency;
     private int amount;
-    private int partId;
-    private int taxTypeId;
-    private int taxGroupId;
-    private int categoryId;
+    private String part;
+    private String taxType;
+    private String taxGroup;
+    private String category;
     private boolean archived;
     private int clientId;
 
@@ -36,28 +36,28 @@ public class FbarBreakdown {
         return frequency;
     }
 
-    public int getCurrencyId() {
-        return currencyId;
+    public String getCurrency() {
+        return currency;
     }
 
     public int getAmount() {
         return amount;
     }
 
-    public int getPartId() {
-        return partId;
+    public String getPart() {
+        return part;
     }
 
-    public int getTaxTypeId() {
-        return taxTypeId;
+    public String getTaxType() {
+        return taxType;
     }
 
-    public int getTaxGroupId() {
-        return taxGroupId;
+    public String getTaxGroup() {
+        return taxGroup;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public String getCategory() {
+        return category;
     }
 
     public boolean isArchived() {

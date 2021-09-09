@@ -14,7 +14,7 @@ import java.util.List;
 @Dao
 public interface ContactDAO {
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO contacts (archived, zip, state, secondary_detail, main_detail, memo, contact_type_id, disabled, client_id) VALUES (:archived, :zip, :state, :secondaryDetail, :mainDetail, :memo, :contactTypeId, :disabled, :clientId)")
+    @SqlUpdate("INSERT INTO contacts (archived, zip, state, secondary_detail, main_detail, memo, contact_type, disabled, client_id) VALUES (:archived, :zip, :state, :secondaryDetail, :mainDetail, :memo, :contactType, :disabled, :clientId)")
     int create(@BindBean Contact contact);
 
     @RegisterFieldMapper(Contact.class)

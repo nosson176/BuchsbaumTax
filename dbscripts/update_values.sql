@@ -30,6 +30,12 @@ SET currency = value
 FROM value_lists v
 WHERE v.id = CAST(f.currency AS INTEGER);
 
+ALTER TABLE filings
+DROP COLUMN tax_form_id,
+DROP COLUMN status_id,
+DROP COLUMN status_detail_id,
+DROP COLUMN file_type_id;
+
 -- income_breakdowns table
 ALTER TABLE income_breakdowns
 ADD COLUMN category TEXT,
@@ -62,6 +68,13 @@ UPDATE income_breakdowns ib
 SET currency = value
 FROM value_lists v
 WHERE v.id = ib.currency_id;
+
+ALTER TABLE income_breakdowns
+DROP COLUMN category_id,
+DROP COLUMN tax_group_id,
+DROP COLUMN tax_type_id,
+DROP COLUMN job_id,
+DROP COLUMN currency_id;
 
 -- fbar_breakdowns table
 ALTER TABLE fbar_breakdowns
@@ -96,6 +109,13 @@ SET currency = value
 FROM value_lists v
 WHERE v.id = fb.currency_id;
 
+ALTER TABLE fbar_breakdowns
+DROP COLUMN category_id,
+DROP COLUMN tax_group_id,
+DROP COLUMN tax_type_id,
+DROP COLUMN part_id,
+DROP COLUMN currency_id;
+
 -- contacts table
 ALTER TABLE contacts
 ADD COLUMN contact_type TEXT;
@@ -104,6 +124,9 @@ UPDATE contacts c
 SET contact_type = value
 FROM value_lists v
 WHERE v.id = c.contact_type_id;
+
+ALTER TABLE contacts
+DROP COLUMN contact_type_id;
 
 -- tax_personals table
 ALTER TABLE tax_personals
@@ -125,3 +148,8 @@ UPDATE tax_personals t
 SET language = value
 FROM value_lists v
 WHERE v.id = t.language_id;
+
+ALTER TABLE tax_personals
+DROP COLUMN category_id,
+DROP COLUMN relation_id,
+DROP COLUMN language_id;
