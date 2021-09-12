@@ -153,3 +153,22 @@ ALTER TABLE tax_personals
 DROP COLUMN category_id,
 DROP COLUMN relation_id,
 DROP COLUMN language_id;
+
+-- clients table
+ALTER TABLE clients
+ADD COLUMN status TEXT,
+ADD COLUMN owes_status TEXT;
+
+UPDATE clients c
+SET status = value
+FROM value_lists v
+WHERE v.id = c.status_id;
+
+UPDATE clients c
+SET owes_status = value
+FROM value_lists v
+WHERE v.id = c.owes_status_id;
+
+ALTER TABLE clients
+DROP COLUMN status_id,
+DROP COLUMN owes_status_id;
