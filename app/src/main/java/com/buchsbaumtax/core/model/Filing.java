@@ -7,10 +7,10 @@ public class Filing {
 
     private String currency;
     private boolean completed;
-    private long taxYearId;
+    private int taxYearId;
     private Date dateFiled;
-    private long secondDeliveryContactId;
-    private long deliveryContactId;
+    private int secondDeliveryContactId;
+    private int deliveryContactId;
     private double rebate;
     private double refund;
     private boolean includeFee;
@@ -37,7 +37,7 @@ public class Filing {
         return completed;
     }
 
-    public long getTaxYearId() {
+    public int getTaxYearId() {
         return taxYearId;
     }
 
@@ -45,11 +45,11 @@ public class Filing {
         return dateFiled;
     }
 
-    public long getSecondDeliveryContactId() {
+    public int getSecondDeliveryContactId() {
         return secondDeliveryContactId;
     }
 
-    public long getDeliveryContactId() {
+    public int getDeliveryContactId() {
         return deliveryContactId;
     }
 
