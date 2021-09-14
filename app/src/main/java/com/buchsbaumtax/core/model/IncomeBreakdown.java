@@ -10,11 +10,11 @@ public class IncomeBreakdown {
     private String description;
     private String documents;
     private int frequency;
-    private int currencyId;
-    private int jobId;
-    private int taxTypeId;
-    private int taxGroupId;
-    private int categoryId;
+    private String currency;
+    private String job;
+    private String taxType;
+    private String taxGroup;
+    private String category;
     private boolean archived;
 
     public String getDepend() {
@@ -49,24 +49,24 @@ public class IncomeBreakdown {
         return frequency;
     }
 
-    public int getCurrencyId() {
-        return currencyId;
+    public String getCurrency() {
+        return currency;
     }
 
-    public int getJobId() {
-        return jobId;
+    public String getJob() {
+        return job;
     }
 
-    public int getTaxTypeId() {
-        return taxTypeId;
+    public String getTaxType() {
+        return taxType;
     }
 
-    public int getTaxGroupId() {
-        return taxGroupId;
+    public String getTaxGroup() {
+        return taxGroup;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public String getCategory() {
+        return category;
     }
 
     public boolean isArchived() {

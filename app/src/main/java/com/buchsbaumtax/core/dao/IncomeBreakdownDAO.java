@@ -15,7 +15,7 @@ import java.util.List;
 public interface IncomeBreakdownDAO {
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO income_breakdowns (depend, include, client_id, exclusion, amount, description, documents, frequency, currency_id, job_id, tax_type_id, tax_group_id, category_id, archived) VALUES (:depend, :include, :clientId, :exclusion, :amount, :description, :documents, :frequency, :currencyId, :jobId, :taxTypeId, :taxGrouopId, :categoryId, :archived)")
+    @SqlUpdate("INSERT INTO income_breakdowns (depend, include, client_id, exclusion, amount, description, documents, frequency, currency, job, tax_type, tax_group, category, archived) VALUES (:depend, :include, :clientId, :exclusion, :amount, :description, :documents, :frequency, :currency, :job, :taxType, :taxGrouop, :category, :archived)")
     int create(@BindBean IncomeBreakdown incomeBreakdown);
 
     @RegisterFieldMapper(IncomeBreakdown.class)

@@ -15,7 +15,7 @@ import java.util.List;
 public interface FbarBreakdownDAO {
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO fbar_breakdowns (include, depend, description, documents, frequency, currency_id, amount, part_id, tax_type_id, tax_group_id, category_id, archived, client_id) VALUES (:include, :depend, :description, :documents, :frequency, :currecnyId, :amount, :partId, :taxTypeId, :taxGroupId, :categoryId, :archived, :clientId)")
+    @SqlUpdate("INSERT INTO fbar_breakdowns (include, depend, description, documents, frequency, currency, amount, part, tax_type, tax_group, category, archived, client_id) VALUES (:include, :depend, :description, :documents, :frequency, :currency, :amount, :part, :taxType, :taxGroup, :category, :archived, :clientId)")
     int create(@BindBean FbarBreakdown fbarBreakdown);
 
     @RegisterFieldMapper(FbarBreakdown.class)

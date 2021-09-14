@@ -5,15 +5,15 @@ import java.util.Date;
 public class TaxPersonal {
     private boolean archived;
     private int clientId;
-    private int categoryId;
+    private String category;
     private String firstName;
     private String middleInitial;
     private String lastName;
     private Date dateOfBirth;
     private String ssn;
     private String informal;
-    private int relationId;
-    private int languageId;
+    private String relation;
+    private String language;
     private boolean include;
 
     public boolean isArchived() {
@@ -24,8 +24,8 @@ public class TaxPersonal {
         return clientId;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public String getCategory() {
+        return category;
     }
 
     public String getFirstName() {
@@ -52,12 +52,12 @@ public class TaxPersonal {
         return informal;
     }
 
-    public int getRelationId() {
-        return relationId;
+    public String getRelation() {
+        return relation;
     }
 
-    public int getLanguageId() {
-        return languageId;
+    public String getLanguage() {
+        return language;
     }
 
     public boolean isInclude() {

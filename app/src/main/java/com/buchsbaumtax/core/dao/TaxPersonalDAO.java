@@ -14,7 +14,7 @@ import java.util.List;
 @Dao
 public interface TaxPersonalDAO {
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO tax_personals (archived, client_id, category_id, first_name, middle_initial, last_name, date_of_birth, ssn, informal, relation_id, language_id, include) VALUES (:archived, :clientId, :categoryId, :firstName, :middleInitial, :lastName, :dateOfBirth, :ssn, :informal, :relationId, :languageId, :include)")
+    @SqlUpdate("INSERT INTO tax_personals (archived, client_id, category, first_name, middle_initial, last_name, date_of_birth, ssn, informal, relation, language, include) VALUES (:archived, :clientId, :category, :firstName, :middleInitial, :lastName, :dateOfBirth, :ssn, :informal, :relation, :language, :include)")
     int create(@BindBean TaxPersonal taxPersonal);
 
     @RegisterFieldMapper(TaxPersonal.class)
