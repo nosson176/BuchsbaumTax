@@ -3,6 +3,7 @@ package com.buchsbaumtax.core.model;
 import java.util.Date;
 
 public class TaxPersonal {
+    private int id;
     private boolean archived;
     private int clientId;
     private String category;
@@ -15,6 +16,10 @@ public class TaxPersonal {
     private String relation;
     private String language;
     private boolean include;
+
+    public int getId() {
+        return id;
+    }
 
     public boolean isArchived() {
         return archived;

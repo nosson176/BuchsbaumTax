@@ -18,6 +18,9 @@ public interface LogDAO {
     @SqlUpdate("INSERT INTO logs (alerted, priority, alarm_time, client_id, time_spent, alarm_user_id, alarm_complete, alert, alarm_date, log_date, note, archived) VALUES (:alerted, :priority, :alarmTime, :clientId, :timeSpent, :alarmUserId, :alarmComplete, :alert, :alarmDate, :logDate, :note, :archived)")
     int create(@BindBean Log log);
 
+    @SqlUpdate("UPDATE logs SET alerted = :alerted, priority = :priority, alarm_time = :alarmTime, client_id = :clientId, time_spent = :timeSpent, alarm_user_id = :alarmUserId, alarm_complete = :alarmComplete, alert = :alert, alarm_date = :alarmDate, log_date = :logDate, note = :note, archived = :archived WHERE id = :id")
+    void update(@BindBean Log log);
+
     @RegisterFieldMapper(Log.class)
     @SqlQuery("SELECT * FROM logs WHERE id = :id")
     Log get(@Bind("id") int id);

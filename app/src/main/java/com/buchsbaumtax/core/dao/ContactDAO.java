@@ -17,6 +17,9 @@ public interface ContactDAO {
     @SqlUpdate("INSERT INTO contacts (archived, zip, state, secondary_detail, main_detail, memo, contact_type, disabled, client_id) VALUES (:archived, :zip, :state, :secondaryDetail, :mainDetail, :memo, :contactType, :disabled, :clientId)")
     int create(@BindBean Contact contact);
 
+    @SqlUpdate("UPDATE contacts SET archived = :archived, zip = :zip, secondary_detail = :secondaryDetail, main_detail = :mainDetail, memo = :memo, contact_type = :contactType, disabled = :disabled, client_id = :clientId WHERE id = :id")
+    void update(@BindBean Contact contact);
+
     @RegisterFieldMapper(Contact.class)
     @SqlQuery("SELECT * FROM contacts WHERE id = :id")
     Contact get(@Bind("id") int id);

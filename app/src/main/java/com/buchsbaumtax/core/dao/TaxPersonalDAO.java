@@ -17,6 +17,9 @@ public interface TaxPersonalDAO {
     @SqlUpdate("INSERT INTO tax_personals (archived, client_id, category, first_name, middle_initial, last_name, date_of_birth, ssn, informal, relation, language, include) VALUES (:archived, :clientId, :category, :firstName, :middleInitial, :lastName, :dateOfBirth, :ssn, :informal, :relation, :language, :include)")
     int create(@BindBean TaxPersonal taxPersonal);
 
+    @SqlUpdate("UPDATE tax_personals SET archived = :archived, client_id = :clientId, category = :category, first_name = :firstName, middle_initial = :middleInitial, last_name = :lastName, date_of_birth = :dateOfBirth, ssn = :ssn, informal = :informal, relation = :relation, language = :language, include = :include WHERE id = :id")
+    void update(@BindBean TaxPersonal taxPersonal);
+
     @RegisterFieldMapper(TaxPersonal.class)
     @SqlQuery("SELECT * FROM tax_personals WHERE id = :id")
     TaxPersonal get(@Bind("id") int id);

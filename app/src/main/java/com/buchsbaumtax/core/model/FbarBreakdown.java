@@ -1,7 +1,7 @@
 package com.buchsbaumtax.core.model;
 
 public class FbarBreakdown {
-
+    private int id;
     private boolean include;
     private String depend;
     private String description;
@@ -15,6 +15,10 @@ public class FbarBreakdown {
     private String category;
     private boolean archived;
     private int clientId;
+
+    public int getId() {
+        return id;
+    }
 
     public boolean isInclude() {
         return include;
