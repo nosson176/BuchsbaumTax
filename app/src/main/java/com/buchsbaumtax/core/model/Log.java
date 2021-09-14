@@ -3,6 +3,7 @@ package com.buchsbaumtax.core.model;
 import java.util.Date;
 
 public class Log {
+    private int id;
     private boolean alerted;
     private int priority;
     private String alarmTime;
@@ -15,6 +16,10 @@ public class Log {
     private Date logDate;
     private String note;
     private boolean archived;
+
+    public int getId() {
+        return id;
+    }
 
     public boolean isAlerted() {
         return alerted;

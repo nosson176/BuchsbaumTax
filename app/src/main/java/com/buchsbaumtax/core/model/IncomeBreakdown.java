@@ -1,7 +1,7 @@
 package com.buchsbaumtax.core.model;
 
 public class IncomeBreakdown {
-
+    private int id;
     private String depend;
     private boolean include;
     private int clientId;
@@ -16,6 +16,10 @@ public class IncomeBreakdown {
     private String taxGroup;
     private String category;
     private boolean archived;
+
+    public int getId() {
+        return id;
+    }
 
     public String getDepend() {
         return depend;

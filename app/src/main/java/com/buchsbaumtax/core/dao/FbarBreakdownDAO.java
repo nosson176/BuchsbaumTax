@@ -18,6 +18,9 @@ public interface FbarBreakdownDAO {
     @SqlUpdate("INSERT INTO fbar_breakdowns (include, depend, description, documents, frequency, currency, amount, part, tax_type, tax_group, category, archived, client_id) VALUES (:include, :depend, :description, :documents, :frequency, :currency, :amount, :part, :taxType, :taxGroup, :category, :archived, :clientId)")
     int create(@BindBean FbarBreakdown fbarBreakdown);
 
+    @SqlUpdate("UPDATE fbar_breakdowns SET include = :include, depend = :depend, description = :description, documents = :documents, frequency = :frequency, currency = :currency, amount = :amount, part = :part, tax_type = :taxType, tax_group = :taxGroup, category = :category, archived = :archived, client_id = :clientId WHERE id = :id")
+    void update(@BindBean FbarBreakdown fbarBreakdown);
+
     @RegisterFieldMapper(FbarBreakdown.class)
     @SqlQuery("SELECT * FROM fbar_breakdowns WHERE id = :id")
     FbarBreakdown get(@Bind("id") int id);

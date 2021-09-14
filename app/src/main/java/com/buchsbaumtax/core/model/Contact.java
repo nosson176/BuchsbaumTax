@@ -1,6 +1,7 @@
 package com.buchsbaumtax.core.model;
 
 public class Contact {
+    private int id;
     private boolean archived;
     private int zip;
     private String state;
@@ -10,6 +11,10 @@ public class Contact {
     private String contactType;
     private boolean disabled;
     private int clientId;
+
+    public int getId() {
+        return id;
+    }
 
     public boolean isArchived() {
         return archived;
