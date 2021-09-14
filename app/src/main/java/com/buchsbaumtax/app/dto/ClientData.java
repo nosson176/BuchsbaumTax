@@ -15,14 +15,14 @@ public class ClientData {
     private String periodical;
     private String displayName;
     private String displayPhone;
-    private List<TaxYear> taxYears;
+    private List<TaxYearData> taxYearData;
     private List<FbarBreakdown> fbarBreakdowns;
     private List<IncomeBreakdown> incomeBreakdowns;
     private List<Log> logs;
     private List<Contact> contacts;
     private List<TaxPersonal> taxPersonals;
 
-    public ClientData(Client client) {
+    public ClientData(Client client, List<TaxYearData> taxYearData) {
         this.id = client.getId();
         this.lastName = client.getLastName();
         this.currentStatus = client.getCurrentStatus();
@@ -30,7 +30,7 @@ public class ClientData {
         this.periodical = client.getPeriodical();
         this.displayName = client.getDisplayName();
         this.displayPhone = client.getDisplayPhone();
-        this.taxYears = Database.dao(TaxYearDAO.class).getByClient(client.getId());
+        this.taxYearData = taxYearData;
         this.fbarBreakdowns = Database.dao(FbarBreakdownDAO.class).getForClient(client.getId());
         this.incomeBreakdowns = Database.dao(IncomeBreakdownDAO.class).getForClient(client.getId());
         this.logs = Database.dao(LogDAO.class).getForClient(client.getId());
@@ -66,8 +66,8 @@ public class ClientData {
         return displayPhone;
     }
 
-    public List<TaxYear> getTaxYears() {
-        return taxYears;
+    public List<TaxYearData> getTaxYears() {
+        return taxYearData;
     }
 
     public List<FbarBreakdown> getFbarBreakdowns() {
