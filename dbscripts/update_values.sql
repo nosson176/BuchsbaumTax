@@ -172,3 +172,22 @@ WHERE v.id = c.owes_status_id;
 ALTER TABLE clients
 DROP COLUMN status_id,
 DROP COLUMN owes_status_id;
+
+-- exchange_rate table
+ALTER TABLE exchange_rates
+ADD COLUMN currency TEXT,
+ADD COLUMN year TEXT;
+
+UPDATE exchange_rates er
+SET currency = value
+FROM value_lists v
+WHERE v.id = er.currency_id;
+
+UPDATE exchange_rates er
+SET year = year_name
+FROM year_details yd
+WHERE yd.id = er.year_detail_id;
+
+ALTER TABLE exchange_rates
+DROP COLUMN currency_id,
+DROP COLUMN year_detail_id;
