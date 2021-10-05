@@ -4,7 +4,8 @@ public class Client {
 
     private int id;
     private String lastName;
-    private String currentStatus;
+    private String status;
+    private String owesStatus;
     private boolean archived;
     private String periodical;
     private String displayName;
@@ -18,8 +19,12 @@ public class Client {
         return lastName;
     }
 
-    public String getCurrentStatus() {
-        return currentStatus;
+    public String getStatus() {
+        return status;
+    }
+
+    public String getOwesStatus() {
+        return owesStatus;
     }
 
     public boolean isArchived() {
@@ -34,7 +39,15 @@ public class Client {
         return displayName;
     }
 
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
     public String getDisplayPhone() {
         return displayPhone;
+    }
+
+    public void setDisplayPhone(String displayPhone) {
+        this.displayPhone = displayPhone;
     }
 }

@@ -25,7 +25,7 @@ public class ClientData {
     public ClientData(Client client) {
         this.id = client.getId();
         this.lastName = client.getLastName();
-        this.currentStatus = client.getCurrentStatus();
+        this.currentStatus = client.getStatus();
         this.archived = client.isArchived();
         this.periodical = client.getPeriodical();
         this.displayName = client.getDisplayName();

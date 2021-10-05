@@ -122,6 +122,12 @@ CREATE TABLE users (
     updated TIMESTAMPTZ DEFAULT now()
 );
 
+CREATE TABLE sessions (
+    token TEXT PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users ON DELETE CASCADE,
+    created TIMESTAMPTZ DEFAULT NOW()
+);
+
 CREATE TABLE logs (
     id SERIAL PRIMARY KEY,
     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
@@ -179,7 +185,8 @@ CREATE TABLE filings (
     filing_type TEXT,
     state TEXT,
     tax_year_id INTEGER,
-    sort_order INTEGER
+    sort_order INTEGER,
+    amount FLOAT
 );
 
 -- CREATE TABLE textees (
