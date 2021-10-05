@@ -376,6 +376,7 @@ public class Migration {
                 stateMap.put("state", row[23]);
                 stateMap.put("filingType", "state");
                 stateMap.put("fileType", null);
+                stateMap.put("taxYearId", taxYearIds.get(row[0]));
 
                 filingDAO.createState(stateMap);
             }
@@ -386,6 +387,7 @@ public class Migration {
                 state2Map.put("state", row[36]);
                 state2Map.put("filingType", "state");
                 state2Map.put("fileType", null);
+                state2Map.put("taxYearId", taxYearIds.get(row[0]));
 
                 filingDAO.createState(state2Map);
             }
@@ -398,6 +400,7 @@ public class Migration {
                 fbarMap.put("state", null);
                 fbarMap.put("fileType", row[56]);
                 fbarMap.put("filingType", "fbar");
+                fbarMap.put("taxYearId", taxYearIds.get(row[0]));
 
                 filingDAO.createState(fbarMap);
             }
@@ -411,6 +414,7 @@ public class Migration {
                 extMap.put("taxForm", row[62]);
                 extMap.put("dateFiled", parseDate(row[63]));
                 extMap.put("filingType", "ext");
+                extMap.put("taxYearId", taxYearIds.get(row[0]));
 
                 filingDAO.createExt(extMap);
             }
@@ -630,10 +634,10 @@ public class Migration {
         @SqlUpdate("INSERT INTO filings (tax_form, status, status_detail, status_date, memo, include_in_refund, owes, paid, include_fee, owes_fee, paid_fee, file_type, refund, rebate, completed, delivery_contact, second_delivery_contact, date_filed, tax_year_id, filing_type) VALUES (:taxForm, :status, :statusDetail, :statusDate, :memo, :includeInRefund, :owes, :paid, :includeFee, :owesFee, :paidFee, :fileType, :refund, :rebate, :completed, :deliveryContact, :secondDeliveryContact, :dateFiled, :taxYearId, :filingType)")
         void create(@BindMap Map<String, ?> filing);
 
-        @SqlUpdate("INSERT INTO filings (state, status, status_detail, status_date, memo, include_in_refund, owes, paid, refund, completed, delivery_contact, second_delivery_contact, date_filed, filing_type, file_type) VALUES (:state, :status, :statusDetail, :statusDate, :memo, :includeInRefund, :owes, :paid, :refund, :completed, :deliveryContact, :secondDeliveryContact, :dateFiled, :filingType, :fileType)")
+        @SqlUpdate("INSERT INTO filings (state, status, status_detail, status_date, memo, include_in_refund, owes, paid, refund, completed, delivery_contact, second_delivery_contact, date_filed, tax_year_id, filing_type, file_type) VALUES (:state, :status, :statusDetail, :statusDate, :memo, :includeInRefund, :owes, :paid, :refund, :completed, :deliveryContact, :secondDeliveryContact, :dateFiled, :taxYearId, :filingType, :fileType)")
         void createState(@BindMap Map<String, ?> stateFiling);
 
-        @SqlUpdate("INSERT INTO filings (status, status_date, amount, completed, tax_form, date_filed, filing_type) VALUES (:status, :statusDate, :amount, :completed, :taxForm, :dateFiled, :filingType)")
+        @SqlUpdate("INSERT INTO filings (status, status_date, amount, completed, tax_form, date_filed, tax_year_id, filing_type) VALUES (:status, :statusDate, :amount, :completed, :taxForm, :dateFiled, :taxYearId, :filingType)")
         void createExt(@BindMap Map<String, ?> extFiling);
     }
 
