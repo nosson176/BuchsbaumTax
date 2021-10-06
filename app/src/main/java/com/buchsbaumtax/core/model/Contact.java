@@ -3,13 +3,13 @@ package com.buchsbaumtax.core.model;
 public class Contact {
     private int id;
     private boolean archived;
-    private int zip;
+    private String zip;
     private String state;
     private String secondaryDetail;
     private String mainDetail;
     private String memo;
     private String contactType;
-    private boolean disabled;
+    private boolean enabled;
     private int clientId;
 
     public int getId() {
@@ -20,7 +20,7 @@ public class Contact {
         return archived;
     }
 
-    public int getZip() {
+    public String getZip() {
         return zip;
     }
 
@@ -44,8 +44,8 @@ public class Contact {
         return contactType;
     }
 
-    public boolean isDisabled() {
-        return disabled;
+    public boolean isEnabled() {
+        return enabled;
     }
 
     public int getClientId() {
