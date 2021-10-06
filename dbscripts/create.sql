@@ -189,8 +189,6 @@ CREATE TABLE filings (
     amount FLOAT
 );
 
-UPDATE users SET password = '1000:a55d2a919684268d8d14138f177119ec50a707cd42436edc:7e7a159e2e57b31f2523e750cb9ac98d85e50d332dd1ac0a';
-
 -- CREATE TABLE textees (
 --     id SERIAL PRIMARY KEY,
 --     inactive BOOLEAN NOT NULL DEFAULT FALSE,
