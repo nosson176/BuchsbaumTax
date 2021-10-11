@@ -189,6 +189,20 @@ CREATE TABLE filings (
     amount FLOAT
 );
 
+CREATE TABLE value_lists (
+    id SERIAL PRIMARY KEY,
+    sort_order INTEGER,
+    key TEXT,
+    value TEXT,
+    parent_id INTEGER,
+    translation_needed BOOLEAN NOT NULL DEFAULT FALSE,
+    passive BOOLEAN NOT NULL DEFAULT FALSE,
+    self_employment BOOLEAN NOT NULL DEFAULT FALSE,
+    show BOOLEAN NOT NULL DEFAULT TRUE,
+    sub_type TEXT,
+    include BOOLEAN NOT NULL DEFAULT TRUE
+);
+
 -- CREATE TABLE textees (
 --     id SERIAL PRIMARY KEY,
 --     inactive BOOLEAN NOT NULL DEFAULT FALSE,
@@ -487,21 +501,6 @@ CREATE TABLE filings (
 --     notification_id INTEGER,
 --     created TIMESTAMPTZ DEFAULT now(),
 --     updated TIMESTAMPTZ DEFAULT now()
--- );
---
--- CREATE TABLE value_lists (
---     id SERIAL PRIMARY KEY,
---     sort_order INTEGER,
---     key TEXT,
---     value TEXT,
---     parent_id INTEGER,
---     translation_needed BOOLEAN NOT NULL DEFAULT FALSE,
---     passive BOOLEAN NOT NULL DEFAULT FALSE,
---     self_employment BOOLEAN NOT NULL DEFAULT FALSE,
---     show BOOLEAN NOT NULL DEFAULT TRUE,
---     sub_type TEXT,
---     include BOOLEAN NOT NULL DEFAULT TRUE,
---     year_detail_id INTEGER REFERENCES year_details ON DELETE CASCADE
 -- );
 
 
