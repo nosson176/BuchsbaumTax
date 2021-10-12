@@ -189,6 +189,34 @@ CREATE TABLE filings (
     amount FLOAT
 );
 
+CREATE TABLE fees (
+    id SERIAL PRIMARY KEY,
+    client_id INTEGER REFERENCES clients ON DELETE CASCADE,
+    year TEXT,
+    status TEXT,
+    status_detail TEXT,
+    fee_type TEXT,
+    manual_amount FLOAT,
+    paid_amount FLOAT,
+    include BOOLEAN NOT NULL DEFAULT TRUE,
+    rate FLOAT,
+    date_fee DATE,
+    sum BOOLEAN NOT NULL DEFAULT FALSE,
+    archived BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE TABLE smartviews (
+    id SERIAL PRIMARY KEY,
+    user_name TEXT,
+    user_id INTEGER REFERENCES users ON DELETE CASCADE,
+    name TEXT,
+    sort_number INTEGER,
+    archived BOOLEAN NOT NULL DEFAULT FALSE,
+    client_count INTEGER,
+    created TIMESTAMPTZ DEFAULT now(),
+    updated TIMESTAMPTZ DEFAULT now()
+);
+
 -- CREATE TABLE textees (
 --     id SERIAL PRIMARY KEY,
 --     inactive BOOLEAN NOT NULL DEFAULT FALSE,
@@ -260,25 +288,6 @@ CREATE TABLE filings (
 --     tax_year_id INTEGER REFERENCES tax_years ON DELETE CASCADE,
 --     year_name_id INTEGER,
 --     year_detail_id INTEGER REFERENCES year_details ON DELETE CASCADE
--- );
---
--- CREATE TABLE fees (
---     id SERIAL PRIMARY KEY,
---     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
---     status_id INTEGER,
---     status_detail_id INTEGER,
---     fee_type_id INTEGER,
---     date_fee DATE,
---     manual_amount FLOAT,
---     paid_amount FLOAT,
---     rate FLOAT,
---     notes TEXT,
---     archived BOOLEAN NOT NULL DEFAULT FALSE,
---     include BOOLEAN NOT NULL DEFAULT TRUE,
---     sum BOOLEAN NOT NULL DEFAULT FALSE,
---     year_name TEXT,
---     currency TEXT,
---     year_ids TEXT
 -- );
 --
 -- CREATE TABLE fee_tax_years (
@@ -419,17 +428,6 @@ CREATE TABLE filings (
 --     secondary_exclusion_2555 BOOLEAN NOT NULL DEFAULT FALSE,
 --     primary_exclusion_2555 BOOLEAN NOT NULL DEFAULT FALSE,
 --     self_employment_exclusion_2555 BOOLEAN NOT NULL DEFAULT FALSE
--- );
---
--- CREATE TABLE smartviews (
---     id SERIAL PRIMARY KEY,
---     created TIMESTAMPTZ DEFAULT now(),
---     updated TIMESTAMPTZ DEFAULT now(),
---     user_id INTEGER REFERENCES users ON DELETE CASCADE,
---     name TEXT,
---     sort_number INTEGER,
---     archived BOOLEAN NOT NULL DEFAULT FALSE,
---     client_count INTEGER
 -- );
 --
 -- CREATE TABLE smartview_lines (

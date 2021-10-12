@@ -422,6 +422,52 @@ public class Migration {
         }
     }
 
+    private void csvToFees(List<String[]> fees) {
+        FeeDAO feeDAO = handle.attach(FeeDAO.class);
+
+        for (String[] row : fees) {
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("clientId", clientIds.get(row[0]));
+            map.put("year", row[1]);
+            map.put("status", row[2]);
+            map.put("statusDetail", row[3]);
+            map.put("feeType", row[4]);
+            map.put("manualAmount", castToDouble(row[5]));
+            map.put("paidAmount", castToDouble(row[6]));
+            map.put("include", castToBoolean(row[7]));
+            map.put("rate", castToDouble(row[8]));
+            map.put("dateFee", parseDate(row[9]));
+            map.put("sum", castToBoolean(row[10]));
+            map.put("archived", castToBoolean(row[11]));
+
+            feeDAO.create(map);
+        }
+    }
+
+    private void csvToSmartViews(List<String[]> smartViews) {
+        SmartViewDAO smartViewDAO = handle.attach(SmartViewDAO.class);
+        UserDAO userDAO = handle.attach(UserDAO.class);
+
+        for (String[] row : smartViews) {
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("userName", row[1]);
+            User user = userDAO.getByUsername(row[1].toUpperCase());
+            if (user != null) {
+                map.put("userId", user.getId());
+            }
+            else {
+                map.put("userId", null);
+            }
+            map.put("name", row[2]);
+            map.put("sortNumber", castToInt(row[3]));
+            map.put("archived", castToBoolean(row[4]));
+
+            smartViewDAO.create(map);
+        }
+    }
+
     private Map<String, Object> setFilingData(List<String> row) {
         Map<String, Object> map = new HashMap<>();
 
@@ -642,66 +688,86 @@ public class Migration {
         void createExt(@BindMap Map<String, ?> extFiling);
     }
 
+    private interface FeeDAO {
+        @SqlUpdate("INSERT INTO fees (client_id, year, status, status_detail, fee_type, manual_amount, paid_amount, include, rate, date_fee, sum, archived) VALUES (:clientId, :year, :status, :statusDetail, :feeType, :manualAmount, :paidAmount, :include, :rate, :dateFee, :sum, :archived)")
+        void create(@BindMap Map<String, ?> fee);
+    }
+
+    private interface SmartViewDAO {
+        @SqlUpdate("INSERT INTO smartviews (user_name, user_id, name, sort_number, archived) VALUES (:userName, :userId, :name, :sortNumber, :archived)")
+        void create(@BindMap Map<String, ?> smartView);
+    }
+
     public static void main(String[] args) {
         String root = "C:\\Users\\shalo\\Downloads\\buchsbaum-main\\buchsbaum-main\\lib\\fm_uploads\\";
         Migration migration = new Migration(root);
 
 
-//        System.out.println("Uploading clients...");
-//        List<String[]> clients = migration.parseCSV(root + "clients.csv");
-//        migration.csvToClient(clients);
-//        System.out.println("Clients uploaded");
-//
-//        System.out.println("Uploading contacts...");
-//        List<String[]> contacts = migration.parseCSV(root + "contacts.csv");
-//        migration.csvToContact(contacts);
-//        System.out.println("Contacts completed.");
-//
-//        System.out.println("Uploading exchange rates...");
-//        List<String[]> exchangeRates = migration.parseCSV(root + "exchange_rates.csv");
-//        migration.csvToExchangeRate(exchangeRates);
-//        System.out.println("Exchange rates completed.");
-//
-//        System.out.println("Uploading fbar breakdowns...");
-//        List<String[]> fbarBreakdowns = migration.parseCSV(root + "fbar_breakdowns.csv");
-//        migration.csvToFbarBreakdown(fbarBreakdowns);
-//        System.out.println("Fbar breakdowns completed.");
-//
-//        System.out.println("Uploading income breakdowns...");
-//        List<String[]> incomeBreakdowns = migration.parseCSV(root + "inc_breakdowns.csv");
-//        migration.csvToIncomeBreakdown(incomeBreakdowns);
-//        System.out.println("Income breakdowns completed.");
-//
-//        System.out.println("Uploading year details...");
-//        List<String[]> yearDetails = migration.parseCSV(root + "year_details.csv");
-//        migration.csvToYearDetail(yearDetails);
-//        System.out.println("Year details completed.");
-//
-//        System.out.println("Uploading tax years...");
-//        List<String[]> taxYears = migration.parseCSV(root + "tax_years.csv");
-//        migration.csvToTaxYears(taxYears);
-//        System.out.println("Tax years completed.");
+        System.out.println("Uploading clients...");
+        List<String[]> clients = migration.parseCSV(root + "clients.csv");
+        migration.csvToClient(clients);
+        System.out.println("Clients uploaded");
+
+        System.out.println("Uploading contacts...");
+        List<String[]> contacts = migration.parseCSV(root + "contacts.csv");
+        migration.csvToContact(contacts);
+        System.out.println("Contacts completed.");
+
+        System.out.println("Uploading exchange rates...");
+        List<String[]> exchangeRates = migration.parseCSV(root + "exchange_rates.csv");
+        migration.csvToExchangeRate(exchangeRates);
+        System.out.println("Exchange rates completed.");
+
+        System.out.println("Uploading fbar breakdowns...");
+        List<String[]> fbarBreakdowns = migration.parseCSV(root + "fbar_breakdowns.csv");
+        migration.csvToFbarBreakdown(fbarBreakdowns);
+        System.out.println("Fbar breakdowns completed.");
+
+        System.out.println("Uploading income breakdowns...");
+        List<String[]> incomeBreakdowns = migration.parseCSV(root + "inc_breakdowns.csv");
+        migration.csvToIncomeBreakdown(incomeBreakdowns);
+        System.out.println("Income breakdowns completed.");
+
+        System.out.println("Uploading year details...");
+        List<String[]> yearDetails = migration.parseCSV(root + "year_details.csv");
+        migration.csvToYearDetail(yearDetails);
+        System.out.println("Year details completed.");
+
+        System.out.println("Uploading tax years...");
+        List<String[]> taxYears = migration.parseCSV(root + "tax_years.csv");
+        migration.csvToTaxYears(taxYears);
+        System.out.println("Tax years completed.");
 
         System.out.println("Uploading users...");
         List<String[]> users = migration.parseCSV(root + "users.csv");
         migration.csvToUser(users);
         System.out.println("Users completed.");
 
-//        System.out.println("Uploading logs...");
-//        List<String[]> logs = migration.parseCSV(root + "logs.csv");
-//        migration.csvToLogs(logs);
-//        System.out.println("Logs completed.");
-//
-//        System.out.println("Uploading tax personals...");
-//        List<String[]> taxPersonals = migration.parseCSV(root + "tax_personals.csv");
-//        migration.csvToTaxPersonals(taxPersonals);
-//        System.out.println("Tax personals completed.");
-//
-//        System.out.println("Uploading filings...");
-//        List<String[]> filings = migration.parseCSV(root + "tax_years.csv");
-//        migration.csvTOFilings(filings);
-//        System.out.println("Filings completed.");
-//
-//        migration.setDisplayFields();
+        System.out.println("Uploading logs...");
+        List<String[]> logs = migration.parseCSV(root + "logs.csv");
+        migration.csvToLogs(logs);
+        System.out.println("Logs completed.");
+
+        System.out.println("Uploading tax personals...");
+        List<String[]> taxPersonals = migration.parseCSV(root + "tax_personals.csv");
+        migration.csvToTaxPersonals(taxPersonals);
+        System.out.println("Tax personals completed.");
+
+        System.out.println("Uploading filings...");
+        List<String[]> filings = migration.parseCSV(root + "tax_years.csv");
+        migration.csvTOFilings(filings);
+        System.out.println("Filings completed.");
+
+        migration.setDisplayFields();
+
+        System.out.println("Uploading fees...");
+        List<String[]> fees = migration.parseCSV(root + "fees.csv");
+        migration.csvToFees(fees);
+        System.out.println("Fees completed.");
+
+        System.out.println("Uploading smartviews...");
+        List<String[]> smartViews = migration.parseCSV(root + "smartviews.csv");
+        migration.csvToSmartViews(smartViews);
+        System.out.println("Smartviews completed.");
     }
 }
