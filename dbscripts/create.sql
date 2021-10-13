@@ -217,6 +217,17 @@ CREATE TABLE smartviews (
     updated TIMESTAMPTZ DEFAULT now()
 );
 
+CREATE TABLE smartview_lines (
+    id SERIAL PRIMARY KEY,
+    created TIMESTAMPTZ DEFAULT now(),
+    updated TIMESTAMPTZ DEFAULT now(),
+    smartview_id INTEGER REFERENCES smartviews ON DELETE CASCADE,
+    query INTEGER,
+    class_to_join TEXT,
+    field_to_search TEXT,
+    search_value TEXT
+);
+
 -- CREATE TABLE textees (
 --     id SERIAL PRIMARY KEY,
 --     inactive BOOLEAN NOT NULL DEFAULT FALSE,
@@ -428,18 +439,6 @@ CREATE TABLE smartviews (
 --     secondary_exclusion_2555 BOOLEAN NOT NULL DEFAULT FALSE,
 --     primary_exclusion_2555 BOOLEAN NOT NULL DEFAULT FALSE,
 --     self_employment_exclusion_2555 BOOLEAN NOT NULL DEFAULT FALSE
--- );
---
--- CREATE TABLE smartview_lines (
---     id SERIAL PRIMARY KEY,
---     created TIMESTAMPTZ DEFAULT now(),
---     updated TIMESTAMPTZ DEFAULT now(),
---     smartview_id INTEGER REFERENCES smartviews ON DELETE CASCADE,
---     group_number INTEGER,
---     class_to_join TEXT,
---     field_to_search TEXT,
---     operator TEXT,
---     search_value TEXT
 -- );
 --
 -- CREATE TABLE status_histories (

@@ -29,6 +29,7 @@ public class Migration {
     private Handle handle;
     private Map<String, Integer> clientIds = new HashMap<>();
     private Map<String, Integer> taxYearIds = new HashMap<>();
+    private Map<String, Integer> smartViewIds = new HashMap<>();
     private Map<String, String> statusMap = new HashMap<>();
     private Map<String, String> owesStatusMap = new HashMap<>();
     private Map<String, String> currenciesMap = new HashMap<>();
@@ -464,8 +465,36 @@ public class Migration {
             map.put("sortNumber", castToInt(row[3]));
             map.put("archived", castToBoolean(row[4]));
 
-            smartViewDAO.create(map);
+            int id = smartViewDAO.create(map);
+            smartViewIds.put(row[0], id);
         }
+    }
+
+    private void csvToSmartViewLines(List<String[]> smartViews) {
+        SmartViewLineDAO smartViewLineDAO = handle.attach(SmartViewLineDAO.class);
+
+        for (String[] row : smartViews) {
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("smartViewId", smartViewIds.get(row[0]));
+            map.put("query", castToInt(row[1]));
+            String[] classMethod = new String[]{null, null};
+            if (row[2] != null && !row[2].equals("")) {
+                classMethod = row[2].split("::");
+            }
+            if (classMethod.length == 2) {
+                map.put("classToJoin", classMethod[0]);
+                map.put("fieldToSearch", classMethod[1]);
+            }
+            else {
+                map.put("classToJoin", classMethod[0]);
+                map.put("fieldToSearch", null);
+            }
+            map.put("searchValue", row[3]);
+
+            smartViewLineDAO.create(map);
+        }
+
     }
 
     private Map<String, Object> setFilingData(List<String> row) {
@@ -695,7 +724,13 @@ public class Migration {
 
     private interface SmartViewDAO {
         @SqlUpdate("INSERT INTO smartviews (user_name, user_id, name, sort_number, archived) VALUES (:userName, :userId, :name, :sortNumber, :archived)")
-        void create(@BindMap Map<String, ?> smartView);
+        @GetGeneratedKeys
+        int create(@BindMap Map<String, ?> smartView);
+    }
+
+    private interface SmartViewLineDAO {
+        @SqlUpdate("INSERT INTO smartview_lines (smartview_id, query, class_to_join, field_to_search, search_value) VALUES (:smartViewId, :query, :classToJoin, :fieldToSearch, :searchValue)")
+        void create(@BindMap Map<String, ?> smartViewLine);
     }
 
     public static void main(String[] args) {
@@ -769,5 +804,10 @@ public class Migration {
         List<String[]> smartViews = migration.parseCSV(root + "smartviews.csv");
         migration.csvToSmartViews(smartViews);
         System.out.println("Smartviews completed.");
+
+        System.out.println("Uploading smartview lines...");
+        List<String[]> smartViewLines = migration.parseCSV(root + "smartview_lines.csv");
+        migration.csvToSmartViewLines(smartViewLines);
+        System.out.println("Smartview lines completed.");
     }
 }
