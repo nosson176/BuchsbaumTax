@@ -5,13 +5,10 @@ public class Value {
     private int sortOrder;
     private String key;
     private String value;
-    private int ParentId;
+    private Integer parentId;
     private boolean translationNeeded;
-    private boolean passive;
-    private boolean selfEmployment;
-    private boolean show;
-    private String subType;
-    private boolean include;
+    private boolean show = true;
+    private boolean include = true;
 
     public int getId() {
         return id;
@@ -29,28 +26,16 @@ public class Value {
         return value;
     }
 
-    public int getParentId() {
-        return ParentId;
+    public Integer getParentId() {
+        return parentId;
     }
 
     public boolean isTranslationNeeded() {
         return translationNeeded;
     }
 
-    public boolean isPassive() {
-        return passive;
-    }
-
-    public boolean isSelfEmployment() {
-        return selfEmployment;
-    }
-
     public boolean isShow() {
         return show;
-    }
-
-    public String getSubType() {
-        return subType;
     }
 
     public boolean isInclude() {

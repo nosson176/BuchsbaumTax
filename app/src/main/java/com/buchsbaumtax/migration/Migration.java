@@ -29,6 +29,7 @@ public class Migration {
     private Handle handle;
     private Map<String, Integer> clientIds = new HashMap<>();
     private Map<String, Integer> taxYearIds = new HashMap<>();
+    private Map<String, Integer> taxGroupIds = new HashMap<>();
     private Map<String, String> statusMap = new HashMap<>();
     private Map<String, String> owesStatusMap = new HashMap<>();
     private Map<String, String> currenciesMap = new HashMap<>();
@@ -428,13 +429,13 @@ public class Migration {
         List<String> integerFields = Arrays.asList("sortOrder", "parentId");
         Map<String, Integer> valueIds = new HashMap<>();
 
-        for (String key : valueLists.keySet()) {
-            Map<String, Object> map = new HashMap<>();
+        for (Map.Entry<String, List<String[]>> entry : valueLists.entrySet()) {
+            Map<String, Object> map = new LinkedHashMap<>();
 
-            List<String[]> values = valueLists.get(key);
+            List<String[]> values = entry.getValue();
             String[] columns = values.get(0);
 
-            map.put("key", key);
+            map.put("key", entry.getKey());
             for (int i = 1; i < values.size(); i++) {
                 map.put("sortOrder", null);
                 map.put("value", null);
@@ -462,13 +463,36 @@ public class Migration {
                     }
 
                     if (column.equals("fmParentId")) {
-                        map.put("parentId", valueIds.get(value));
+                        if (map.get("key").equals("tax_type")) {
+                            map.put("parentId", taxGroupIds.get(value));
+                        }
+                        else {
+                            map.put("parentId", valueIds.get(value));
+                        }
                     }
                 }
 
                 int id = valueListDAO.create(map);
                 valueIds.put(row[0], id);
             }
+        }
+    }
+
+    private void csvToTaxGroups(List<String[]> taxGroups) {
+        TaxGroupDAO taxGroupDAO = handle.attach(TaxGroupDAO.class);
+
+        for (String[] row : taxGroups) {
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("value", row[1]);
+            map.put("show", castToBoolean(row[2]));
+            map.put("include", castToBoolean(row[3]));
+            map.put("selfEmployment", castToBoolean(row[4]));
+            map.put("passive", castToBoolean(row[5]));
+            map.put("subType", row[6]);
+
+            int id = taxGroupDAO.create(map);
+            taxGroupIds.put(row[0], id);
         }
     }
 
@@ -694,9 +718,16 @@ public class Migration {
 
     private interface ValueListDAO {
         @RegisterFieldMapper(Value.class)
-        @SqlUpdate("INSERT INTO value_lists (sort_order, key, value, parent_id, translation_needed, passive, self_employment, show, sub_type, include) VALUES (:sortOrder, :key, :value, :parentId, :translationNeeded, :passive, :selfEmployment, :show, :subType, :include)")
+        @SqlUpdate("INSERT INTO value_lists (sort_order, key, value, parent_id, translation_needed, show, include) VALUES (:sortOrder, :key, :value, :parentId, :translationNeeded, :show, :include)")
         @GetGeneratedKeys
         int create(@BindMap Map<String, ?> value_list);
+    }
+
+    private interface TaxGroupDAO {
+        @RegisterFieldMapper(TaxGroup.class)
+        @SqlUpdate("INSERT INTO tax_groups (value, show, include, self_employment, passive, sub_type) VALUES (:value, :show, :include, :selfEmployment, :passive, :subType)")
+        @GetGeneratedKeys
+        int create(@BindMap Map<String, ?> tax_group);
     }
 
     public static void main(String[] args) {
@@ -761,8 +792,13 @@ public class Migration {
 
         migration.setDisplayFields();
 
+        System.out.println("Uploading tax groups...");
+        List<String[]> taxGroups = migration.parseCSV(root + "tax_groups.csv");
+        migration.csvToTaxGroups(taxGroups);
+        System.out.println("Tax groups completed.");
+
         System.out.println("Uploading value lists...");
-        Map<String, List<String[]>> valueLists = new HashMap<>();
+        Map<String, List<String[]>> valueLists = new LinkedHashMap<>();
 
         List<String[]> checklistMemos = new ArrayList<>();
         String[] columns = new String[]{"fmId", "value", "show", "sortOrder", "translationNeeded"};
@@ -785,13 +821,6 @@ public class Migration {
         currencies.addAll(currencyData);
         valueLists.put("currency", currencies);
 
-        List<String[]> feeStatuses = new ArrayList<>();
-        columns = new String[]{"fmId", "value", "show"};
-        feeStatuses.add(columns);
-        List<String[]> feeStatusData = migration.parseCSV(root + "fee_statuses.csv");
-        feeStatuses.addAll(feeStatusData);
-        valueLists.put("fee_status", feeStatuses);
-
         List<String[]> feeTypes = new ArrayList<>();
         columns = new String[]{"fmId", "value", "show", "sortOrder"};
         feeTypes.add(columns);
@@ -812,13 +841,6 @@ public class Migration {
         List<String[]> categoryData = migration.parseCSV(root + "categories.csv");
         categories.addAll(categoryData);
         valueLists.put("category", categories);
-
-        List<String[]> fbarStatuses = new ArrayList<>();
-        columns = new String[]{"fmId", "value", "show", "sortOrder"};
-        fbarStatuses.add(columns);
-        List<String[]> fbarStatusData = migration.parseCSV(root + "fbar_statuses.csv");
-        fbarStatuses.addAll(fbarStatusData);
-        valueLists.put("fbar_status", fbarStatuses);
 
         List<String[]> parts = new ArrayList<>();
         columns = new String[]{"fmId", "value", "show", "sortOrder"};
@@ -848,13 +870,6 @@ public class Migration {
         contactTypes.addAll(contactTypeData);
         valueLists.put("contact_type", contactTypes);
 
-        List<String[]> taxGroups = new ArrayList<>();
-        columns = new String[]{"fmId", "value", "show", "include", "selfEmployment", "passive", "subType"};
-        taxGroups.add(columns);
-        List<String[]> taxGroupData = migration.parseCSV(root + "tax_groups.csv");
-        taxGroups.addAll(taxGroupData);
-        valueLists.put("tax_group", taxGroups);
-
         List<String[]> languages = new ArrayList<>();
         columns = new String[]{"fmId", "value", "show", "sortOrder"};
         languages.add(columns);
@@ -883,13 +898,6 @@ public class Migration {
         periodicals.addAll(periodicalData);
         valueLists.put("periodical", periodicals);
 
-        List<String[]> stateStatuses = new ArrayList<>();
-        columns = new String[]{"fmId", "value", "show", "sortOrder"};
-        stateStatuses.add(columns);
-        List<String[]> stateStatusData = migration.parseCSV(root + "state_statuses.csv");
-        stateStatuses.addAll(stateStatusData);
-        valueLists.put("state_status", stateStatuses);
-
         List<String[]> statuses = new ArrayList<>();
         columns = new String[]{"fmId", "value", "show"};
         statuses.add(columns);
@@ -904,19 +912,19 @@ public class Migration {
         fileTypes.addAll(fileTypeData);
         valueLists.put("file_type", fileTypes);
 
-        List<String[]> taxYearStatuses = new ArrayList<>();
-        columns = new String[]{"fmId", "value", "show"};
-        taxYearStatuses.add(columns);
-        List<String[]> taxYearStatusData = migration.parseCSV(root + "tax_year_statuses.csv");
-        taxYearStatuses.addAll(taxYearStatusData);
-        valueLists.put("tax_year_status", taxYearStatuses);
-
         List<String[]> taxTypes = new ArrayList<>();
         columns = new String[]{"fmId", "fmParentId", "value", "show", "include"};
         taxTypes.add(columns);
         List<String[]> taxTypesData = migration.parseCSV(root + "tax_types.csv");
         taxTypes.addAll(taxTypesData);
         valueLists.put("tax_type", taxTypes);
+
+        List<String[]> taxYearStatuses = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show"};
+        taxYearStatuses.add(columns);
+        List<String[]> taxYearStatusData = migration.parseCSV(root + "tax_year_statuses.csv");
+        taxYearStatuses.addAll(taxYearStatusData);
+        valueLists.put("tax_year_status", taxYearStatuses);
 
         List<String[]> taxYearStatusDetails = new ArrayList<>();
         columns = new String[]{"fmId", "fmParentId", "value", "show", "include"};
@@ -925,6 +933,13 @@ public class Migration {
         taxYearStatusDetails.addAll(taxYearStatusDetailsData);
         valueLists.put("tax_year_status_detail", taxYearStatusDetails);
 
+        List<String[]> feeStatuses = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show"};
+        feeStatuses.add(columns);
+        List<String[]> feeStatusData = migration.parseCSV(root + "fee_statuses.csv");
+        feeStatuses.addAll(feeStatusData);
+        valueLists.put("fee_status", feeStatuses);
+
         List<String[]> feeStatusDetails = new ArrayList<>();
         columns = new String[]{"fmId", "fmParentId", "value", "show"};
         feeStatusDetails.add(columns);
@@ -932,12 +947,26 @@ public class Migration {
         feeStatusDetails.addAll(feeStatusDetailData);
         valueLists.put("fee_status_detail", feeStatusDetails);
 
+        List<String[]> stateStatuses = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show", "sortOrder"};
+        stateStatuses.add(columns);
+        List<String[]> stateStatusData = migration.parseCSV(root + "state_statuses.csv");
+        stateStatuses.addAll(stateStatusData);
+        valueLists.put("state_status", stateStatuses);
+
         List<String[]> stateStatusDetails = new ArrayList<>();
         columns = new String[]{"fmId", "fmParentId", "value", "show", "sortOrder"};
         stateStatusDetails.add(columns);
         List<String[]> stateStatusDetailData = migration.parseCSV(root + "state_status_details.csv");
         stateStatusDetails.addAll(stateStatusDetailData);
         valueLists.put("state_status_detail", stateStatusDetails);
+
+        List<String[]> fbarStatuses = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show", "sortOrder"};
+        fbarStatuses.add(columns);
+        List<String[]> fbarStatusData = migration.parseCSV(root + "fbar_statuses.csv");
+        fbarStatuses.addAll(fbarStatusData);
+        valueLists.put("fbar_status", fbarStatuses);
 
         List<String[]> fbarStatusDetails = new ArrayList<>();
         columns = new String[]{"fmId", "fmParentId", "value", "show", "sortOrder"};

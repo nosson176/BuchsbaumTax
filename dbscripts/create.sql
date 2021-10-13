@@ -196,11 +196,18 @@ CREATE TABLE value_lists (
     value TEXT,
     parent_id INTEGER,
     translation_needed BOOLEAN NOT NULL DEFAULT FALSE,
-    passive BOOLEAN NOT NULL DEFAULT FALSE,
-    self_employment BOOLEAN NOT NULL DEFAULT FALSE,
     show BOOLEAN NOT NULL DEFAULT TRUE,
-    sub_type TEXT,
     include BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+CREATE TABLE tax_groups(
+    id SERIAL PRIMARY KEY,
+    value TEXT,
+    show BOOLEAN NOT NULL DEFAULT TRUE,
+    include BOOLEAN NOT NULL DEFAULT TRUE,
+    self_employment BOOLEAN NOT NULL DEFAULT FALSE,
+    passive BOOLEAN NOT NULL DEFAULT FALSE,
+    sub_type TEXT
 );
 
 -- CREATE TABLE textees (
