@@ -208,6 +208,7 @@ CREATE TABLE tax_groups(
     self_employment BOOLEAN NOT NULL DEFAULT FALSE,
     passive BOOLEAN NOT NULL DEFAULT FALSE,
     sub_type TEXT
+);
 
 CREATE TABLE fees (
     id SERIAL PRIMARY KEY,

@@ -495,8 +495,9 @@ public class Migration {
             int id = taxGroupDAO.create(map);
             taxGroupIds.put(row[0], id);
         }
+    }
 
-      private void csvToFees(List<String[]> fees) {
+    private void csvToFees(List<String[]> fees) {
         FeeDAO feeDAO = handle.attach(FeeDAO.class);
 
         for (String[] row : fees) {
@@ -802,7 +803,8 @@ public class Migration {
         @SqlUpdate("INSERT INTO tax_groups (value, show, include, self_employment, passive, sub_type) VALUES (:value, :show, :include, :selfEmployment, :passive, :subType)")
         @GetGeneratedKeys
         int create(@BindMap Map<String, ?> tax_group);
-      
+    }
+
     private interface FeeDAO {
         @SqlUpdate("INSERT INTO fees (client_id, year, status, status_detail, fee_type, manual_amount, paid_amount, include, rate, date_fee, sum, archived) VALUES (:clientId, :year, :status, :statusDetail, :feeType, :manualAmount, :paidAmount, :include, :rate, :dateFee, :sum, :archived)")
         void create(@BindMap Map<String, ?> fee);
