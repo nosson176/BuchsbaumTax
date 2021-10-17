@@ -15,10 +15,10 @@ import java.util.List;
 public interface LogDAO {
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO logs (alerted, priority, alarm_time, client_id, time_spent, alarm_user_id, alarm_complete, alert, alarm_date, log_date, note, archived) VALUES (:alerted, :priority, :alarmTime, :clientId, :timeSpent, :alarmUserId, :alarmComplete, :alert, :alarmDate, :logDate, :note, :archived)")
+    @SqlUpdate("INSERT INTO logs (client_id, years, alarm_user_id, alert, alarm_complete, alarm_date, alarm_time, log_date, priority, note, seconds_spent, archived, alerted) VALUES (:clientId, :years, :alarmUserId, :alert, :alarmComplete, :alarmDate, :alarmTime, :logDate, :priority, :note, :secondsSpent, :archived, :alerted)")
     int create(@BindBean Log log);
 
-    @SqlUpdate("UPDATE logs SET alerted = :alerted, priority = :priority, alarm_time = :alarmTime, client_id = :clientId, time_spent = :timeSpent, alarm_user_id = :alarmUserId, alarm_complete = :alarmComplete, alert = :alert, alarm_date = :alarmDate, log_date = :logDate, note = :note, archived = :archived WHERE id = :id")
+    @SqlUpdate("UPDATE logs SET client_id = :clientId, years = :years, alarm_user_id = :alarmUserId, alert = :alert, alarm_complete = :alarmComplete, alarm_date = :alarmDate, alarm_time = :alarmTime, log_date = :logDate, priority = :priority, note = :note, seconds_spent = :secondsSpent, archived = :archived, alerted = :alerted WHERE id = :id")
     void update(@BindBean Log log);
 
     @RegisterFieldMapper(Log.class)
