@@ -5,7 +5,7 @@ import com.buchsbaumtax.core.model.Value;
 public class ValueObject {
     private int sortOrder;
     private String value;
-    private int parentId;
+    private Integer parentId;
     private boolean show;
     private boolean include;
 
