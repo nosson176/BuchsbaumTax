@@ -12,6 +12,7 @@ import com.sifradigital.framework.db.Database;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class ValueResource {
     public Map<String, List<ValueObject>> getAllValues() {
         List<Value> values = Database.dao(ValueDAO.class).getAll();
         return values.stream()
+                .sorted(Comparator.comparing(Value::getSortOrder))
                 .collect(Collectors.groupingBy(Value::getKey, HashMap::new, Collectors.mapping(ValueObject::new, Collectors.toList())));
     }
 
