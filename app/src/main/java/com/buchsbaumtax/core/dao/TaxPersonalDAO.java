@@ -14,10 +14,10 @@ import java.util.List;
 @Dao
 public interface TaxPersonalDAO {
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO tax_personals (archived, client_id, category, first_name, middle_initial, last_name, date_of_birth, ssn, informal, relation, language, include) VALUES (:archived, :clientId, :category, :firstName, :middleInitial, :lastName, :dateOfBirth, :ssn, :informal, :relation, :language, :include)")
+    @SqlUpdate("INSERT INTO tax_personals (client_id, category, include, language, relation, first_name, middle_initial, last_name, date_of_birth, ssn, informal, archived) VALUES (:clientId, :category, :include, :language, :relation, :firstName, :middleInitial, :lastName, :dateOfBirth, :ssn, :informal, :archived)")
     int create(@BindBean TaxPersonal taxPersonal);
 
-    @SqlUpdate("UPDATE tax_personals SET archived = :archived, client_id = :clientId, category = :category, first_name = :firstName, middle_initial = :middleInitial, last_name = :lastName, date_of_birth = :dateOfBirth, ssn = :ssn, informal = :informal, relation = :relation, language = :language, include = :include WHERE id = :id")
+    @SqlUpdate("UPDATE tax_personals SET client_id = :clientId, category = :category, include = :include, language = :language, relation = :relation, first_name = :firstName, middle_initial = :middleInitial, last_name = :lastName, date_of_birth = :dateOfBirth, ssn = :ssn, informal = :informal, archived = :archived WHERE id = :id")
     void update(@BindBean TaxPersonal taxPersonal);
 
     @RegisterFieldMapper(TaxPersonal.class)

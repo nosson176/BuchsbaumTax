@@ -9,17 +9,17 @@ import java.util.List;
 
 public class TaxYearData {
     private int id;
-    private int yearDetailId;
+    private int clientId;
+    private String year;
     private boolean archived;
-    private String yearName;
     private boolean irsHistory;
     private List<Filing> filings;
 
     public TaxYearData(TaxYear taxYear) {
         this.id = taxYear.getId();
-        this.yearDetailId = taxYear.getYearDetailId();
+        this.clientId = taxYear.getClientId();
+        this.year = taxYear.getYear();
         this.archived = taxYear.isArchived();
-        this.yearName = taxYear.getYearName();
         this.irsHistory = taxYear.isIrsHistory();
         this.filings = Database.dao(FilingDAO.class).getByTaxYear(taxYear.getId());
     }
@@ -28,16 +28,16 @@ public class TaxYearData {
         return id;
     }
 
-    public int getYearDetailId() {
-        return yearDetailId;
+    public int getClientId() {
+        return clientId;
+    }
+
+    public String getYear() {
+        return year;
     }
 
     public boolean isArchived() {
         return archived;
-    }
-
-    public String getYearName() {
-        return yearName;
     }
 
     public boolean isIrsHistory() {

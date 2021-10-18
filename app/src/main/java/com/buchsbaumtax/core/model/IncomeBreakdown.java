@@ -5,6 +5,7 @@ public class IncomeBreakdown {
     private String depend;
     private boolean include;
     private int clientId;
+    private String years;
     private boolean exclusion;
     private double amount;
     private String description;
@@ -31,6 +32,10 @@ public class IncomeBreakdown {
 
     public int getClientId() {
         return clientId;
+    }
+
+    public String getYears() {
+        return years;
     }
 
     public boolean isExclusion() {

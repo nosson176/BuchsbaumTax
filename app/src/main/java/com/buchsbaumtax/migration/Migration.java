@@ -832,19 +832,19 @@ public class Migration {
         System.out.println("Clients uploaded");
 
         System.out.println("Uploading contacts...");
-        List<String[]> contacts = migration.parseCSV(root + "contacts.csv");
-        migration.csvToContact(contacts);
-        System.out.println("Contacts completed.");
+       List<String[]> contacts = migration.parseCSV(root + "contacts.csv");
+       migration.csvToContact(contacts);
+       System.out.println("Contacts completed.");
 
-        System.out.println("Uploading exchange rates...");
-        List<String[]> exchangeRates = migration.parseCSV(root + "exchange_rates.csv");
-        migration.csvToExchangeRate(exchangeRates);
-        System.out.println("Exchange rates completed.");
+       System.out.println("Uploading exchange rates...");
+       List<String[]> exchangeRates = migration.parseCSV(root + "exchange_rates.csv");
+       migration.csvToExchangeRate(exchangeRates);
+       System.out.println("Exchange rates completed.");
 
-        System.out.println("Uploading fbar breakdowns...");
-        List<String[]> fbarBreakdowns = migration.parseCSV(root + "fbar_breakdowns.csv");
-        migration.csvToFbarBreakdown(fbarBreakdowns);
-        System.out.println("Fbar breakdowns completed.");
+       System.out.println("Uploading fbar breakdowns...");
+       List<String[]> fbarBreakdowns = migration.parseCSV(root + "fbar_breakdowns.csv");
+       migration.csvToFbarBreakdown(fbarBreakdowns);
+       System.out.println("Fbar breakdowns completed.");
 
         System.out.println("Uploading income breakdowns...");
         List<String[]> incomeBreakdowns = migration.parseCSV(root + "inc_breakdowns.csv");

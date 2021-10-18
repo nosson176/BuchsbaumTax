@@ -8,7 +8,7 @@ public class Log {
     private int priority;
     private String alarmTime;
     private int clientId;
-    private int timeSpent;
+    private int secondsSpent;
     private int alarmUserId;
     private boolean alarmComplete;
     private boolean alert;
@@ -16,6 +16,7 @@ public class Log {
     private Date logDate;
     private String note;
     private boolean archived;
+    private String years;
 
     public int getId() {
         return id;
@@ -37,8 +38,8 @@ public class Log {
         return clientId;
     }
 
-    public int getTimeSpent() {
-        return timeSpent;
+    public int getSecondsSpent() {
+        return secondsSpent;
     }
 
     public int getAlarmUserId() {
@@ -67,5 +68,9 @@ public class Log {
 
     public boolean isArchived() {
         return archived;
+    }
+
+    public String getYears() {
+        return years;
     }
 }
