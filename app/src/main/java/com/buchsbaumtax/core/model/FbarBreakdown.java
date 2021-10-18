@@ -15,6 +15,7 @@ public class FbarBreakdown {
     private String category;
     private boolean archived;
     private int clientId;
+    private String years;
 
     public int getId() {
         return id;
@@ -70,5 +71,9 @@ public class FbarBreakdown {
 
     public int getClientId() {
         return clientId;
+    }
+
+    public String getYears() {
+        return years;
     }
 }

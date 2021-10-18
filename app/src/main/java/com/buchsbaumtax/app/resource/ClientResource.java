@@ -158,4 +158,36 @@ public class ClientResource {
     public BaseResponse deleteTaxPersonal(@PathParam("id") int taxPersonalId) {
         return new TaxPersonalCRUD().delete(taxPersonalId);
     }
+
+    //filings CRUD
+    @GET
+    @Path("/filings")
+    public List<Filing> getAllFilings() {
+        return new FilingCRUD().getAll();
+    }
+
+    @GET
+    @Path("/filings/{filingId}")
+    public Filing getFiling(@PathParam("filingId") int filingId) {
+        return new FilingCRUD().get(filingId);
+    }
+
+    @GET
+    @Path("/filings/tax-year/{taxYearId}")
+    public List<Filing> getFilingsByTaxYear(@PathParam("taxYearId") int taxYearId) {
+        return new FilingCRUD().getByTaxYear(taxYearId);
+    }
+
+    @POST
+    @Path("/filings")
+    public Filing createFiling(Filing filing) {
+        return new FilingCRUD().create(filing);
+    }
+
+    @DELETE
+    @Path("/filings/{filingId}")
+    public BaseResponse deleteFiling(@PathParam("filingId") int filingId) {
+        return new FilingCRUD().delete(filingId);
+    }
+
 }

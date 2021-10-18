@@ -15,10 +15,10 @@ import java.util.List;
 public interface FbarBreakdownDAO {
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO fbar_breakdowns (include, depend, description, documents, frequency, currency, amount, part, tax_type, tax_group, category, archived, client_id) VALUES (:include, :depend, :description, :documents, :frequency, :currency, :amount, :part, :taxType, :taxGroup, :category, :archived, :clientId)")
+    @SqlUpdate("INSERT INTO fbar_breakdowns (client_id, years, category, tax_group, tax_type, part, currency, frequency, documents, description, amount, depend, include, archived) VALUES (:clientId, :years, :category, :taxGroup, :taxType, :part, :currency, :frequency, :documents, :description, :amount, :depend, :include, :archived)")
     int create(@BindBean FbarBreakdown fbarBreakdown);
 
-    @SqlUpdate("UPDATE fbar_breakdowns SET include = :include, depend = :depend, description = :description, documents = :documents, frequency = :frequency, currency = :currency, amount = :amount, part = :part, tax_type = :taxType, tax_group = :taxGroup, category = :category, archived = :archived, client_id = :clientId WHERE id = :id")
+    @SqlUpdate("UPDATE fbar_breakdowns SET client_id = :clientId, years = :years, category = :category, tax_group = :taxGroup, tax_type = :taxType, part = :part, currency = :currency, frequency = :frequency, documents = :documents, description = :description, amount = :amount, depend = :depend, include = :include, archived = :archived WHERE id = :id")
     void update(@BindBean FbarBreakdown fbarBreakdown);
 
     @RegisterFieldMapper(FbarBreakdown.class)
