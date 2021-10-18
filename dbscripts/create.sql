@@ -132,6 +132,7 @@ CREATE TABLE logs (
     id SERIAL PRIMARY KEY,
     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
     years TEXT,
+    alarm_user_name TEXT,
     alarm_user_id INTEGER REFERENCES users ON DELETE CASCADE,
     alert BOOLEAN NOT NULL DEFAULT FALSE,
     alarm_complete BOOLEAN NOT NULL DEFAULT FALSE,

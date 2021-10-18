@@ -9,6 +9,7 @@ public class Log {
     private String alarmTime;
     private int clientId;
     private int secondsSpent;
+    private String alarmUserName;
     private int alarmUserId;
     private boolean alarmComplete;
     private boolean alert;
