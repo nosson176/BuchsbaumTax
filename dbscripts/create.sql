@@ -189,6 +189,27 @@ CREATE TABLE filings (
     amount FLOAT
 );
 
+CREATE TABLE value_lists (
+    id SERIAL PRIMARY KEY,
+    sort_order INTEGER,
+    key TEXT,
+    value TEXT,
+    parent_id INTEGER,
+    translation_needed BOOLEAN NOT NULL DEFAULT FALSE,
+    show BOOLEAN NOT NULL DEFAULT TRUE,
+    include BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+CREATE TABLE tax_groups(
+    id SERIAL PRIMARY KEY,
+    value TEXT,
+    show BOOLEAN NOT NULL DEFAULT TRUE,
+    include BOOLEAN NOT NULL DEFAULT TRUE,
+    self_employment BOOLEAN NOT NULL DEFAULT FALSE,
+    passive BOOLEAN NOT NULL DEFAULT FALSE,
+    sub_type TEXT
+);
+
 CREATE TABLE fees (
     id SERIAL PRIMARY KEY,
     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
@@ -484,21 +505,6 @@ CREATE TABLE smartview_lines (
 --     notification_id INTEGER,
 --     created TIMESTAMPTZ DEFAULT now(),
 --     updated TIMESTAMPTZ DEFAULT now()
--- );
---
--- CREATE TABLE value_lists (
---     id SERIAL PRIMARY KEY,
---     sort_order INTEGER,
---     key TEXT,
---     value TEXT,
---     parent_id INTEGER,
---     translation_needed BOOLEAN NOT NULL DEFAULT FALSE,
---     passive BOOLEAN NOT NULL DEFAULT FALSE,
---     self_employment BOOLEAN NOT NULL DEFAULT FALSE,
---     show BOOLEAN NOT NULL DEFAULT TRUE,
---     sub_type TEXT,
---     include BOOLEAN NOT NULL DEFAULT TRUE,
---     year_detail_id INTEGER REFERENCES year_details ON DELETE CASCADE
 -- );
 
 
