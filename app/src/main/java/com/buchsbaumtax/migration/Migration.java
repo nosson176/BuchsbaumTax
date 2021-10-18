@@ -308,6 +308,7 @@ public class Migration {
 
             map.put("clientId", clientIds.get(row[0]));
             map.put("years", row[1]);
+            map.put("alarmUserName", row[2]);
             UserDAO userDAO = handle.attach(UserDAO.class);
             User user = userDAO.getByUsername(row[2]);
             if (user != null) {
@@ -696,8 +697,13 @@ public class Migration {
                     return Duration.parse(String.format("PT%sM%sS", parts[0], parts[1])).getSeconds();
                 }
                 catch (Exception ex) {
-                    ex.printStackTrace();
-                    return null;
+                    try {
+                        return Long.parseLong(str);
+                    }
+                    catch (Exception exception) {
+                        exception.printStackTrace();
+                        return null;
+                    }
                 }
             }
         }
@@ -776,7 +782,7 @@ public class Migration {
     }
 
     private interface LogDAO {
-        @SqlUpdate("INSERT INTO logs (client_id, years, alarm_user_id, alert, alarm_complete, alarm_date, alarm_time, log_date, priority, note, seconds_spent, archived) VALUES (:clientId, :years, :alarmUserId, :alert, :alarmComplete, :alarmDate, :alarmTime, :logDate, :priority, :note, :secondsSpent, :archived)")
+        @SqlUpdate("INSERT INTO logs (client_id, years, alarm_user_name, alarm_user_id, alert, alarm_complete, alarm_date, alarm_time, log_date, priority, note, seconds_spent, archived) VALUES (:clientId, :years, :alarmUserName, :alarmUserId, :alert, :alarmComplete, :alarmDate, :alarmTime, :logDate, :priority, :note, :secondsSpent, :archived)")
         void create(@BindMap Map<String, ?> log);
     }
 
