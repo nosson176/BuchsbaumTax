@@ -29,6 +29,7 @@ public class Migration {
     private Handle handle;
     private Map<String, Integer> clientIds = new HashMap<>();
     private Map<String, Integer> taxYearIds = new HashMap<>();
+    private Map<String, Integer> taxGroupIds = new HashMap<>();
     private Map<String, Integer> smartViewIds = new HashMap<>();
     private Map<String, String> statusMap = new HashMap<>();
     private Map<String, String> owesStatusMap = new HashMap<>();
@@ -307,6 +308,7 @@ public class Migration {
 
             map.put("clientId", clientIds.get(row[0]));
             map.put("years", row[1]);
+            map.put("alarmUserName", row[2]);
             UserDAO userDAO = handle.attach(UserDAO.class);
             User user = userDAO.getByUsername(row[2]);
             if (user != null) {
@@ -420,6 +422,79 @@ public class Migration {
 
                 filingDAO.createExt(extMap);
             }
+        }
+    }
+
+    private void csvToValueList(Map<String, List<String[]>> valueLists) {
+        ValueListDAO valueListDAO = handle.attach(ValueListDAO.class);
+        List<String> booleanFields = Arrays.asList("translationNeeded", "passive", "selfEmployment", "show", "include");
+        List<String> integerFields = Arrays.asList("sortOrder", "parentId");
+        Map<String, Integer> valueIds = new HashMap<>();
+
+        for (Map.Entry<String, List<String[]>> entry : valueLists.entrySet()) {
+            Map<String, Object> map = new LinkedHashMap<>();
+
+            List<String[]> values = entry.getValue();
+            String[] columns = values.get(0);
+
+            map.put("key", entry.getKey());
+            for (int i = 1; i < values.size(); i++) {
+                map.put("sortOrder", null);
+                map.put("value", null);
+                map.put("parentId", null);
+                map.put("translationNeeded", false);
+                map.put("passive", false);
+                map.put("selfEmployment", false);
+                map.put("show", true);
+                map.put("subType", null);
+                map.put("include", true);
+
+                String[] row = values.get(i);
+
+                for (int j = 1; j < columns.length; j++) {
+                    String column = columns[j];
+                    String value = row[j];
+                    if (integerFields.contains(column)) {
+                        map.put(column, castToInt(value));
+                    }
+                    else if (booleanFields.contains(column)) {
+                        map.put(column, castToBoolean(value));
+                    }
+                    else {
+                        map.put(column, value);
+                    }
+
+                    if (column.equals("fmParentId")) {
+                        if (map.get("key").equals("tax_type")) {
+                            map.put("parentId", taxGroupIds.get(value));
+                        }
+                        else {
+                            map.put("parentId", valueIds.get(value));
+                        }
+                    }
+                }
+
+                int id = valueListDAO.create(map);
+                valueIds.put(row[0], id);
+            }
+        }
+    }
+
+    private void csvToTaxGroups(List<String[]> taxGroups) {
+        TaxGroupDAO taxGroupDAO = handle.attach(TaxGroupDAO.class);
+
+        for (String[] row : taxGroups) {
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("value", row[1]);
+            map.put("show", castToBoolean(row[2]));
+            map.put("include", castToBoolean(row[3]));
+            map.put("selfEmployment", castToBoolean(row[4]));
+            map.put("passive", castToBoolean(row[5]));
+            map.put("subType", row[6]);
+
+            int id = taxGroupDAO.create(map);
+            taxGroupIds.put(row[0], id);
         }
     }
 
@@ -622,8 +697,13 @@ public class Migration {
                     return Duration.parse(String.format("PT%sM%sS", parts[0], parts[1])).getSeconds();
                 }
                 catch (Exception ex) {
-                    ex.printStackTrace();
-                    return null;
+                    try {
+                        return Long.parseLong(str);
+                    }
+                    catch (Exception exception) {
+                        exception.printStackTrace();
+                        return null;
+                    }
                 }
             }
         }
@@ -702,7 +782,7 @@ public class Migration {
     }
 
     private interface LogDAO {
-        @SqlUpdate("INSERT INTO logs (client_id, years, alarm_user_id, alert, alarm_complete, alarm_date, alarm_time, log_date, priority, note, seconds_spent, archived) VALUES (:clientId, :years, :alarmUserId, :alert, :alarmComplete, :alarmDate, :alarmTime, :logDate, :priority, :note, :secondsSpent, :archived)")
+        @SqlUpdate("INSERT INTO logs (client_id, years, alarm_user_name, alarm_user_id, alert, alarm_complete, alarm_date, alarm_time, log_date, priority, note, seconds_spent, archived) VALUES (:clientId, :years, :alarmUserName, :alarmUserId, :alert, :alarmComplete, :alarmDate, :alarmTime, :logDate, :priority, :note, :secondsSpent, :archived)")
         void create(@BindMap Map<String, ?> log);
     }
 
@@ -715,6 +795,20 @@ public class Migration {
 
         @SqlUpdate("INSERT INTO filings (status, status_date, amount, completed, tax_form, date_filed, tax_year_id, filing_type) VALUES (:status, :statusDate, :amount, :completed, :taxForm, :dateFiled, :taxYearId, :filingType)")
         void createExt(@BindMap Map<String, ?> extFiling);
+    }
+
+    private interface ValueListDAO {
+        @RegisterFieldMapper(Value.class)
+        @SqlUpdate("INSERT INTO value_lists (sort_order, key, value, parent_id, translation_needed, show, include) VALUES (:sortOrder, :key, :value, :parentId, :translationNeeded, :show, :include)")
+        @GetGeneratedKeys
+        int create(@BindMap Map<String, ?> value_list);
+    }
+
+    private interface TaxGroupDAO {
+        @RegisterFieldMapper(TaxGroup.class)
+        @SqlUpdate("INSERT INTO tax_groups (value, show, include, self_employment, passive, sub_type) VALUES (:value, :show, :include, :selfEmployment, :passive, :subType)")
+        @GetGeneratedKeys
+        int create(@BindMap Map<String, ?> tax_group);
     }
 
     private interface FeeDAO {
@@ -744,19 +838,19 @@ public class Migration {
         System.out.println("Clients uploaded");
 
         System.out.println("Uploading contacts...");
-        List<String[]> contacts = migration.parseCSV(root + "contacts.csv");
-        migration.csvToContact(contacts);
-        System.out.println("Contacts completed.");
+       List<String[]> contacts = migration.parseCSV(root + "contacts.csv");
+       migration.csvToContact(contacts);
+       System.out.println("Contacts completed.");
 
-        System.out.println("Uploading exchange rates...");
-        List<String[]> exchangeRates = migration.parseCSV(root + "exchange_rates.csv");
-        migration.csvToExchangeRate(exchangeRates);
-        System.out.println("Exchange rates completed.");
+       System.out.println("Uploading exchange rates...");
+       List<String[]> exchangeRates = migration.parseCSV(root + "exchange_rates.csv");
+       migration.csvToExchangeRate(exchangeRates);
+       System.out.println("Exchange rates completed.");
 
-        System.out.println("Uploading fbar breakdowns...");
-        List<String[]> fbarBreakdowns = migration.parseCSV(root + "fbar_breakdowns.csv");
-        migration.csvToFbarBreakdown(fbarBreakdowns);
-        System.out.println("Fbar breakdowns completed.");
+       System.out.println("Uploading fbar breakdowns...");
+       List<String[]> fbarBreakdowns = migration.parseCSV(root + "fbar_breakdowns.csv");
+       migration.csvToFbarBreakdown(fbarBreakdowns);
+       System.out.println("Fbar breakdowns completed.");
 
         System.out.println("Uploading income breakdowns...");
         List<String[]> incomeBreakdowns = migration.parseCSV(root + "inc_breakdowns.csv");
@@ -794,6 +888,192 @@ public class Migration {
         System.out.println("Filings completed.");
 
         migration.setDisplayFields();
+
+        System.out.println("Uploading tax groups...");
+        List<String[]> taxGroups = migration.parseCSV(root + "tax_groups.csv");
+        migration.csvToTaxGroups(taxGroups);
+        System.out.println("Tax groups completed.");
+
+        System.out.println("Uploading value lists...");
+        Map<String, List<String[]>> valueLists = new LinkedHashMap<>();
+
+        List<String[]> checklistMemos = new ArrayList<>();
+        String[] columns = new String[]{"fmId", "value", "show", "sortOrder", "translationNeeded"};
+        checklistMemos.add(columns);
+        List<String[]> memosData = migration.parseCSV(root + "cl_memos.csv");
+        checklistMemos.addAll(memosData);
+        valueLists.put("checklist_memo", checklistMemos);
+
+        List<String[]> states = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show", "sortOrder"};
+        states.add(columns);
+        List<String[]> statesData = migration.parseCSV(root + "states.csv");
+        states.addAll(statesData);
+        valueLists.put("state", states);
+
+        List<String[]> currencies = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show"};
+        currencies.add(columns);
+        List<String[]> currencyData = migration.parseCSV(root + "currencies.csv");
+        currencies.addAll(currencyData);
+        valueLists.put("currency", currencies);
+
+        List<String[]> feeTypes = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show", "sortOrder"};
+        feeTypes.add(columns);
+        List<String[]> feeTypesData = migration.parseCSV(root + "fee_types.csv");
+        feeTypes.addAll(feeTypesData);
+        valueLists.put("fee_type", feeTypes);
+
+        List<String[]> jobs = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show", "sortOrder"};
+        jobs.add(columns);
+        List<String[]> jobsData = migration.parseCSV(root + "job.csv");
+        jobs.addAll(jobsData);
+        valueLists.put("job", jobs);
+
+        List<String[]> categories = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show", "sortOrder"};
+        categories.add(columns);
+        List<String[]> categoryData = migration.parseCSV(root + "categories.csv");
+        categories.addAll(categoryData);
+        valueLists.put("category", categories);
+
+        List<String[]> parts = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show", "sortOrder"};
+        parts.add(columns);
+        List<String[]> partData = migration.parseCSV(root + "fbar_part.csv");
+        parts.addAll(partData);
+        valueLists.put("part", parts);
+
+        List<String[]> taxForms = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show", "sortOrder"};
+        taxForms.add(columns);
+        List<String[]> taxFormData = migration.parseCSV(root + "tax_forms.csv");
+        taxForms.addAll(taxFormData);
+        valueLists.put("tax_form", taxForms);
+
+        List<String[]> oweStatuses = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show", "sortOrder"};
+        oweStatuses.add(columns);
+        List<String[]> owesStatusData = migration.parseCSV(root + "owes_statuses.csv");
+        oweStatuses.addAll(owesStatusData);
+        valueLists.put("owes_status", oweStatuses);
+
+        List<String[]> contactTypes = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show", "sortOrder"};
+        contactTypes.add(columns);
+        List<String[]> contactTypeData = migration.parseCSV(root + "contact_types.csv");
+        contactTypes.addAll(contactTypeData);
+        valueLists.put("contact_type", contactTypes);
+
+        List<String[]> languages = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show", "sortOrder"};
+        languages.add(columns);
+        List<String[]> languageData = migration.parseCSV(root + "languages.csv");
+        languages.addAll(languageData);
+        valueLists.put("language", languages);
+
+        List<String[]> yearNames = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show", "sortOrder"};
+        yearNames.add(columns);
+        List<String[]> yearNameData = migration.parseCSV(root + "year_names.csv");
+        yearNames.addAll(yearNameData);
+        valueLists.put("year_name", yearNames);
+
+        List<String[]> relations = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show", "sortOrder"};
+        relations.add(columns);
+        List<String[]> relationData = migration.parseCSV(root + "relations.csv");
+        relations.addAll(relationData);
+        valueLists.put("relation", relations);
+
+        List<String[]> periodicals = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show", "sortOrder"};
+        periodicals.add(columns);
+        List<String[]> periodicalData = migration.parseCSV(root + "periodicals.csv");
+        periodicals.addAll(periodicalData);
+        valueLists.put("periodical", periodicals);
+
+        List<String[]> statuses = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show"};
+        statuses.add(columns);
+        List<String[]> statusData = migration.parseCSV(root + "client_statuses.csv");
+        statuses.addAll(statusData);
+        valueLists.put("status", statuses);
+
+        List<String[]> fileTypes = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show", "sortOrder"};
+        fileTypes.add(columns);
+        List<String[]> fileTypeData = migration.parseCSV(root + "file_types.csv");
+        fileTypes.addAll(fileTypeData);
+        valueLists.put("file_type", fileTypes);
+
+        List<String[]> taxTypes = new ArrayList<>();
+        columns = new String[]{"fmId", "fmParentId", "value", "show", "include"};
+        taxTypes.add(columns);
+        List<String[]> taxTypesData = migration.parseCSV(root + "tax_types.csv");
+        taxTypes.addAll(taxTypesData);
+        valueLists.put("tax_type", taxTypes);
+
+        List<String[]> taxYearStatuses = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show"};
+        taxYearStatuses.add(columns);
+        List<String[]> taxYearStatusData = migration.parseCSV(root + "tax_year_statuses.csv");
+        taxYearStatuses.addAll(taxYearStatusData);
+        valueLists.put("tax_year_status", taxYearStatuses);
+
+        List<String[]> taxYearStatusDetails = new ArrayList<>();
+        columns = new String[]{"fmId", "fmParentId", "value", "show", "include"};
+        taxYearStatusDetails.add(columns);
+        List<String[]> taxYearStatusDetailsData = migration.parseCSV(root + "tax_year_status_details.csv");
+        taxYearStatusDetails.addAll(taxYearStatusDetailsData);
+        valueLists.put("tax_year_status_detail", taxYearStatusDetails);
+
+        List<String[]> feeStatuses = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show"};
+        feeStatuses.add(columns);
+        List<String[]> feeStatusData = migration.parseCSV(root + "fee_statuses.csv");
+        feeStatuses.addAll(feeStatusData);
+        valueLists.put("fee_status", feeStatuses);
+
+        List<String[]> feeStatusDetails = new ArrayList<>();
+        columns = new String[]{"fmId", "fmParentId", "value", "show"};
+        feeStatusDetails.add(columns);
+        List<String[]> feeStatusDetailData = migration.parseCSV(root + "fee_status_details.csv");
+        feeStatusDetails.addAll(feeStatusDetailData);
+        valueLists.put("fee_status_detail", feeStatusDetails);
+
+        List<String[]> stateStatuses = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show", "sortOrder"};
+        stateStatuses.add(columns);
+        List<String[]> stateStatusData = migration.parseCSV(root + "state_statuses.csv");
+        stateStatuses.addAll(stateStatusData);
+        valueLists.put("state_status", stateStatuses);
+
+        List<String[]> stateStatusDetails = new ArrayList<>();
+        columns = new String[]{"fmId", "fmParentId", "value", "show", "sortOrder"};
+        stateStatusDetails.add(columns);
+        List<String[]> stateStatusDetailData = migration.parseCSV(root + "state_status_details.csv");
+        stateStatusDetails.addAll(stateStatusDetailData);
+        valueLists.put("state_status_detail", stateStatusDetails);
+
+        List<String[]> fbarStatuses = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show", "sortOrder"};
+        fbarStatuses.add(columns);
+        List<String[]> fbarStatusData = migration.parseCSV(root + "fbar_statuses.csv");
+        fbarStatuses.addAll(fbarStatusData);
+        valueLists.put("fbar_status", fbarStatuses);
+
+        List<String[]> fbarStatusDetails = new ArrayList<>();
+        columns = new String[]{"fmId", "fmParentId", "value", "show", "sortOrder"};
+        fbarStatusDetails.add(columns);
+        List<String[]> fbarStatusDetailData = migration.parseCSV(root + "fbar_status_details.csv");
+        fbarStatusDetails.addAll(fbarStatusDetailData);
+        valueLists.put("fbar_status_detail", fbarStatusDetails);
+
+        migration.csvToValueList(valueLists);
+        System.out.println("Value list completed.");
 
         System.out.println("Uploading fees...");
         List<String[]> fees = migration.parseCSV(root + "fees.csv");

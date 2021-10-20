@@ -14,7 +14,7 @@ import java.util.List;
 @Dao
 public interface FilingDAO {
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO filings (currency, completed, tax_year_id, date_filed, second_delivery_contact_id, delivery_contact_id, rebate, refund, include_fee, include_in_refund, paid_fee, owes_fee, paid, owes, memo, state, filing_type, status_date, tax_year, file_type, status_detail, status, tax_form) VALUES (:currency, :completed, :taxYearId, :dateFiled, :secondDeliveryContactId, :deliveryContactId,:rebate, :refund, :includeFee, :includeInRefund, :paidFee, :owesFee, :paid, :owes, :memo, :state, :filingType, :statusDate, :taxYear, :fileType, :statusDetail, :status, :taxForm)")
+    @SqlUpdate("INSERT INTO filings (tax_form, status, status_detail, status_date, memo, include_in_refund, owes, paid, include_fee, owes_fee, paid_fee, file_type, refund, rebate, completed, delivery_contact, second_delivery_contact, date_filed, currency, filing_type, state, tax_year_id, sort_order, amount) VALUES (:taxForm, :status, :statusDetail, :statusDate, :memo, :includeInRefund, :owes, :paid, :includeFee, :owesFee, :paidFee, :fileType, :refund, :rebate, :completed, :deliveryContact, :secondDeliveryContact, :dateFiled, :currency, :filingType, :state, :taxYearId, :sortOrder, :amount)")
     int create(@BindBean Filing filing);
 
     @RegisterFieldMapper(Filing.class)

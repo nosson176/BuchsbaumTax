@@ -14,10 +14,10 @@ import java.util.List;
 @Dao
 public interface ContactDAO {
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO contacts (archived, zip, state, secondary_detail, main_detail, memo, contact_type, disabled, client_id) VALUES (:archived, :zip, :state, :secondaryDetail, :mainDetail, :memo, :contactType, :disabled, :clientId)")
+    @SqlUpdate("INSERT INTO contacts (client_id, contact_type, memo, main_detail, secondary_detail, state, zip, enabled, archived) VALUES (:clientId, :contactType, :memo, :mainDetail, :secondaryDetail, :state, :zip, :enabled, :archived)")
     int create(@BindBean Contact contact);
 
-    @SqlUpdate("UPDATE contacts SET archived = :archived, zip = :zip, secondary_detail = :secondaryDetail, main_detail = :mainDetail, memo = :memo, contact_type = :contactType, disabled = :disabled, client_id = :clientId WHERE id = :id")
+    @SqlUpdate("UPDATE contacts SET client_id = :clientId, memo = :memo, main_detail = :mainDetail, secondary_detail = :secondaryDetail, state = :state, zip = :zip, enabled = :enabled, archived = :archived WHERE id = :id")
     void update(@BindBean Contact contact);
 
     @RegisterFieldMapper(Contact.class)
