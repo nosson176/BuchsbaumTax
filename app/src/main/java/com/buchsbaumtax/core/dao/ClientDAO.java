@@ -5,6 +5,7 @@ import com.sifradigital.framework.db.Dao;
 import org.jdbi.v3.sqlobject.config.RegisterFieldMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.customizer.Define;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
@@ -21,6 +22,14 @@ public interface ClientDAO {
     @RegisterFieldMapper(Client.class)
     @SqlQuery("SELECT * FROM clients WHERE id = :id")
     Client get(@Bind("id") int id);
+
+    @RegisterFieldMapper(Client.class)
+    @SqlQuery("SELECT DISTINCT clients.* <from> <where> ORDER BY clients.id")
+    List<Client> getFiltered(@Define("from") String from, @Define("where") String where);
+
+    @RegisterFieldMapper(Client.class)
+    @SqlQuery("SELECT * FROM clients WHERE status ~ :q OR periodical ~ :q OR last_name ~ :q OR display_name ~ :q OR display_phone ~ :q")
+    List<Client> getFiltered(@Bind("q") String q);
 
     @GetGeneratedKeys
     @SqlUpdate("INSERT INTO clients (last_name, current_status, periodical, display_name, display_phone) VALUES (:lastName, :currentStatus, :periodical, :displayName, :displayPhone)")

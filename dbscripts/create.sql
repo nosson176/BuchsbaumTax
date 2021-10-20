@@ -1,232 +1,250 @@
-CREATE TABLE clients (
-    id SERIAL PRIMARY KEY,
-    status TEXT,
-    owes_status TEXT,
-    periodical TEXT,
-    last_name TEXT,
-    archived BOOLEAN NOT NULL DEFAULT FALSE,
-    display_name TEXT,
-    display_phone TEXT,
-    created TIMESTAMPTZ DEFAULT NOW(),
-    updated TIMESTAMPTZ DEFAULT NOW()
-);
+-- CREATE TABLE clients (
+--     id SERIAL PRIMARY KEY,
+--     status TEXT,
+--     owes_status TEXT,
+--     periodical TEXT,
+--     last_name TEXT,
+--     archived BOOLEAN NOT NULL DEFAULT FALSE,
+--     display_name TEXT,
+--     display_phone TEXT,
+--     created TIMESTAMPTZ DEFAULT NOW(),
+--     updated TIMESTAMPTZ DEFAULT NOW()
+-- );
+--
+-- CREATE TABLE contacts (
+--     id SERIAL PRIMARY KEY,
+--     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
+--     contact_type TEXT,
+--     memo TEXT,
+--     main_detail TEXT,
+--     secondary_detail TEXT,
+--     state TEXT,
+--     zip TEXT,
+--     enabled BOOLEAN NOT NULL DEFAULT TRUE,
+--     archived BOOLEAN NOT NULL DEFAULT FALSE
+-- );
 
-CREATE TABLE contacts (
-    id SERIAL PRIMARY KEY,
-    client_id INTEGER REFERENCES clients ON DELETE CASCADE,
-    contact_type TEXT,
-    memo TEXT,
-    main_detail TEXT,
-    secondary_detail TEXT,
-    state TEXT,
-    zip TEXT,
-    enabled BOOLEAN NOT NULL DEFAULT TRUE,
-    archived BOOLEAN NOT NULL DEFAULT FALSE
-);
+CREATE INDEX ON contacts (client_id);
 
-CREATE TABLE exchange_rates (
-    id SERIAL PRIMARY KEY,
-    currency TEXT,
-    year TEXT,
-    show BOOLEAN NOT NULL DEFAULT TRUE,
-    rate FLOAT
-);
+-- CREATE TABLE exchange_rates (
+--     id SERIAL PRIMARY KEY,
+--     currency TEXT,
+--     year TEXT,
+--     show BOOLEAN NOT NULL DEFAULT TRUE,
+--     rate FLOAT
+-- );
+--
+-- CREATE TABLE fbar_breakdowns (
+--     id SERIAL PRIMARY KEY,
+--     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
+--     years TEXT,
+--     category TEXT,
+--     tax_group TEXT,
+--     tax_type TEXT,
+--     part TEXT,
+--     currency TEXT,
+--     frequency INTEGER,
+--     documents TEXT,
+--     description TEXT,
+--     amount FLOAT,
+--     depend TEXT,
+--     include BOOLEAN NOT NULL DEFAULT TRUE,
+--     archived BOOLEAN NOT NULL DEFAULT FALSE
+-- );
 
-CREATE TABLE fbar_breakdowns (
-    id SERIAL PRIMARY KEY,
-    client_id INTEGER REFERENCES clients ON DELETE CASCADE,
-    years TEXT,
-    category TEXT,
-    tax_group TEXT,
-    tax_type TEXT,
-    part TEXT,
-    currency TEXT,
-    frequency INTEGER,
-    documents TEXT,
-    description TEXT,
-    amount FLOAT,
-    depend TEXT,
-    include BOOLEAN NOT NULL DEFAULT TRUE,
-    archived BOOLEAN NOT NULL DEFAULT FALSE
-);
+CREATE INDEX ON fbar_breakdowns (client_id);
 
-CREATE TABLE income_breakdowns (
-    id SERIAL PRIMARY KEY,
-    client_id INTEGER REFERENCES clients ON DELETE CASCADE,
-    years TEXT,
-    category TEXT,
-    tax_group TEXT,
-    tax_type TEXT,
-    job TEXT,
-    currency TEXT,
-    frequency INTEGER,
-    documents TEXT,
-    description TEXT,
-    amount FLOAT,
-    exclusion BOOLEAN NOT NULL DEFAULT FALSE,
-    include BOOLEAN NOT NULL DEFAULT TRUE,
-    archived BOOLEAN NOT NULL DEFAULT FALSE,
-    depend TEXT
-);
+-- CREATE TABLE income_breakdowns (
+--     id SERIAL PRIMARY KEY,
+--     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
+--     years TEXT,
+--     category TEXT,
+--     tax_group TEXT,
+--     tax_type TEXT,
+--     job TEXT,
+--     currency TEXT,
+--     frequency INTEGER,
+--     documents TEXT,
+--     description TEXT,
+--     amount FLOAT,
+--     exclusion BOOLEAN NOT NULL DEFAULT FALSE,
+--     include BOOLEAN NOT NULL DEFAULT TRUE,
+--     archived BOOLEAN NOT NULL DEFAULT FALSE,
+--     depend TEXT
+-- );
 
-CREATE TABLE year_details (
-    year TEXT PRIMARY KEY,
-    deduction_married_filing_jointly INTEGER,
-    deduction_head_of_household INTEGER,
-    deduction_single_and_married_filing_separately INTEGER,
-    deduction_married_filing_jointly_amount INTEGER,
-    deduction_married_filing_separately_amount INTEGER,
-    deduction_single_and_head_of_household_amount INTEGER,
-    ceiling_single_and_head_of_household INTEGER,
-    exemption INTEGER,
-    credit_8812_annual_deduction INTEGER,
-    ceiling_self_employment INTEGER,
-    exclusion_2555 INTEGER,
-    foreign_annual TEXT,
-    foreign_monthly TEXT,
-    foreign_secondary_annual TEXT,
-    foreign_secondary_monthly TEXT,
-    dollar_annual TEXT,
-    dollar_monthly TEXT,
-    dollar_secondary_annual TEXT,
-    dollar_secondary_monthly TEXT,
-    additional_8812_child_credit TEXT,
-    ceiling_married_filing_jointly INTEGER,
-    ceiling_married_filing_separately INTEGER,
-    show BOOLEAN NOT NULL DEFAULT TRUE,
-    created TIMESTAMPTZ DEFAULT now(),
-    updated TIMESTAMPTZ DEFAULT now()
-);
+CREATE INDEX ON income_breakdowns (client_id);
 
-CREATE TABLE tax_years (
-    id SERIAL PRIMARY KEY,
-    client_id INTEGER REFERENCES clients ON DELETE CASCADE,
-    year TEXT REFERENCES year_details ON DELETE CASCADE,
-    archived BOOLEAN NOT NULL DEFAULT FALSE,
-    irs_history BOOLEAN NOT NULL DEFAULT FALSE
-);
+-- CREATE TABLE year_details (
+--     year TEXT PRIMARY KEY,
+--     deduction_married_filing_jointly INTEGER,
+--     deduction_head_of_household INTEGER,
+--     deduction_single_and_married_filing_separately INTEGER,
+--     deduction_married_filing_jointly_amount INTEGER,
+--     deduction_married_filing_separately_amount INTEGER,
+--     deduction_single_and_head_of_household_amount INTEGER,
+--     ceiling_single_and_head_of_household INTEGER,
+--     exemption INTEGER,
+--     credit_8812_annual_deduction INTEGER,
+--     ceiling_self_employment INTEGER,
+--     exclusion_2555 INTEGER,
+--     foreign_annual TEXT,
+--     foreign_monthly TEXT,
+--     foreign_secondary_annual TEXT,
+--     foreign_secondary_monthly TEXT,
+--     dollar_annual TEXT,
+--     dollar_monthly TEXT,
+--     dollar_secondary_annual TEXT,
+--     dollar_secondary_monthly TEXT,
+--     additional_8812_child_credit TEXT,
+--     ceiling_married_filing_jointly INTEGER,
+--     ceiling_married_filing_separately INTEGER,
+--     show BOOLEAN NOT NULL DEFAULT TRUE,
+--     created TIMESTAMPTZ DEFAULT now(),
+--     updated TIMESTAMPTZ DEFAULT now()
+-- );
 
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    first_name TEXT,
-    last_name TEXT,
-    username TEXT,
-    send_login_notifications BOOLEAN NOT NULL DEFAULT FALSE,
-    notify_of_logins BOOLEAN NOT NULL DEFAULT FALSE,
-    seconds_in_day INTEGER,
-    allow_texting BOOLEAN NOT NULL DEFAULT FALSE,
-    selectable BOOLEAN NOT NULL DEFAULT FALSE,
-    user_type TEXT,
-    password TEXT,
-    created TIMESTAMPTZ DEFAULT now(),
-    updated TIMESTAMPTZ DEFAULT now()
-);
+-- CREATE TABLE tax_years (
+--     id SERIAL PRIMARY KEY,
+--     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
+--     year TEXT REFERENCES year_details ON DELETE CASCADE,
+--     archived BOOLEAN NOT NULL DEFAULT FALSE,
+--     irs_history BOOLEAN NOT NULL DEFAULT FALSE
+-- );
 
-CREATE TABLE sessions (
-    token TEXT PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users ON DELETE CASCADE,
-    created TIMESTAMPTZ DEFAULT NOW()
-);
+CREATE INDEX ON tax_years (client_id);
 
-CREATE TABLE logs (
-    id SERIAL PRIMARY KEY,
-    client_id INTEGER REFERENCES clients ON DELETE CASCADE,
-    years TEXT,
-    alarm_user_id INTEGER REFERENCES users ON DELETE CASCADE,
-    alert BOOLEAN NOT NULL DEFAULT FALSE,
-    alarm_complete BOOLEAN NOT NULL DEFAULT FALSE,
-    alarm_date DATE,
-    alarm_time TEXT,
-    log_date DATE,
-    priority INTEGER,
-    note TEXT,
-    seconds_spent INTEGER,
-    archived BOOLEAN NOT NULL DEFAULT FALSE,
-    alerted BOOLEAN NOT NULL DEFAULT FALSE
-);
+-- CREATE TABLE users (
+--     id SERIAL PRIMARY KEY,
+--     first_name TEXT,
+--     last_name TEXT,
+--     username TEXT,
+--     send_login_notifications BOOLEAN NOT NULL DEFAULT FALSE,
+--     notify_of_logins BOOLEAN NOT NULL DEFAULT FALSE,
+--     seconds_in_day INTEGER,
+--     allow_texting BOOLEAN NOT NULL DEFAULT FALSE,
+--     selectable BOOLEAN NOT NULL DEFAULT FALSE,
+--     user_type TEXT,
+--     password TEXT,
+--     created TIMESTAMPTZ DEFAULT now(),
+--     updated TIMESTAMPTZ DEFAULT now()
+-- );
 
-CREATE TABLE tax_personals (
-    id SERIAL PRIMARY KEY,
-    client_id INTEGER REFERENCES clients ON DELETE CASCADE,
-    category TEXT,
-    include BOOLEAN NOT NULL DEFAULT TRUE,
-    language TEXT,
-    relation TEXT,
-    first_name TEXT,
-    middle_initial TEXT,
-    last_name TEXT,
-    date_of_birth DATE,
-    ssn TEXT,
-    informal TEXT,
-    archived BOOLEAN NOT NULL DEFAULT FALSE
-);
+-- CREATE TABLE sessions (
+--     token TEXT PRIMARY KEY,
+--     user_id INTEGER NOT NULL REFERENCES users ON DELETE CASCADE,
+--     created TIMESTAMPTZ DEFAULT NOW()
+-- );
 
-CREATE TABLE filings (
-    id SERIAL PRIMARY KEY,
-    tax_form TEXT,
-    status TEXT,
-    status_detail TEXT,
-    status_date DATE,
-    memo TEXT,
-    include_in_refund BOOLEAN NOT NULL DEFAULT FALSE,
-    owes FLOAT,
-    paid FLOAT,
-    include_fee BOOLEAN NOT NULL DEFAULT FALSE,
-    owes_fee FLOAT,
-    paid_fee FLOAT,
-    file_type TEXT,
-    refund FLOAT,
-    rebate FLOAT,
-    completed BOOLEAN NOT NULL DEFAULT FALSE,
-    delivery_contact TEXT,
-    second_delivery_contact TEXT,
-    date_filed DATE,
-    currency TEXT,
-    filing_type TEXT,
-    state TEXT,
-    tax_year_id INTEGER,
-    sort_order INTEGER,
-    amount FLOAT
-);
+-- CREATE TABLE logs (
+--     id SERIAL PRIMARY KEY,
+--     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
+--     years TEXT,
+--     alarm_user_id INTEGER REFERENCES users ON DELETE CASCADE,
+--     alert BOOLEAN NOT NULL DEFAULT FALSE,
+--     alarm_complete BOOLEAN NOT NULL DEFAULT FALSE,
+--     alarm_date DATE,
+--     alarm_time TEXT,
+--     log_date DATE,
+--     priority INTEGER,
+--     note TEXT,
+--     seconds_spent INTEGER,
+--     archived BOOLEAN NOT NULL DEFAULT FALSE,
+--     alerted BOOLEAN NOT NULL DEFAULT FALSE
+-- );
 
-CREATE TABLE fees (
-    id SERIAL PRIMARY KEY,
-    client_id INTEGER REFERENCES clients ON DELETE CASCADE,
-    year TEXT,
-    status TEXT,
-    status_detail TEXT,
-    fee_type TEXT,
-    manual_amount FLOAT,
-    paid_amount FLOAT,
-    include BOOLEAN NOT NULL DEFAULT TRUE,
-    rate FLOAT,
-    date_fee DATE,
-    sum BOOLEAN NOT NULL DEFAULT FALSE,
-    archived BOOLEAN NOT NULL DEFAULT FALSE
-);
+CREATE INDEX ON logs (client_id);
 
-CREATE TABLE smartviews (
-    id SERIAL PRIMARY KEY,
-    user_name TEXT,
-    user_id INTEGER REFERENCES users ON DELETE CASCADE,
-    name TEXT,
-    sort_number INTEGER,
-    archived BOOLEAN NOT NULL DEFAULT FALSE,
-    client_count INTEGER,
-    created TIMESTAMPTZ DEFAULT now(),
-    updated TIMESTAMPTZ DEFAULT now()
-);
+-- CREATE TABLE tax_personals (
+--     id SERIAL PRIMARY KEY,
+--     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
+--     category TEXT,
+--     include BOOLEAN NOT NULL DEFAULT TRUE,
+--     language TEXT,
+--     relation TEXT,
+--     first_name TEXT,
+--     middle_initial TEXT,
+--     last_name TEXT,
+--     date_of_birth DATE,
+--     ssn TEXT,
+--     informal TEXT,
+--     archived BOOLEAN NOT NULL DEFAULT FALSE
+-- );
 
-CREATE TABLE smartview_lines (
-    id SERIAL PRIMARY KEY,
-    created TIMESTAMPTZ DEFAULT now(),
-    updated TIMESTAMPTZ DEFAULT now(),
-    smartview_id INTEGER REFERENCES smartviews ON DELETE CASCADE,
-    query INTEGER,
-    class_to_join TEXT,
-    field_to_search TEXT,
-    search_value TEXT
-);
+CREATE INDEX ON tax_personals (client_id);
+
+-- CREATE TABLE filings (
+--     id SERIAL PRIMARY KEY,
+--     tax_form TEXT,
+--     status TEXT,
+--     status_detail TEXT,
+--     status_date DATE,
+--     memo TEXT,
+--     include_in_refund BOOLEAN NOT NULL DEFAULT FALSE,
+--     owes FLOAT,
+--     paid FLOAT,
+--     include_fee BOOLEAN NOT NULL DEFAULT FALSE,
+--     owes_fee FLOAT,
+--     paid_fee FLOAT,
+--     file_type TEXT,
+--     refund FLOAT,
+--     rebate FLOAT,
+--     completed BOOLEAN NOT NULL DEFAULT FALSE,
+--     delivery_contact TEXT,
+--     second_delivery_contact TEXT,
+--     date_filed DATE,
+--     currency TEXT,
+--     filing_type TEXT,
+--     state TEXT,
+--     tax_year_id INTEGER,
+--     sort_order INTEGER,
+--     amount FLOAT
+-- );
+
+CREATE INDEX ON filings (tax_year_id);
+
+-- CREATE TABLE fees (
+--     id SERIAL PRIMARY KEY,
+--     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
+--     year TEXT,
+--     status TEXT,
+--     status_detail TEXT,
+--     fee_type TEXT,
+--     manual_amount FLOAT,
+--     paid_amount FLOAT,
+--     include BOOLEAN NOT NULL DEFAULT TRUE,
+--     rate FLOAT,
+--     date_fee DATE,
+--     sum BOOLEAN NOT NULL DEFAULT FALSE,
+--     archived BOOLEAN NOT NULL DEFAULT FALSE
+-- );
+
+CREATE INDEX ON fees (client_id);
+
+-- CREATE TABLE smartviews (
+--     id SERIAL PRIMARY KEY,
+--     user_name TEXT,
+--     user_id INTEGER REFERENCES users ON DELETE CASCADE,
+--     name TEXT,
+--     sort_number INTEGER,
+--     archived BOOLEAN NOT NULL DEFAULT FALSE,
+--     client_count INTEGER,
+--     created TIMESTAMPTZ DEFAULT now(),
+--     updated TIMESTAMPTZ DEFAULT now()
+-- );
+
+-- CREATE TABLE smartview_lines (
+--     id SERIAL PRIMARY KEY,
+--     created TIMESTAMPTZ DEFAULT now(),
+--     updated TIMESTAMPTZ DEFAULT now(),
+--     smartview_id INTEGER REFERENCES smartviews ON DELETE CASCADE,
+--     query INTEGER,
+--     class_to_join TEXT,
+--     field_to_search TEXT,
+--     search_value TEXT,
+--     operator TEXT,
+--     type TEXT
+-- );
 
 -- CREATE TABLE textees (
 --     id SERIAL PRIMARY KEY,
