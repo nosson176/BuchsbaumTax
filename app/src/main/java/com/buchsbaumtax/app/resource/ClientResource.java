@@ -23,10 +23,7 @@ public class ClientResource {
     }
 
     @GET
-    public List<Client> getAllClients(@QueryParam("smartview") Integer smartviewId, @QueryParam("q") String q) {
-        if (smartviewId != null) {
-            return new ClientCRUD().getFiltered(smartviewId);
-        }
+    public List<Client> getAllClients(@QueryParam("q") String q) {
         if (q != null) {
             return new ClientCRUD().getFiltered(q);
         }
