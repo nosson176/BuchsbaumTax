@@ -478,21 +478,18 @@ public class Migration {
 
             map.put("smartViewId", smartViewIds.get(row[0]));
             map.put("query", castToInt(row[1]));
-
             String[] classMethod = new String[]{null, null};
             if (row[2] != null && !row[2].equals("")) {
                 classMethod = row[2].split("::");
             }
-
             if (classMethod.length == 2) {
                 map.put("classToJoin", classMethod[0]);
                 map.put("fieldToSearch", classMethod[1]);
             }
             else {
-                map.put("classToJoin", null);
+                map.put("classToJoin", classMethod[0]);
                 map.put("fieldToSearch", null);
             }
-
             map.put("searchValue", row[3]);
 
             smartViewLineDAO.create(map);
