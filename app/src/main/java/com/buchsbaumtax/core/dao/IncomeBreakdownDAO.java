@@ -15,10 +15,10 @@ import java.util.List;
 public interface IncomeBreakdownDAO {
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO income_breakdowns (depend, include, client_id, exclusion, amount, description, documents, frequency, currency, job, tax_type, tax_group, category, archived) VALUES (:depend, :include, :clientId, :exclusion, :amount, :description, :documents, :frequency, :currency, :job, :taxType, :taxGroup, :category, :archived)")
+    @SqlUpdate("INSERT INTO income_breakdowns (client_id, years, category, tax_group, tax_type, job, currency, frequency, documents, description, amount, exclusion, include, archived, depend) VALUES (:clientId, :years, :category, :taxGroup, :taxType, :job, :currency, :frequency, :documents, :description, :amount, :exclusion, :include, :archived, :depend)")
     int create(@BindBean IncomeBreakdown incomeBreakdown);
 
-    @SqlUpdate("UPDATE income_breakdowns SET depend = :depend, include = :include, client_id = :clientId, exclusion = :exclusion, amount = :amount, description = :description, documents = :documents, frequency = :frequency, currency = :currency, job = :job, tax_type = :taxType, tax_group = :taxGroup, category = :category, archived = :archived WHERE id = :id")
+    @SqlUpdate("UPDATE income_breakdowns SET client_id = :clientId, years = :years, category = :category, tax_group = :taxGroup, tax_type = :taxType, job = :job, currency = :currency, frequency = :frequency, documents = :documents, description = :description, amount = :amount, exclusion = :exclusion, include = :include, archived = :archived, depend = :depend WHERE id = :id")
     void update(@BindBean IncomeBreakdown incomeBreakdown);
 
     @RegisterFieldMapper(IncomeBreakdown.class)

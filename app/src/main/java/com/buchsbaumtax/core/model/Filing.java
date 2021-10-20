@@ -9,8 +9,8 @@ public class Filing {
     private boolean completed;
     private int taxYearId;
     private Date dateFiled;
-    private int secondDeliveryContactId;
-    private int deliveryContactId;
+    private String secondDeliveryContact;
+    private String deliveryContact;
     private double rebate;
     private double refund;
     private boolean includeFee;
@@ -23,11 +23,12 @@ public class Filing {
     private String state;
     private String filingType;
     private Date statusDate;
-    private String taxYear;
     private String fileType;
     private String statusDetail;
     private String status;
     private String taxForm;
+    private int sortOrder;
+    private double amount;
 
     public String getCurrency() {
         return currency;
@@ -45,12 +46,12 @@ public class Filing {
         return dateFiled;
     }
 
-    public int getSecondDeliveryContactId() {
-        return secondDeliveryContactId;
+    public String getSecondDeliveryContact() {
+        return secondDeliveryContact;
     }
 
-    public int getDeliveryContactId() {
-        return deliveryContactId;
+    public String getDeliveryContact() {
+        return deliveryContact;
     }
 
     public double getRebate() {
@@ -101,9 +102,6 @@ public class Filing {
         return statusDate;
     }
 
-    public String getTaxYear() {
-        return taxYear;
-    }
 
     public String getFileType() {
         return fileType;
@@ -119,5 +117,13 @@ public class Filing {
 
     public String getTaxForm() {
         return taxForm;
+    }
+
+    public int getSortOrder() {
+        return sortOrder;
+    }
+
+    public double getAmount() {
+        return amount;
     }
 }

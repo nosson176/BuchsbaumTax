@@ -32,10 +32,10 @@ public interface ClientDAO {
     List<Client> getFiltered(@Bind("q") String q);
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO clients (last_name, current_status, periodical, display_name, display_phone) VALUES (:lastName, :currentStatus, :periodical, :displayName, :displayPhone)")
+    @SqlUpdate("INSERT INTO clients (status, owes_status, periodical, last_name, archived, display_name, display_phone) VALUES (:status, :owesStatus, :periodical, :lastName, :archived, :displayName, :displayPhone)")
     int create(@BindBean Client client);
 
-    @SqlUpdate("UPDATE clients SET last_name = :lastName, current_status = :currentStatus, periodical = :periodical, display_name = :displayName, display_phone = :displayPhone WHERE id = :id")
+    @SqlUpdate("UPDATE clients SET status = :status, owes_status = :owesStatus, periodical = :periodical, last_name = :lastName, archived = :archived, display_name = :displayName, display_phone = :displayPhone, updated = now() WHERE id = :id")
     void update(@BindBean Client client);
 
     @SqlUpdate("DELETE FROM clients WHERE id = :id")

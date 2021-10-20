@@ -15,7 +15,7 @@ import java.util.List;
 public interface TaxYearDAO {
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO tax_years (client_id, year_detail_id, archived, year_name, irs_history) VALUES (:clientId, :yearDetailId, :archived, :yearName, :irsHistory)")
+    @SqlUpdate("INSERT INTO tax_years (client_id, year, archived, irs_history) VALUES (:clientId, :year, :archived, :irsHistory)")
     int create(@BindBean TaxYear taxYear, @Bind("clientId") int clientId);
 
     @RegisterFieldMapper(TaxYear.class)

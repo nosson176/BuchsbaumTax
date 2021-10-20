@@ -1,5 +1,7 @@
 package com.buchsbaumtax.core.model;
 
+import java.util.Date;
+
 public class Client {
 
     private int id;
@@ -10,6 +12,9 @@ public class Client {
     private String periodical;
     private String displayName;
     private String displayPhone;
+    private Date created;
+    private Date updated;
+
 
     public int getId() {
         return id;
@@ -49,5 +54,13 @@ public class Client {
 
     public void setDisplayPhone(String displayPhone) {
         this.displayPhone = displayPhone;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public Date getUpdated() {
+        return updated;
     }
 }

@@ -2,25 +2,25 @@ package com.buchsbaumtax.core.model;
 
 public class TaxYear {
     private int id;
-    private int yearDetailId;
+    private int clientId;
+    private String year;
     private boolean archived;
-    private String yearName;
     private boolean irsHistory;
 
     public int getId() {
         return id;
     }
 
-    public int getYearDetailId() {
-        return yearDetailId;
+    public int getClientId() {
+        return clientId;
+    }
+
+    public String getYear() {
+        return year;
     }
 
     public boolean isArchived() {
         return archived;
-    }
-
-    public String getYearName() {
-        return yearName;
     }
 
     public boolean isIrsHistory() {
