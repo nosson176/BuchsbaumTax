@@ -11,6 +11,18 @@
       "Allow Title Setting": false,
       "Name": "${project_name}-app-${environment_name}",
       "Guid": "${project_name}-app-${environment_name}"
+    },
+    {
+      "Tags": [
+        "${project_name}"
+      ],
+      "Working Directory": "\/Users\/shuie",
+      "Command": "ssh -i dev\/certificates\/${key_name}.pem ubuntu@${web_ip}",
+      "Custom Command": "Yes",
+      "Sync Title": true,
+      "Allow Title Setting": false,
+      "Name": "${project_name}-web-${environment_name}",
+      "Guid": "${project_name}-web-${environment_name}"
     }
   ]
 }

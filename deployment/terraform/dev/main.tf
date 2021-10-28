@@ -28,16 +28,26 @@ module "app" {
   ubuntu_ami = "ami-0b063c60b220a0574" // Ubuntu 20.04
 }
 
+module "web" {
+  source = "github.com/SifraDigital/DevOpsCommon//terraform/modules/web"
+  context = local.context
+
+  network = module.network
+  ubuntu_ami = "ami-0b063c60b220a0574" // Ubuntu 20.04
+}
+
+
 module "database" {
   source = "github.com/SifraDigital/DevOpsCommon//terraform/modules/database"
   context = local.context
 
-  postgres_version = "12.5"
+  postgres_version = "12.7"
 }
 
 resource "local_file" "ansible" {
   content = templatefile("../ansible.tpl", {
     app_ip = module.app.app_ip
+    web_ip = module.web.web_ip
     database_host = module.database.database_host
     database_name = module.database.database_name
     database_username = module.database.database_username
@@ -50,6 +60,7 @@ resource "local_file" "ansible" {
 resource "local_file" "iterm" {
   content = templatefile("../iterm.json", {
     app_ip = module.app.app_ip
+    web_ip = module.web.web_ip
     key_name = local.context.key_name
     project_name = local.context.project_name
     environment_name = local.context.environment_name
