@@ -4,6 +4,7 @@ import com.buchsbaumtax.core.dao.*;
 import com.buchsbaumtax.core.model.*;
 import com.sifradigital.framework.db.Database;
 
+import java.util.Date;
 import java.util.List;
 
 public class ClientData {
@@ -15,6 +16,7 @@ public class ClientData {
     private String periodical;
     private String displayName;
     private String displayPhone;
+    private Date created;
     private List<TaxYearData> taxYearData;
     private List<FbarBreakdown> fbarBreakdowns;
     private List<IncomeBreakdown> incomeBreakdowns;
@@ -30,6 +32,7 @@ public class ClientData {
         this.periodical = client.getPeriodical();
         this.displayName = client.getDisplayName();
         this.displayPhone = client.getDisplayPhone();
+        this.created = client.getCreated();
         this.taxYearData = taxYearData;
         this.fbarBreakdowns = Database.dao(FbarBreakdownDAO.class).getForClient(client.getId());
         this.incomeBreakdowns = Database.dao(IncomeBreakdownDAO.class).getForClient(client.getId());
@@ -64,6 +67,10 @@ public class ClientData {
 
     public String getDisplayPhone() {
         return displayPhone;
+    }
+
+    public Date getCreated() {
+        return created;
     }
 
     public List<TaxYearData> getTaxYears() {

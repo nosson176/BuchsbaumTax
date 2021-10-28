@@ -633,6 +633,20 @@ public class Migration {
         }
     }
 
+    private void setClientCreated() {
+        ClientDAO clientDAO = handle.attach(ClientDAO.class);
+        LogDAO logDAO = handle.attach(LogDAO.class);
+        List<Client> clients = clientDAO.getAll();
+
+        for (Client client : clients) {
+            Date firstLog = logDAO.getForClient(client.getId()).stream().map(Log::getLogDate).filter(Objects::nonNull).min(Date::compareTo).orElse(null);
+            if (firstLog != null) {
+                client.setCreated(firstLog);
+                clientDAO.update(client);
+            }
+        }
+    }
+
     private boolean castToBoolean(String str) {
         return str != null && (str.equals("1") || str.equalsIgnoreCase("true") || str.equalsIgnoreCase("yes"));
     }
@@ -723,7 +737,7 @@ public class Migration {
         @SqlQuery("SELECT * FROM clients WHERE id = :id")
         Client get(@Bind("id") int id);
 
-        @SqlUpdate("UPDATE clients SET status = :status, owes_status = :owesStatus, periodical = :periodical, last_name = last_name, archived = :archived, display_name = :displayName, display_phone = :displayPhone WHERE id = :id")
+        @SqlUpdate("UPDATE clients SET status = :status, owes_status = :owesStatus, periodical = :periodical, last_name = last_name, archived = :archived, display_name = :displayName, display_phone = :displayPhone, created = :created WHERE id = :id")
         void update(@BindBean Client client);
     }
 
@@ -784,6 +798,10 @@ public class Migration {
     private interface LogDAO {
         @SqlUpdate("INSERT INTO logs (client_id, years, alarm_user_name, alarm_user_id, alert, alarm_complete, alarm_date, alarm_time, log_date, priority, note, seconds_spent, archived) VALUES (:clientId, :years, :alarmUserName, :alarmUserId, :alert, :alarmComplete, :alarmDate, :alarmTime, :logDate, :priority, :note, :secondsSpent, :archived)")
         void create(@BindMap Map<String, ?> log);
+
+        @RegisterFieldMapper(Log.class)
+        @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId")
+        List<Log> getForClient(@Bind("clientId") int clientId);
     }
 
     private interface FilingDAO {
@@ -838,19 +856,19 @@ public class Migration {
         System.out.println("Clients uploaded");
 
         System.out.println("Uploading contacts...");
-       List<String[]> contacts = migration.parseCSV(root + "contacts.csv");
-       migration.csvToContact(contacts);
-       System.out.println("Contacts completed.");
+        List<String[]> contacts = migration.parseCSV(root + "contacts.csv");
+        migration.csvToContact(contacts);
+        System.out.println("Contacts completed.");
 
-       System.out.println("Uploading exchange rates...");
-       List<String[]> exchangeRates = migration.parseCSV(root + "exchange_rates.csv");
-       migration.csvToExchangeRate(exchangeRates);
-       System.out.println("Exchange rates completed.");
+        System.out.println("Uploading exchange rates...");
+        List<String[]> exchangeRates = migration.parseCSV(root + "exchange_rates.csv");
+        migration.csvToExchangeRate(exchangeRates);
+        System.out.println("Exchange rates completed.");
 
-       System.out.println("Uploading fbar breakdowns...");
-       List<String[]> fbarBreakdowns = migration.parseCSV(root + "fbar_breakdowns.csv");
-       migration.csvToFbarBreakdown(fbarBreakdowns);
-       System.out.println("Fbar breakdowns completed.");
+        System.out.println("Uploading fbar breakdowns...");
+        List<String[]> fbarBreakdowns = migration.parseCSV(root + "fbar_breakdowns.csv");
+        migration.csvToFbarBreakdown(fbarBreakdowns);
+        System.out.println("Fbar breakdowns completed.");
 
         System.out.println("Uploading income breakdowns...");
         List<String[]> incomeBreakdowns = migration.parseCSV(root + "inc_breakdowns.csv");
@@ -1089,5 +1107,7 @@ public class Migration {
         List<String[]> smartViewLines = migration.parseCSV(root + "smartview_lines.csv");
         migration.csvToSmartViewLines(smartViewLines);
         System.out.println("Smartview lines completed.");
+
+        migration.setClientCreated();
     }
 }
