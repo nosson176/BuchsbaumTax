@@ -36,7 +36,6 @@ public class LogCRUD {
     private void validate(Log log) {
         new Validator()
                 .required(log.getClientId())
-                .after(log.getAlarmDate(), log.getLogDate())
                 .validateAndGuard();
     }
 }

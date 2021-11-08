@@ -10,7 +10,7 @@ public class Log {
     private int clientId;
     private int secondsSpent;
     private String alarmUserName;
-    private int alarmUserId;
+    private Integer alarmUserId;
     private boolean alarmComplete;
     private boolean alert;
     private Date alarmDate;
@@ -43,7 +43,7 @@ public class Log {
         return secondsSpent;
     }
 
-    public int getAlarmUserId() {
+    public Integer getAlarmUserId() {
         return alarmUserId;
     }
 
