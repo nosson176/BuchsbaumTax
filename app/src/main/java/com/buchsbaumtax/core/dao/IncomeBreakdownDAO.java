@@ -29,10 +29,6 @@ public interface IncomeBreakdownDAO {
     @SqlQuery("SELECT * FROM income_breakdowns ORDER BY id")
     List<IncomeBreakdown> getAll();
 
-    @SqlUpdate("DELETE FROM income_breakdowns WHERE id = :id")
-    void delete(@Bind("id") int id);
-
-
     @RegisterFieldMapper(IncomeBreakdown.class)
     @SqlQuery("SELECT * FROM income_breakdowns WHERE client_id = :clientId")
     List<IncomeBreakdown> getForClient(@Bind("clientId") int clientId);

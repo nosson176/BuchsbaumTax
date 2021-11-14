@@ -1,6 +1,5 @@
 package com.buchsbaumtax.app.domain;
 
-import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.ContactDAO;
 import com.buchsbaumtax.core.model.Contact;
 import com.sifradigital.framework.db.Database;
@@ -26,11 +25,6 @@ public class ContactCRUD {
         }
         Database.dao(ContactDAO.class).update(contact);
         return Database.dao(ContactDAO.class).get(contactId);
-    }
-
-    public BaseResponse delete(int contactId) {
-        Database.dao(ContactDAO.class).delete(contactId);
-        return new BaseResponse(true);
     }
 
     private void validate(Contact contact) {
