@@ -208,4 +208,23 @@ public class ClientResource {
     public Fee updateFee(@PathParam("feeId") int feeId, Fee fee) {
         return new FeeCRUD().update(fee, feeId);
     }
+
+    // checklists CRUD
+    @POST
+    @Path("/checklists")
+    public Checklist createChecklist(Checklist checklist) {
+        return new ChecklistCRUD().create(checklist);
+    }
+
+    @GET
+    @Path("/checklists")
+    public List<Checklist> getAllChecklists() {
+        return new ChecklistCRUD().getAll();
+    }
+
+    @PUT
+    @Path("/checklists/{checklistId}")
+    public Checklist updateChecklist(@PathParam("checklistId") int checklistId, Checklist checklist) {
+        return new ChecklistCRUD().update(checklistId, checklist);
+    }
 }

@@ -572,6 +572,23 @@ public class Migration {
 
     }
 
+    private void csvToChecklists(List<String[]> checklists) {
+        ChecklistDAO checklistDAO = handle.attach(ChecklistDAO.class);
+
+        for (String[] row : checklists) {
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("clientId", clientIds.get(row[0]));
+            map.put("taxYearId", taxYearIds.get(row[1]));
+            map.put("memo", row[2]);
+            map.put("sortNumber", castToInt(row[3]));
+            map.put("finished", castToBoolean(row[4]));
+            map.put("translated", castToBoolean(row[5]));
+
+            checklistDAO.create(map);
+        }
+    }
+
     private Map<String, Object> setFilingData(List<String> row) {
         Map<String, Object> map = new HashMap<>();
 
@@ -845,6 +862,11 @@ public class Migration {
         void create(@BindMap Map<String, ?> smartViewLine);
     }
 
+    private interface ChecklistDAO {
+        @SqlUpdate("INSERT INTO checklist_items (client_id, tax_year_id, memo, sort_number, finished, translated) VALUES (:clientId, :taxYearId, :memo, :sortNumber, :finished, :translated)")
+        void create(@BindMap Map<String, ?> checklist);
+    }
+
     public static void main(String[] args) {
         String root = "C:\\Users\\shalo\\Downloads\\buchsbaum-main\\buchsbaum-main\\lib\\fm_uploads\\";
         Migration migration = new Migration(root);
@@ -1107,6 +1129,11 @@ public class Migration {
         List<String[]> smartViewLines = migration.parseCSV(root + "smartview_lines.csv");
         migration.csvToSmartViewLines(smartViewLines);
         System.out.println("Smartview lines completed.");
+
+        System.out.println("Uploading checklists...");
+        List<String[]> checklists = migration.parseCSV(root + "check_lists.csv");
+        migration.csvToChecklists(checklists);
+        System.out.println("Checklists completed.");
 
         migration.setClientCreated();
     }
