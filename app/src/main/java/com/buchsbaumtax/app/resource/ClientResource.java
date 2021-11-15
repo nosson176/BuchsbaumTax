@@ -190,4 +190,22 @@ public class ClientResource {
         return new FilingCRUD().delete(filingId);
     }
 
+    // fees CRUD
+    @POST
+    @Path("/fees")
+    public Fee createFee(Fee fee) {
+        return new FeeCRUD().create(fee);
+    }
+
+    @GET
+    @Path("/fees")
+    public List<Fee> getAllFees() {
+        return new FeeCRUD().getAll();
+    }
+
+    @PUT
+    @Path("/fees/{feeId}")
+    public Fee updateFee(@PathParam("feeId") int feeId, Fee fee) {
+        return new FeeCRUD().update(fee, feeId);
+    }
 }
