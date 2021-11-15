@@ -1,6 +1,5 @@
 package com.buchsbaumtax.app.domain;
 
-import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.TaxPersonalDAO;
 import com.buchsbaumtax.core.model.TaxPersonal;
 import com.sifradigital.framework.db.Database;
@@ -27,11 +26,6 @@ public class TaxPersonalCRUD {
         }
         Database.dao(TaxPersonalDAO.class).update(taxPersonal);
         return Database.dao(TaxPersonalDAO.class).get(taxPersonalId);
-    }
-
-    public BaseResponse delete(int taxPersonalId) {
-        Database.dao(TaxPersonalDAO.class).delete(taxPersonalId);
-        return new BaseResponse(true);
     }
 
     private void validate(TaxPersonal taxPersonal) {

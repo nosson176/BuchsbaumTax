@@ -28,9 +28,6 @@ public interface TaxPersonalDAO {
     @SqlQuery("SELECT * FROM tax_personals ORDER BY id")
     List<TaxPersonal> getAll();
 
-    @SqlUpdate("DELETE FROM tax_personals WHERE id = :id")
-    void delete(@Bind("id") int id);
-
 
     @RegisterFieldMapper(TaxPersonal.class)
     @SqlQuery("SELECT * FROM tax_personals WHERE client_id = :clientId")

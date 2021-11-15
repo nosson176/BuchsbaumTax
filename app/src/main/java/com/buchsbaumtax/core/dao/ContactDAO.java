@@ -28,9 +28,6 @@ public interface ContactDAO {
     @SqlQuery("SELECT * FROM contacts ORDER BY id")
     List<Contact> getAll();
 
-    @SqlUpdate("DELETE FROM contacts WHERE id = :id")
-    void delete(@Bind("id") int id);
-
 
     @RegisterFieldMapper(Contact.class)
     @SqlQuery("SELECT * FROM contacts WHERE client_id = :clientId")
