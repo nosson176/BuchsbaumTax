@@ -16,6 +16,7 @@ public class FbarBreakdown {
     private boolean archived;
     private int clientId;
     private String years;
+    private Double amountUSD;
 
     public int getId() {
         return id;
@@ -75,5 +76,13 @@ public class FbarBreakdown {
 
     public String getYears() {
         return years;
+    }
+
+    public Double getAmountUSD() {
+        return amountUSD;
+    }
+
+    public void setAmountUSD(Double amountUSD) {
+        this.amountUSD = amountUSD;
     }
 }
