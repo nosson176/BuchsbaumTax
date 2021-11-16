@@ -9,9 +9,15 @@ public class User implements Principal {
     private String firstName;
     private String lastName;
     private String username;
+    private boolean sendLoginNotifications;
+    private boolean notifyOfLogins;
+    private Integer secondsInDay;
+    private boolean allowTexting;
+    private boolean selectable;
     private String userType;
     private Date created;
     private Date updated;
+    private String password;
 
     public int getId() {
         return id;
@@ -29,6 +35,26 @@ public class User implements Principal {
         return username;
     }
 
+    public boolean isSendLoginNotifications() {
+        return sendLoginNotifications;
+    }
+
+    public boolean isNotifyOfLogins() {
+        return notifyOfLogins;
+    }
+
+    public Integer getSecondsInDay() {
+        return secondsInDay;
+    }
+
+    public boolean isAllowTexting() {
+        return allowTexting;
+    }
+
+    public boolean isSelectable() {
+        return selectable;
+    }
+
     public String getUserType() {
         return userType;
     }
@@ -39,6 +65,14 @@ public class User implements Principal {
 
     public Date getUpdated() {
         return updated;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override

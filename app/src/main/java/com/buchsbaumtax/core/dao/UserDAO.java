@@ -23,11 +23,14 @@ public interface UserDAO {
     User get(@Bind("id") int id);
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO users (first_name, last_name, username, user_type, created, updated) VALUES (:firstName, :lastName, :username, :userType,:created, :updated)")
+    @SqlUpdate("INSERT INTO users (first_name, last_name, username, send_login_notifications, notify_of_logins, seconds_in_day, allow_texting, selectable, user_type, password) VALUES (:firstName, :lastName, :username, :sendLoginNotifications, :notifyOfLogins, :secondsInDay, :allowTexting, :selectable, :userType, :password)")
     int create(@BindBean User user);
 
-    @SqlUpdate("UPDATE users SET first_name = :firstName, last_name = :lastName, username = :username, user_type = :userType, updated = now() WHERE id = :id")
+    @SqlUpdate("UPDATE users SET first_name = :firstName, last_name = :lastName, username = :username, send_login_notifications = :sendLoginNotifications, notify_of_logins = :notifyOfLogins, seconds_in_day = :secondsInDay, allow_texting = :allowTexting, selectable = :selectable, user_type = :userType, updated = now() WHERE id = :id")
     void update(@BindBean User user);
+
+    @SqlUpdate("UPDATE users SET password = :password WHERE id = :id")
+    void updatePassword(@Bind("id") int id, @Bind("password") String password);
 
     @SqlUpdate("DELETE FROM users WHERE id = :id")
     void delete(@Bind("id") int id);
