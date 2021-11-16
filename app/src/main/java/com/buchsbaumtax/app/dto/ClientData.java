@@ -23,6 +23,8 @@ public class ClientData {
     private List<Log> logs;
     private List<Contact> contacts;
     private List<TaxPersonal> taxPersonals;
+    private List<Fee> fees;
+    private List<Checklist> checklists;
 
     public ClientData(Client client, List<TaxYearData> taxYearData) {
         this.id = client.getId();
@@ -39,6 +41,8 @@ public class ClientData {
         this.logs = Database.dao(LogDAO.class).getForClient(client.getId());
         this.contacts = Database.dao(ContactDAO.class).getForClient(client.getId());
         this.taxPersonals = Database.dao(TaxPersonalDAO.class).getForClient(client.getId());
+        this.fees = Database.dao(FeeDAO.class).getForClient(client.getId());
+        this.checklists = Database.dao(ChecklistDAO.class).getForClient(client.getId());
     }
 
     public int getId() {
@@ -95,5 +99,13 @@ public class ClientData {
 
     public List<TaxPersonal> getTaxPersonals() {
         return taxPersonals;
+    }
+
+    public List<Fee> getFees() {
+        return fees;
+    }
+
+    public List<Checklist> getChecklists() {
+        return checklists;
     }
 }
