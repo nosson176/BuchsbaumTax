@@ -617,10 +617,11 @@ public class Migration {
 
         for (Client client : clients) {
             List<TaxPersonal> taxPersonals = taxPersonalDAO.getForClient(client.getId());
+            List<Contact> contacts = contactDAO.getForClient(client.getId());
 
             DisplayFields displayFields = new DisplayFields();
             String displayName = displayFields.getDisplayName(taxPersonals);
-            String mainDetail = displayFields.getDisplayPhone(client.getId());
+            String mainDetail = displayFields.getDisplayPhone(contacts);
 
             client.setDisplayName(displayName);
             client.setDisplayPhone(mainDetail);

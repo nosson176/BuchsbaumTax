@@ -22,41 +22,41 @@ public class DisplayFields {
     }
 
     public String getDisplayName(List<TaxPersonal> taxPersonals) {
-        TaxPersonal primary = taxPersonals.stream()
-                .filter(tp -> Objects.nonNull(tp.getCategory()))
-                .filter(tp -> tp.getCategory().equals("PRI."))
-                .findFirst()
-                .orElse(null);
-        TaxPersonal secondary = taxPersonals.stream()
-                .filter(tp -> Objects.nonNull(tp.getCategory()))
-                .filter(tp -> tp.getCategory().equals("SEC."))
-                .findFirst()
-                .orElse(null);
+        TaxPersonal primary = getByCategory(taxPersonals, TaxPersonal.CATEGORY_PRIMARY);
+        TaxPersonal secondary = getByCategory(taxPersonals, TaxPersonal.CATEGORY_SECONDARY);
 
-        boolean primaryExists = primary != null && primary.getFirstName() != null;
-        boolean secondaryExists = secondary != null && secondary.getFirstName() != null;
+        boolean primaryExists = primary != null && (primary.getInformal() != null || primary.getFirstName() != null);
+        boolean secondaryExists = secondary != null && (secondary.getInformal() != null || secondary.getFirstName() != null);
         if (primaryExists && secondaryExists) {
-            return primary.getFirstName() + " - " + secondary.getFirstName();
+            String primaryName = primary.getInformal() != null ? primary.getInformal() : primary.getFirstName();
+            String secondaryName = secondary.getInformal() != null ? secondary.getInformal() : secondary.getFirstName();
+            return primaryName + " - " + secondaryName;
         }
         else if (primaryExists) {
-            return primary.getFirstName();
+            return primary.getInformal() != null ? primary.getInformal() : primary.getFirstName();
         }
         return null;
     }
 
     public void setDisplayPhone(int clientId) {
         Client client = Database.dao(ClientDAO.class).get(clientId);
-        String displayPhone = getDisplayPhone(clientId);
+        List<Contact> contacts = Database.dao(ContactDAO.class).getForClient(clientId);
+        String displayPhone = getDisplayPhone(contacts);
         client.setDisplayPhone(displayPhone);
         Database.dao(ClientDAO.class).update(client);
     }
 
-    public String getDisplayPhone(int clientId) {
-        List<Contact> contacts = Database.dao(ContactDAO.class).getForClient(clientId);
+    public String getDisplayPhone(List<Contact> contacts) {
         return contacts.stream()
-                .filter(Objects::nonNull)
                 .findFirst()
                 .map(Contact::getMainDetail)
+                .orElse(null);
+    }
+
+    private TaxPersonal getByCategory(List<TaxPersonal> taxPersonals, String category) {
+        return taxPersonals.stream()
+                .filter(tp -> Objects.nonNull(tp.getCategory()) && tp.getCategory().equals(category))
+                .findFirst()
                 .orElse(null);
     }
 }
