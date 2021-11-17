@@ -1,9 +1,11 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.config.Role;
-import com.buchsbaumtax.app.domain.UserCRUD;
+import com.buchsbaumtax.app.domain.user.TimeSlipCRUD;
+import com.buchsbaumtax.app.domain.user.UserCRUD;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.UpdatePasswordRequest;
+import com.buchsbaumtax.core.model.TimeSlip;
 import com.buchsbaumtax.core.model.User;
 import com.sifradigital.framework.auth.Authenticated;
 
@@ -44,5 +46,30 @@ public class UserResource {
     @Path("/{userId}/password")
     public BaseResponse updatePassword(@PathParam("userId") int userId, UpdatePasswordRequest updatePasswordRequest) {
         return new UserCRUD().updatePassword(userId, updatePasswordRequest);
+    }
+
+    @GET
+    @Path("/current/time-slips")
+    public List<TimeSlip> getUserTimeSlips(@Authenticated User user) {
+        return new TimeSlipCRUD().getUserTimeSlips(user);
+    }
+
+    @GET
+    @RolesAllowed(Role.ADMIN)
+    @Path("/time-slips")
+    public List<TimeSlip> getAllTimeSlips() {
+        return new TimeSlipCRUD().getAllTimeSlips();
+    }
+
+    @POST
+    @Path("/current/time-slips/start")
+    public TimeSlip clockIn(@Authenticated User user) {
+        return new TimeSlipCRUD().clockIn(user);
+    }
+
+    @PUT
+    @Path("/current/time-slips/end")
+    public TimeSlip clockOut(@Authenticated User user) {
+        return new TimeSlipCRUD().clockOut(user);
     }
 }

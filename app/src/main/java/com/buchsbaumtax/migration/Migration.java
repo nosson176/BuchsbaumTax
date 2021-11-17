@@ -22,6 +22,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Migration {
@@ -597,6 +599,29 @@ public class Migration {
         }
     }
 
+    private void csvToTimeSlips(List<String[]> timeSlips) {
+        TimeSlipDAO timeSlipDAO = handle.attach(TimeSlipDAO.class);
+        UserDAO userDAO = handle.attach(UserDAO.class);
+
+        for (String[] row : timeSlips) {
+            Map<String, Object> map = new HashMap<>();
+            User user = userDAO.getByUsername(row[0]);
+
+            if (user != null) {
+                map.put("userId", userDAO.getByUsername(row[0]).getId());
+            }
+            else {
+                map.put("userId", null);
+            }
+            map.put("memo", row[1]);
+            map.put("timeIn", parseTime(row[2]));
+            map.put("timeOut", parseTime(row[3]));
+
+            timeSlipDAO.create(map);
+        }
+
+    }
+
     private Map<String, Object> setFilingData(List<String> row) {
         Map<String, Object> map = new HashMap<>();
 
@@ -700,6 +725,27 @@ public class Migration {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private LocalDateTime parseTime(String str) {
+        if (str == null) {
+            return null;
+        }
+        DateTimeFormatter formatter;
+        try {
+            formatter = DateTimeFormatter.ofPattern("M/d/yyyy h:mm:ss a");
+            return LocalDateTime.parse(str, formatter);
+        }
+        catch (Exception e) {
+            try {
+                formatter = DateTimeFormatter.ofPattern("M/d/yyyy h:mm a");
+                return LocalDateTime.parse(str, formatter);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return null;
     }
 
     private Date parseDate(String str) {
@@ -873,6 +919,11 @@ public class Migration {
     private interface ChecklistDAO {
         @SqlUpdate("INSERT INTO checklist_items (client_id, tax_year_id, memo, sort_number, finished, translated) VALUES (:clientId, :taxYearId, :memo, :sortNumber, :finished, :translated)")
         void create(@BindMap Map<String, ?> checklist);
+    }
+
+    private interface TimeSlipDAO {
+        @SqlUpdate("INSERT INTO time_slips (user_id, memo, time_in, time_out) VALUES (:userId, :memo, :timeIn, :timeOut)")
+        void create(@BindMap Map<String, ?> timeSlips);
     }
 
     public static void main(String[] args) {
@@ -1142,6 +1193,11 @@ public class Migration {
         List<String[]> checklists = migration.parseCSV(root + "check_lists.csv");
         migration.csvToChecklists(checklists);
         System.out.println("Checklists completed.");
+
+        System.out.println("Uploading time slips...");
+        List<String[]> timeSlips = migration.parseCSV(root + "timeslips.csv");
+        migration.csvToTimeSlips(timeSlips);
+        System.out.println("Time slips completed.");
 
         migration.setClientCreated();
     }
