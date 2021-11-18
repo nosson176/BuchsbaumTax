@@ -5,7 +5,7 @@ import com.buchsbaumtax.core.model.ExchangeRate;
 import com.sifradigital.framework.db.Database;
 
 public class ConvertToUSD {
-    public Double convertToUSD(double amount, String currency, String year) {
+    public static Double convertToUSD(double amount, String currency, String year) {
         if (currency != null && year != null) {
             if (currency.equals("USD")) {
                 return amount;

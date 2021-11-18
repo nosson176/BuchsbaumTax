@@ -23,12 +23,12 @@ public class GetClientData {
         ClientData clientData = new ClientData(client, taxYearData);
         List<IncomeBreakdown> incomeBreakdowns = clientData.getIncomeBreakdowns();
         for (IncomeBreakdown breakdown : incomeBreakdowns) {
-            Double amountUSD = new ConvertToUSD().convertToUSD(breakdown.getAmount(), breakdown.getCurrency(), breakdown.getYears());
+            Double amountUSD = ConvertToUSD.convertToUSD(breakdown.getAmount(), breakdown.getCurrency(), breakdown.getYears());
             breakdown.setAmountUSD(amountUSD);
         }
         List<FbarBreakdown> fbarBreakdowns = clientData.getFbarBreakdowns();
         for (FbarBreakdown breakdown : fbarBreakdowns) {
-            Double amountUSD = new ConvertToUSD().convertToUSD(breakdown.getAmount(), breakdown.getCurrency(), breakdown.getYears());
+            Double amountUSD = ConvertToUSD.convertToUSD(breakdown.getAmount(), breakdown.getCurrency(), breakdown.getYears());
             breakdown.setAmountUSD(amountUSD);
         }
         return clientData;
