@@ -261,6 +261,31 @@ CREATE TABLE checklist_items (
     sort_number INTEGER
 );
 
+CREATE TABLE shekelators (
+    id SERIAL PRIMARY KEY,
+    tax_year_id INTEGER REFERENCES tax_years ON DELETE CASCADE,
+    filing_status TEXT,
+    children_under_16 INTEGER,
+    children_over_16 INTEGER,
+    childcare_count INTEGER,
+    childcare_expenses FLOAT,
+    primary_income FLOAT,
+    primary_foreign_tax FLOAT,
+    secondary_income FLOAT,
+    secondary_foreign_tax FLOAT,
+    self_employment_income FLOAT,
+    self_employment_foreign_tax FLOAT,
+    passive_income FLOAT,
+    passive_foreign_tax FLOAT,
+    total FLOAT,
+    primary_currency TEXT,
+    secondary_currency TEXT,
+    passive_exclusion_2555 BOOLEAN NOT NULL DEFAULT FALSE,
+    secondary_exclusion_2555 BOOLEAN NOT NULL DEFAULT FALSE,
+    primary_exclusion_2555 BOOLEAN NOT NULL DEFAULT FALSE,
+    self_employment_exclusion_2555 BOOLEAN NOT NULL DEFAULT FALSE
+);
+
 -- CREATE TABLE textees (
 --     id SERIAL PRIMARY KEY,
 --     inactive BOOLEAN NOT NULL DEFAULT FALSE,
@@ -436,31 +461,6 @@ CREATE TABLE checklist_items (
 --     authorization_id INTEGER,
 --     created TIMESTAMPTZ DEFAULT now(),
 --     updated TIMESTAMPTZ DEFAULT now()
--- );
---
--- CREATE TABLE shekelators (
---     id SERIAL PRIMARY KEY,
---     tax_year_id INTEGER REFERENCES tax_years ON DELETE CASCADE,
---     filing_status TEXT,
---     children_under_16 INTEGER,
---     children_over_16 INTEGER,
---     childcare_count INTEGER,
---     childcare_expenses FLOAT,
---     primary_income FLOAT,
---     primary_foreign_tax FLOAT,
---     secondary_income FLOAT,
---     secondary_foreign_tax FLOAT,
---     self_employment_income FLOAT,
---     self_employment_foreign_tax FLOAT,
---     passive_income FLOAT,
---     passive_foreign_tax FLOAT,
---     total FLOAT,
---     primary_currency_id INTEGER,
---     secondary_currency_id INTEGER,
---     passive_exclusion_2555 BOOLEAN NOT NULL DEFAULT FALSE,
---     secondary_exclusion_2555 BOOLEAN NOT NULL DEFAULT FALSE,
---     primary_exclusion_2555 BOOLEAN NOT NULL DEFAULT FALSE,
---     self_employment_exclusion_2555 BOOLEAN NOT NULL DEFAULT FALSE
 -- );
 --
 -- CREATE TABLE status_histories (
