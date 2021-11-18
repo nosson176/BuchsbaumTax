@@ -5,6 +5,7 @@ import com.buchsbaumtax.app.domain.UserCRUD;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.UpdatePasswordRequest;
 import com.buchsbaumtax.core.model.User;
+import com.buchsbaumtax.core.model.create.UserCreate;
 import com.sifradigital.framework.auth.Authenticated;
 
 import javax.annotation.security.RolesAllowed;
@@ -21,8 +22,8 @@ public class UserResource {
 
     @POST
     @RolesAllowed(Role.ADMIN)
-    public User createUser(User user) {
-        return new UserCRUD().create(user);
+    public User createUser(UserCreate userCreate) {
+        return new UserCRUD().create(userCreate);
     }
 
     @PUT

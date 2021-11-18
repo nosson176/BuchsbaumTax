@@ -17,7 +17,6 @@ public class User implements Principal {
     private String userType;
     private Date created;
     private Date updated;
-    private String password;
 
     public int getId() {
         return id;
@@ -65,14 +64,6 @@ public class User implements Principal {
 
     public Date getUpdated() {
         return updated;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.UpdatePasswordRequest;
 import com.buchsbaumtax.core.dao.UserDAO;
 import com.buchsbaumtax.core.model.User;
+import com.buchsbaumtax.core.model.create.UserCreate;
 import com.sifradigital.framework.db.Database;
 import com.sifradigital.framework.util.PasswordUtils;
 import com.sifradigital.framework.validation.Validator;
@@ -17,19 +18,18 @@ public class UserCRUD {
         return Database.dao(UserDAO.class).getAll();
     }
 
-    public User create(User user) {
+    public User create(UserCreate userCreate) {
         new Validator()
-                .required(user.getUsername())
-                .required(user.getUserType())
-                .minLength(user.getPassword(), 6, "Password is too short")
+                .required(userCreate.getUsername())
+                .required(userCreate.getUserType())
+                .minLength(userCreate.getPassword(), 6, "Password is too short")
                 .validateAndGuard();
 
-        String hashedPassword = PasswordUtils.hashPassword(user.getPassword());
-        user.setPassword(hashedPassword);
+        String hashedPassword = PasswordUtils.hashPassword(userCreate.getPassword());
+        userCreate.setPassword(hashedPassword);
 
-        int id = Database.dao(UserDAO.class).create(user);
+        int id = Database.dao(UserDAO.class).create(userCreate);
         return Database.dao(UserDAO.class).get(id);
-
     }
 
     public User update(int userId, User user) {
