@@ -3,6 +3,10 @@ package com.buchsbaumtax.core.model;
 import java.util.Date;
 
 public class TaxPersonal {
+    public static final String CATEGORY_PRIMARY = "PRI.";
+    public static final String CATEGORY_SECONDARY = "SEC.";
+    public static final String CATEGORY_DEPENDANT = "DEP.";
+
     private int id;
     private boolean archived;
     private int clientId;

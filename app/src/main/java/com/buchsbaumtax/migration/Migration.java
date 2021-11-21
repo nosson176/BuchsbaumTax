@@ -1,5 +1,6 @@
 package com.buchsbaumtax.migration;
 
+import com.buchsbaumtax.app.domain.DisplayFields;
 import com.buchsbaumtax.core.model.*;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
@@ -624,33 +625,11 @@ public class Migration {
 
         for (Client client : clients) {
             List<TaxPersonal> taxPersonals = taxPersonalDAO.getForClient(client.getId());
-            TaxPersonal primary = taxPersonals.stream()
-                    .filter(tp -> Objects.nonNull(tp.getCategory()))
-                    .filter(tp -> tp.getCategory().equals("PRI."))
-                    .findFirst()
-                    .orElse(null);
-            TaxPersonal secondary = taxPersonals.stream()
-                    .filter(tp -> Objects.nonNull(tp.getCategory()))
-                    .filter(tp -> tp.getCategory().equals("SEC."))
-                    .findFirst()
-                    .orElse(null);
-
-            String displayName = null;
-            boolean primaryExists = primary != null && primary.getFirstName() != null;
-            boolean secondaryExists = secondary != null && secondary.getFirstName() != null;
-            if (primaryExists && secondaryExists) {
-                displayName = primary.getFirstName() + " - " + secondary.getFirstName();
-            }
-            else if (primaryExists) {
-                displayName = primary.getFirstName();
-            }
-
             List<Contact> contacts = contactDAO.getForClient(client.getId());
-            String mainDetail = contacts.stream()
-                    .filter(Objects::nonNull)
-                    .findFirst()
-                    .map(Contact::getMainDetail)
-                    .orElse(null);
+
+            DisplayFields displayFields = new DisplayFields();
+            String displayName = displayFields.getDisplayName(taxPersonals);
+            String mainDetail = displayFields.getDisplayPhone(contacts);
 
             client.setDisplayName(displayName);
             client.setDisplayPhone(mainDetail);
