@@ -24,7 +24,7 @@ public interface UserDAO {
     User get(@Bind("id") int id);
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO users (first_name, last_name, username, user_type, password) VALUES (:firstName, :lastName, :username, :userType, :password)")
+    @SqlUpdate("INSERT INTO users (first_name, last_name, username, user_type, password, send_login_notifications, notify_of_logins, seconds_in_day, allow_texting, selectable) VALUES (:firstName, :lastName, :username, :userType, :password, :sendLoginNotifications, :notifyOfLogins, :secondsInDay, :allowTexting, :selectable)")
     int create(@BindBean UserCreate userCreate);
 
     @SqlUpdate("UPDATE users SET first_name = :firstName, last_name = :lastName, username = :username, send_login_notifications = :sendLoginNotifications, notify_of_logins = :notifyOfLogins, seconds_in_day = :secondsInDay, allow_texting = :allowTexting, selectable = :selectable, user_type = :userType, updated = now() WHERE id = :id")

@@ -6,6 +6,11 @@ public class UserCreate {
     private String username;
     private String userType;
     private String password;
+    private boolean sendLoginNotifications;
+    private boolean notifyOfLogins;
+    private Integer secondsInDay;
+    private boolean allowTexting;
+    private boolean selectable;
 
     public String getFirstName() {
         return firstName;
@@ -29,5 +34,25 @@ public class UserCreate {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isSendLoginNotifications() {
+        return sendLoginNotifications;
+    }
+
+    public boolean isNotifyOfLogins() {
+        return notifyOfLogins;
+    }
+
+    public Integer getSecondsInDay() {
+        return secondsInDay;
+    }
+
+    public boolean isAllowTexting() {
+        return allowTexting;
+    }
+
+    public boolean isSelectable() {
+        return selectable;
     }
 }
