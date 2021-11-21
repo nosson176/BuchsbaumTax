@@ -293,7 +293,15 @@ public class Migration {
             map.put("secondsInDay", castToInt(row[5]));
             map.put("allowTexting", castToBoolean(row[6]));
             map.put("selectable", castToBoolean(row[7]));
-            map.put("userType", row[8]);
+            if (row[8].equals("User")) {
+                map.put("userType", "user");
+            }
+            else if (row[8].equals("Full Access")) {
+                map.put("userType", "admin");
+            }
+            else {
+                map.put("userType", row[8]);
+            }
             map.put("password", "1000:a55d2a919684268d8d14138f177119ec50a707cd42436edc:7e7a159e2e57b31f2523e750cb9ac98d85e50d332dd1ac0a");
 
             userDAO.create(map);

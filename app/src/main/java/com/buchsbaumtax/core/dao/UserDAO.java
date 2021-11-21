@@ -1,6 +1,7 @@
 package com.buchsbaumtax.core.dao;
 
 import com.buchsbaumtax.core.model.User;
+import com.buchsbaumtax.core.model.create.UserCreate;
 import com.sifradigital.framework.db.Dao;
 import org.jdbi.v3.sqlobject.config.RegisterFieldMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
@@ -23,11 +24,14 @@ public interface UserDAO {
     User get(@Bind("id") int id);
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO users (first_name, last_name, username, user_type, created, updated) VALUES (:firstName, :lastName, :username, :userType,:created, :updated)")
-    int create(@BindBean User user);
+    @SqlUpdate("INSERT INTO users (first_name, last_name, username, user_type, password, send_login_notifications, notify_of_logins, seconds_in_day, allow_texting, selectable) VALUES (:firstName, :lastName, :username, :userType, :password, :sendLoginNotifications, :notifyOfLogins, :secondsInDay, :allowTexting, :selectable)")
+    int create(@BindBean UserCreate userCreate);
 
-    @SqlUpdate("UPDATE users SET first_name = :firstName, last_name = :lastName, username = :username, user_type = :userType, updated = now() WHERE id = :id")
+    @SqlUpdate("UPDATE users SET first_name = :firstName, last_name = :lastName, username = :username, send_login_notifications = :sendLoginNotifications, notify_of_logins = :notifyOfLogins, seconds_in_day = :secondsInDay, allow_texting = :allowTexting, selectable = :selectable, user_type = :userType, updated = now() WHERE id = :id")
     void update(@BindBean User user);
+
+    @SqlUpdate("UPDATE users SET password = :password WHERE id = :id")
+    void updatePassword(@Bind("id") int id, @Bind("password") String password);
 
     @SqlUpdate("DELETE FROM users WHERE id = :id")
     void delete(@Bind("id") int id);

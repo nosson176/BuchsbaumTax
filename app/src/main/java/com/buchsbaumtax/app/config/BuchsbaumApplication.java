@@ -9,6 +9,7 @@ import com.sifradigital.framework.auth.AuthenticatedProvider;
 import com.sifradigital.framework.auth.SessionAuthenticationFilter;
 import com.sifradigital.framework.db.Database;
 import com.sifradigital.framework.db.DatabaseConfig;
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 
 import javax.ws.rs.ApplicationPath;
 
@@ -24,7 +25,8 @@ public class BuchsbaumApplication extends SifraApplication {
         DatabaseConfig databaseConfig = new DatabaseConfig(connection, "com.buchsbaumtax.core.dao", false, false);
         Database.init(databaseConfig);
 
-        register(new AuthDynamicFeature(new SessionAuthenticationFilter<>(s -> Database.dao(UserDAO.class).getByToken(s))));
+        register(RolesAllowedDynamicFeature.class);
+        register(new AuthDynamicFeature(new SessionAuthenticationFilter<>(s -> Database.dao(UserDAO.class).getByToken(s), new UserAuthorizer())));
         register(new AuthenticatedProvider.Binder<>(User.class));
     }
 }
