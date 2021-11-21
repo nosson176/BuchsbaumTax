@@ -5,8 +5,10 @@ import com.buchsbaumtax.app.domain.taxyear.CreateTaxYear;
 import com.buchsbaumtax.app.domain.taxyear.GetClientData;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.ClientData;
+import com.buchsbaumtax.core.dao.ClientHistoryDAO;
 import com.buchsbaumtax.core.model.*;
 import com.sifradigital.framework.auth.Authenticated;
+import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.*;
 import java.util.List;
@@ -45,13 +47,20 @@ public class ClientResource {
 
     @GET
     @Path("/{clientId}/data")
-    public ClientData getTaxYearsByClient(@PathParam("clientId") int clientId) {
-        return new GetClientData().getByClient(clientId);
+    public ClientData getTaxYearsByClient(@Authenticated User user, @PathParam("clientId") int clientId) {
+        return new GetClientData().getByClient(user, clientId);
+    }
+
+    @GET
+    @Path("/history")
+    public List<Client> getClientHistory(@Authenticated User user) {
+        return Database.dao(ClientHistoryDAO.class).getLast20(user.getId());
     }
 
     // logs CRUD
     @POST
     @Path("/{clientId}/logs")
+
     public Log createLog(@PathParam("clientId") int clientId, Log log) {
         return new LogCRUD().create(clientId, log);
     }
