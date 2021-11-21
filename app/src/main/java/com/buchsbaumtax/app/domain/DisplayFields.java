@@ -25,15 +25,15 @@ public class DisplayFields {
         TaxPersonal primary = getByCategory(taxPersonals, TaxPersonal.CATEGORY_PRIMARY);
         TaxPersonal secondary = getByCategory(taxPersonals, TaxPersonal.CATEGORY_SECONDARY);
 
-        boolean primaryExists = primary != null && (primary.getInformal() != null || primary.getFirstName() != null);
-        boolean secondaryExists = secondary != null && (secondary.getInformal() != null || secondary.getFirstName() != null);
+        boolean primaryExists = primary != null && (fieldExists(primary.getInformal()) || fieldExists(primary.getFirstName()));
+        boolean secondaryExists = secondary != null && (fieldExists(secondary.getInformal()) || fieldExists(secondary.getFirstName()));
         if (primaryExists && secondaryExists) {
-            String primaryName = primary.getInformal() != null ? primary.getInformal() : primary.getFirstName();
-            String secondaryName = secondary.getInformal() != null ? secondary.getInformal() : secondary.getFirstName();
+            String primaryName = fieldExists(primary.getInformal()) ? primary.getInformal() : primary.getFirstName();
+            String secondaryName = fieldExists(secondary.getInformal()) ? secondary.getInformal() : secondary.getFirstName();
             return primaryName + " - " + secondaryName;
         }
         else if (primaryExists) {
-            return primary.getInformal() != null ? primary.getInformal() : primary.getFirstName();
+            return fieldExists(primary.getInformal()) ? primary.getInformal() : primary.getFirstName();
         }
         return null;
     }
@@ -48,6 +48,7 @@ public class DisplayFields {
 
     public String getDisplayPhone(List<Contact> contacts) {
         return contacts.stream()
+                .filter(c -> !c.getMainDetail().isEmpty())
                 .findFirst()
                 .map(Contact::getMainDetail)
                 .orElse(null);
@@ -58,5 +59,9 @@ public class DisplayFields {
                 .filter(tp -> Objects.nonNull(tp.getCategory()) && tp.getCategory().equals(category))
                 .findFirst()
                 .orElse(null);
+    }
+
+    private boolean fieldExists(String field) {
+        return field != null && !field.isEmpty();
     }
 }
