@@ -4,6 +4,10 @@ package com.buchsbaumtax.core.model;
 import java.util.Date;
 
 public class Filing {
+    public static final String TYPE_FBAR = "fbar";
+    public static final String TYPE_STATE = "state";
+    public static final String TYPE_FEDERAL = "federal";
+    public static final String TYPE_EXT = "ext";
 
     private String currency;
     private boolean completed;

@@ -5,8 +5,10 @@ import com.buchsbaumtax.app.domain.taxyear.CreateTaxYear;
 import com.buchsbaumtax.app.domain.taxyear.GetClientData;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.ClientData;
+import com.buchsbaumtax.core.dao.TaxYearDAO;
 import com.buchsbaumtax.core.model.*;
 import com.sifradigital.framework.auth.Authenticated;
+import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.*;
 import java.util.List;
@@ -181,5 +183,13 @@ public class ClientResource {
     @Path("/checklists/{checklistId}")
     public Checklist updateChecklist(@PathParam("checklistId") int checklistId, Checklist checklist) {
         return new ChecklistCRUD().update(checklistId, checklist);
+    }
+
+    //Shekelator
+    @GET
+    @Path("/tax-years/{taxYearId}/shekelator")
+    public Shekelator getShekelator(@PathParam("taxYearId") int taxYearId) {
+        TaxYear taxYear = Database.dao(TaxYearDAO.class).get(taxYearId);
+        return new ShekelatorCalculator().getShekelator(taxYear);
     }
 }
