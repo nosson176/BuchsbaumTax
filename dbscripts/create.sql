@@ -259,6 +259,7 @@ CREATE TABLE smartviews (
     sort_number INTEGER,
     archived BOOLEAN NOT NULL DEFAULT FALSE,
     client_count INTEGER,
+    client_ids INTEGER[],
     created TIMESTAMPTZ DEFAULT now(),
     updated TIMESTAMPTZ DEFAULT now()
 );

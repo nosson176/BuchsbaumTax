@@ -3,10 +3,7 @@ package com.buchsbaumtax.core.dao;
 import com.buchsbaumtax.core.model.Client;
 import com.sifradigital.framework.db.Dao;
 import org.jdbi.v3.sqlobject.config.RegisterFieldMapper;
-import org.jdbi.v3.sqlobject.customizer.AllowUnusedBindings;
-import org.jdbi.v3.sqlobject.customizer.Bind;
-import org.jdbi.v3.sqlobject.customizer.BindBean;
-import org.jdbi.v3.sqlobject.customizer.Define;
+import org.jdbi.v3.sqlobject.customizer.*;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
@@ -39,6 +36,10 @@ public interface ClientDAO {
     @RegisterFieldMapper(Client.class)
     @SqlQuery("SELECT * FROM clients WHERE id = :id")
     Client get(@Bind("id") int id);
+
+    @RegisterFieldMapper(Client.class)
+    @SqlQuery("SELECT * FROM clients WHERE id IN (<ids>)")
+    List<Client> getBulk(@BindList("ids") List<Integer> ids);
 
     @RegisterFieldMapper(Client.class)
     @SqlQuery("SELECT DISTINCT clients.* <from> <where> ORDER BY clients.id")

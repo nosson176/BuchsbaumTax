@@ -1,15 +1,24 @@
 package com.buchsbaumtax.core.model;
 
 
+import java.util.Date;
+import java.util.List;
+
 public class Smartview {
+    private int id;
     private String userName;
     private long userId;
     private String name;
     private long sortNumber;
-    private String archived;
-    private long clientCount;
-    private java.util.Date created;
-    private java.util.Date updated;
+    private boolean archived;
+    private Integer clientCount;
+    private List<Integer> clientIds;
+    private Date created;
+    private Date updated;
+
+    public int getId() {
+        return id;
+    }
 
     public String getUserName() {
         return userName;
@@ -27,19 +36,31 @@ public class Smartview {
         return sortNumber;
     }
 
-    public String getArchived() {
+    public boolean getArchived() {
         return archived;
     }
 
-    public long getClientCount() {
+    public Integer getClientCount() {
         return clientCount;
     }
 
-    public java.util.Date getCreated() {
+    public void setClientCount(Integer clientCount) {
+        this.clientCount = clientCount;
+    }
+
+    public Date getCreated() {
         return created;
     }
 
-    public java.util.Date getUpdated() {
+    public Date getUpdated() {
         return updated;
+    }
+
+    public List<Integer> getClientIds() {
+        return clientIds;
+    }
+
+    public void setClientIds(List<Integer> clientIds) {
+        this.clientIds = clientIds;
     }
 }

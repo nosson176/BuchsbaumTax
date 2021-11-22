@@ -48,7 +48,7 @@ public class DisplayFields {
 
     public String getDisplayPhone(List<Contact> contacts) {
         return contacts.stream()
-                .filter(c -> !c.getMainDetail().isEmpty())
+                .filter(c -> c.getMainDetail() != null && !c.getMainDetail().isEmpty())
                 .findFirst()
                 .map(Contact::getMainDetail)
                 .orElse(null);
