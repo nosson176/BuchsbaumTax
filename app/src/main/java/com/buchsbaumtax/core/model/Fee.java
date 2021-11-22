@@ -1,7 +1,9 @@
 package com.buchsbaumtax.core.model;
 
+import java.util.Date;
 
 public class Fee {
+    private long id;
     private long clientId;
     private String year;
     private String status;
@@ -9,11 +11,16 @@ public class Fee {
     private String feeType;
     private double manualAmount;
     private double paidAmount;
-    private String include;
+    private boolean include;
     private double rate;
-    private java.util.Date dateFee;
-    private String sum;
-    private String archived;
+    private Date dateFee;
+    private boolean sum;
+    private boolean archived;
+
+
+    public long getId() {
+        return id;
+    }
 
     public long getClientId() {
         return clientId;
@@ -43,7 +50,7 @@ public class Fee {
         return paidAmount;
     }
 
-    public String getInclude() {
+    public boolean getInclude() {
         return include;
     }
 
@@ -55,11 +62,11 @@ public class Fee {
         return dateFee;
     }
 
-    public String getSum() {
+    public boolean getSum() {
         return sum;
     }
 
-    public String getArchived() {
+    public boolean getArchived() {
         return archived;
     }
 }

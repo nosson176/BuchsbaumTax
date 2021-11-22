@@ -5,10 +5,8 @@ import com.buchsbaumtax.app.domain.taxyear.CreateTaxYear;
 import com.buchsbaumtax.app.domain.taxyear.GetClientData;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.ClientData;
-import com.buchsbaumtax.core.dao.TaxYearDAO;
 import com.buchsbaumtax.core.model.*;
 import com.sifradigital.framework.auth.Authenticated;
-import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.*;
 import java.util.List;
@@ -39,12 +37,6 @@ public class ClientResource {
         return new ClientCRUD().get(clientId);
     }
 
-    @DELETE
-    @Path("/{clientId}")
-    public BaseResponse deleteClient(@PathParam("clientId") int clientId) {
-        return new ClientCRUD().delete(clientId);
-    }
-
     @PUT
     @Path("/{clientId}")
     public Client updateClient(@PathParam("clientId") int clientId, Client client) {
@@ -63,13 +55,6 @@ public class ClientResource {
         return new GetClientData().getByClient(clientId);
     }
 
-    @DELETE
-    @Path("/tax-years/{taxYearId}")
-    public BaseResponse deleteTaxYear(@PathParam("taxYearId") int taxYearId) {
-        Database.dao(TaxYearDAO.class).delete(taxYearId);
-        return new BaseResponse(true);
-    }
-
     // logs CRUD
     @POST
     @Path("/{clientId}/logs")
@@ -81,12 +66,6 @@ public class ClientResource {
     @Path("/{clientId}/logs/{id}")
     public Log updateLog(@PathParam("clientId") int clientId, @PathParam("id") int logId, Log log) {
         return new LogCRUD().update(clientId, logId, log);
-    }
-
-    @DELETE
-    @Path("/{clientId}/logs/{id}")
-    public BaseResponse deleteLog(@PathParam("id") int logId) {
-        return new LogCRUD().delete(logId);
     }
 
     // income_breakdowns CRUD
@@ -102,12 +81,6 @@ public class ClientResource {
         return new IncomeBreakdownCRUD().update(clientId, incomeBreakdownId, incomeBreakdown);
     }
 
-    @DELETE
-    @Path("/{clientId}/income/{id}")
-    public BaseResponse deleteIncomeBreakdown(@PathParam("id") int incomeBreakdownId) {
-        return new IncomeBreakdownCRUD().delete(incomeBreakdownId);
-    }
-
     // fbar_breakdowns CRUD
     @POST
     @Path("/{clientId}/fbar")
@@ -119,12 +92,6 @@ public class ClientResource {
     @Path("/{clientId}/fbar/{id}")
     public FbarBreakdown updateFbarBreakdown(@PathParam("clientId") int clientId, @PathParam("id") int fbarBreakdownId, FbarBreakdown fbarBreakdown) {
         return new FbarBreakdownCRUD().update(clientId, fbarBreakdownId, fbarBreakdown);
-    }
-
-    @DELETE
-    @Path("/{clientId}/fbar/{id}")
-    public BaseResponse deleteFbarBreakdown(@PathParam("id") int fbarBreakdownId) {
-        return new FbarBreakdownCRUD().delete(fbarBreakdownId);
     }
 
     // contacts CRUD
@@ -140,12 +107,6 @@ public class ClientResource {
         return new ContactCRUD().update(clientId, contactId, contact);
     }
 
-    @DELETE
-    @Path("/{clientId}/contacts/{id}")
-    public BaseResponse deleteContact(@PathParam("id") int contactId) {
-        return new ContactCRUD().delete(contactId);
-    }
-
     // tax_personals CRUD
     @POST
     @Path("/{clientId}/personals")
@@ -157,12 +118,6 @@ public class ClientResource {
     @Path("/{clientId}/personals/{id}")
     public TaxPersonal updateTaxPersonal(@PathParam("clientId") int clientId, @PathParam("id") int taxPersonalId, TaxPersonal taxPersonal) {
         return new TaxPersonalCRUD().update(clientId, taxPersonalId, taxPersonal);
-    }
-
-    @DELETE
-    @Path("/{clientId}/personals/{id}")
-    public BaseResponse deleteTaxPersonal(@PathParam("id") int taxPersonalId) {
-        return new TaxPersonalCRUD().delete(taxPersonalId);
     }
 
     //filings CRUD
@@ -196,4 +151,41 @@ public class ClientResource {
         return new FilingCRUD().delete(filingId);
     }
 
+    // fees CRUD
+    @POST
+    @Path("/fees")
+    public Fee createFee(Fee fee) {
+        return new FeeCRUD().create(fee);
+    }
+
+    @GET
+    @Path("/fees")
+    public List<Fee> getAllFees() {
+        return new FeeCRUD().getAll();
+    }
+
+    @PUT
+    @Path("/fees/{feeId}")
+    public Fee updateFee(@PathParam("feeId") int feeId, Fee fee) {
+        return new FeeCRUD().update(fee, feeId);
+    }
+
+    // checklists CRUD
+    @POST
+    @Path("/checklists")
+    public Checklist createChecklist(Checklist checklist) {
+        return new ChecklistCRUD().create(checklist);
+    }
+
+    @GET
+    @Path("/checklists")
+    public List<Checklist> getAllChecklists() {
+        return new ChecklistCRUD().getAll();
+    }
+
+    @PUT
+    @Path("/checklists/{checklistId}")
+    public Checklist updateChecklist(@PathParam("checklistId") int checklistId, Checklist checklist) {
+        return new ChecklistCRUD().update(checklistId, checklist);
+    }
 }

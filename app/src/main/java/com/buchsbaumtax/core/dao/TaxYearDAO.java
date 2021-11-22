@@ -25,7 +25,4 @@ public interface TaxYearDAO {
     @RegisterFieldMapper(TaxYear.class)
     @SqlQuery("SELECT * FROM tax_years WHERE client_id = :clientId")
     List<TaxYear> getByClient(@Bind("clientId") int clientId);
-
-    @SqlUpdate("DELETE FROM tax_years WHERE id = :id")
-    void delete(@Bind("id") int id);
 }

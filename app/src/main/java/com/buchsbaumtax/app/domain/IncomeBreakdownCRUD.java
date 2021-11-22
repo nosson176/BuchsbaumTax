@@ -1,6 +1,5 @@
 package com.buchsbaumtax.app.domain;
 
-import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.IncomeBreakdownDAO;
 import com.buchsbaumtax.core.model.IncomeBreakdown;
 import com.sifradigital.framework.db.Database;
@@ -26,11 +25,6 @@ public class IncomeBreakdownCRUD {
         }
         Database.dao(IncomeBreakdownDAO.class).update(incomeBreakdown);
         return Database.dao(IncomeBreakdownDAO.class).get(incomeBreakdownId);
-    }
-
-    public BaseResponse delete(int incomeBreakdownId) {
-        Database.dao(IncomeBreakdownDAO.class).delete(incomeBreakdownId);
-        return new BaseResponse(true);
     }
 
     private void validate(IncomeBreakdown incomeBreakdown) {

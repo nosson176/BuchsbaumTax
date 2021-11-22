@@ -11,3 +11,10 @@ tomcat_memory=1536M
 ansible_python_interpreter=/usr/bin/python3
 app_name=${project_name}
 war_path=../../app/target/ROOT.war
+
+[web]
+web1 ansible_host=${web_ip} ansible_user=ubuntu ansible_ssh_private_key_file=~/dev/certificates/${key_name}.pem
+
+[web:vars]
+web_app_name=${project_name}
+ansible_python_interpreter=/usr/bin/python3

@@ -29,9 +29,6 @@ public interface FbarBreakdownDAO {
     @SqlQuery("SELECT * FROM fbar_breakdowns ORDER BY id")
     List<FbarBreakdown> getAll();
 
-    @SqlUpdate("DELETE FROM fbar_breakdowns WHERE id = :id")
-    void delete(@Bind("id") int id);
-
     @RegisterFieldMapper(FbarBreakdown.class)
     @SqlQuery("SELECT * FROM fbar_breakdowns WHERE client_id = :clientId")
     List<FbarBreakdown> getForClient(@Bind("clientId") int clientId);

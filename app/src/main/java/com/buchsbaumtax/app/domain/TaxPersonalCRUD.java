@@ -1,6 +1,5 @@
 package com.buchsbaumtax.app.domain;
 
-import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.TaxPersonalDAO;
 import com.buchsbaumtax.core.model.TaxPersonal;
 import com.sifradigital.framework.db.Database;
@@ -17,6 +16,7 @@ public class TaxPersonalCRUD {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         int taxPersonalId = Database.dao(TaxPersonalDAO.class).create(taxPersonal);
+        new DisplayFields().setDisplayName(clientId);
         return Database.dao(TaxPersonalDAO.class).get(taxPersonalId);
     }
 
@@ -26,12 +26,8 @@ public class TaxPersonalCRUD {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         Database.dao(TaxPersonalDAO.class).update(taxPersonal);
+        new DisplayFields().setDisplayName(clientId);
         return Database.dao(TaxPersonalDAO.class).get(taxPersonalId);
-    }
-
-    public BaseResponse delete(int taxPersonalId) {
-        Database.dao(TaxPersonalDAO.class).delete(taxPersonalId);
-        return new BaseResponse(true);
     }
 
     private void validate(TaxPersonal taxPersonal) {

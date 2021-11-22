@@ -55,7 +55,4 @@ public interface ClientDAO {
 
     @SqlUpdate("UPDATE clients SET status = :status, owes_status = :owesStatus, periodical = :periodical, last_name = :lastName, archived = :archived, display_name = :displayName, display_phone = :displayPhone, updated = now() WHERE id = :id")
     void update(@BindBean Client client);
-
-    @SqlUpdate("DELETE FROM clients WHERE id = :id")
-    void delete(@Bind("id") int id);
 }

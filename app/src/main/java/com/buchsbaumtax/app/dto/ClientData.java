@@ -4,6 +4,7 @@ import com.buchsbaumtax.core.dao.*;
 import com.buchsbaumtax.core.model.*;
 import com.sifradigital.framework.db.Database;
 
+import java.util.Date;
 import java.util.List;
 
 public class ClientData {
@@ -16,12 +17,15 @@ public class ClientData {
     private String periodical;
     private String displayName;
     private String displayPhone;
+    private Date created;
     private List<TaxYearData> taxYearData;
     private List<FbarBreakdown> fbarBreakdowns;
     private List<IncomeBreakdown> incomeBreakdowns;
     private List<Log> logs;
     private List<Contact> contacts;
     private List<TaxPersonal> taxPersonals;
+    private List<Fee> fees;
+    private List<Checklist> checklists;
 
     public ClientData(Client client, List<TaxYearData> taxYearData) {
         this.id = client.getId();
@@ -32,12 +36,15 @@ public class ClientData {
         this.periodical = client.getPeriodical();
         this.displayName = client.getDisplayName();
         this.displayPhone = client.getDisplayPhone();
+        this.created = client.getCreated();
         this.taxYearData = taxYearData;
         this.fbarBreakdowns = Database.dao(FbarBreakdownDAO.class).getForClient(client.getId());
         this.incomeBreakdowns = Database.dao(IncomeBreakdownDAO.class).getForClient(client.getId());
         this.logs = Database.dao(LogDAO.class).getForClient(client.getId());
         this.contacts = Database.dao(ContactDAO.class).getForClient(client.getId());
         this.taxPersonals = Database.dao(TaxPersonalDAO.class).getForClient(client.getId());
+        this.fees = Database.dao(FeeDAO.class).getForClient(client.getId());
+        this.checklists = Database.dao(ChecklistDAO.class).getForClient(client.getId());
     }
 
     public int getId() {
@@ -72,6 +79,10 @@ public class ClientData {
         return displayPhone;
     }
 
+    public Date getCreated() {
+        return created;
+    }
+
     public List<TaxYearData> getTaxYears() {
         return taxYearData;
     }
@@ -94,5 +105,13 @@ public class ClientData {
 
     public List<TaxPersonal> getTaxPersonals() {
         return taxPersonals;
+    }
+
+    public List<Fee> getFees() {
+        return fees;
+    }
+
+    public List<Checklist> getChecklists() {
+        return checklists;
     }
 }

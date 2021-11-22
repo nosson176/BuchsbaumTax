@@ -276,6 +276,17 @@ CREATE TABLE smartview_lines (
     type TEXT
 );
 
+CREATE TABLE checklist_items (
+    id SERIAL PRIMARY KEY,
+    archived BOOLEAN NOT NULL DEFAULT FALSE,
+    client_id INTEGER REFERENCES clients ON DELETE CASCADE,
+    finished BOOLEAN NOT NULL DEFAULT FALSE,
+    memo TEXT,
+    tax_year_id INTEGER REFERENCES tax_years ON DELETE CASCADE,
+    translated BOOLEAN NOT NULL DEFAULT FALSE,
+    sort_number INTEGER
+);
+
 -- CREATE TABLE textees (
 --     id SERIAL PRIMARY KEY,
 --     inactive BOOLEAN NOT NULL DEFAULT FALSE,
@@ -315,17 +326,6 @@ CREATE TABLE smartview_lines (
 --     description TEXT,
 --     created TIMESTAMPTZ DEFAULT now(),
 --     updated TIMESTAMPTZ DEFAULT now()
--- );
---
--- CREATE TABLE checklist_items (
---     id SERIAL PRIMARY KEY,
---     archived BOOLEAN NOT NULL DEFAULT FALSE,
---     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
---     finished BOOLEAN NOT NULL DEFAULT FALSE,
---     memo TEXT,
---     tax_year_id INTEGER REFERENCES tax_years ON DELETE CASCADE,
---     translated BOOLEAN NOT NULL DEFAULT FALSE,
---     sort_number INTEGER
 -- );
 --
 -- CREATE TABLE client_flags (

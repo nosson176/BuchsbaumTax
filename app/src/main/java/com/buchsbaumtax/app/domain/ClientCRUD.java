@@ -1,6 +1,5 @@
 package com.buchsbaumtax.app.domain;
 
-import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.ClientDAO;
 import com.buchsbaumtax.core.dao.SmartviewDAO;
 import com.buchsbaumtax.core.model.Client;
@@ -20,11 +19,6 @@ public class ClientCRUD {
     public Client create(Client client) {
         int id = Database.dao(ClientDAO.class).create(client);
         return Database.dao(ClientDAO.class).get(id);
-    }
-
-    public BaseResponse delete(int clientId) {
-        Database.dao(ClientDAO.class).delete(clientId);
-        return new BaseResponse(true);
     }
 
     public List<Client> getAll() {

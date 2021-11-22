@@ -1,5 +1,6 @@
 package com.buchsbaumtax.migration;
 
+import com.buchsbaumtax.app.domain.DisplayFields;
 import com.buchsbaumtax.core.model.*;
 import com.google.common.base.CaseFormat;
 import com.opencsv.CSVReader;
@@ -295,7 +296,15 @@ public class Migration {
             map.put("secondsInDay", castToInt(row[5]));
             map.put("allowTexting", castToBoolean(row[6]));
             map.put("selectable", castToBoolean(row[7]));
-            map.put("userType", row[8]);
+            if (row[8].equals("User")) {
+                map.put("userType", "user");
+            }
+            else if (row[8].equals("Full Access")) {
+                map.put("userType", "admin");
+            }
+            else {
+                map.put("userType", row[8]);
+            }
             map.put("password", "1000:a55d2a919684268d8d14138f177119ec50a707cd42436edc:7e7a159e2e57b31f2523e750cb9ac98d85e50d332dd1ac0a");
 
             userDAO.create(map);
@@ -622,6 +631,23 @@ public class Migration {
 
     }
 
+    private void csvToChecklists(List<String[]> checklists) {
+        ChecklistDAO checklistDAO = handle.attach(ChecklistDAO.class);
+
+        for (String[] row : checklists) {
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("clientId", clientIds.get(row[0]));
+            map.put("taxYearId", taxYearIds.get(row[1]));
+            map.put("memo", row[2]);
+            map.put("sortNumber", castToInt(row[3]));
+            map.put("finished", castToBoolean(row[4]));
+            map.put("translated", castToBoolean(row[5]));
+
+            checklistDAO.create(map);
+        }
+    }
+
     private Map<String, Object> setFilingData(List<String> row) {
         Map<String, Object> map = new HashMap<>();
 
@@ -649,37 +675,29 @@ public class Migration {
 
         for (Client client : clients) {
             List<TaxPersonal> taxPersonals = taxPersonalDAO.getForClient(client.getId());
-            TaxPersonal primary = taxPersonals.stream()
-                    .filter(tp -> Objects.nonNull(tp.getCategory()))
-                    .filter(tp -> tp.getCategory().equals("PRI."))
-                    .findFirst()
-                    .orElse(null);
-            TaxPersonal secondary = taxPersonals.stream()
-                    .filter(tp -> Objects.nonNull(tp.getCategory()))
-                    .filter(tp -> tp.getCategory().equals("SEC."))
-                    .findFirst()
-                    .orElse(null);
-
-            String displayName = null;
-            boolean primaryExists = primary != null && primary.getFirstName() != null;
-            boolean secondaryExists = secondary != null && secondary.getFirstName() != null;
-            if (primaryExists && secondaryExists) {
-                displayName = primary.getFirstName() + " - " + secondary.getFirstName();
-            }
-            else if (primaryExists) {
-                displayName = primary.getFirstName();
-            }
-
             List<Contact> contacts = contactDAO.getForClient(client.getId());
-            String mainDetail = contacts.stream()
-                    .filter(Objects::nonNull)
-                    .findFirst()
-                    .map(Contact::getMainDetail)
-                    .orElse(null);
+
+            DisplayFields displayFields = new DisplayFields();
+            String displayName = displayFields.getDisplayName(taxPersonals);
+            String mainDetail = displayFields.getDisplayPhone(contacts);
 
             client.setDisplayName(displayName);
             client.setDisplayPhone(mainDetail);
             clientDAO.update(client);
+        }
+    }
+
+    private void setClientCreated() {
+        ClientDAO clientDAO = handle.attach(ClientDAO.class);
+        LogDAO logDAO = handle.attach(LogDAO.class);
+        List<Client> clients = clientDAO.getAll();
+
+        for (Client client : clients) {
+            Date firstLog = logDAO.getForClient(client.getId()).stream().map(Log::getLogDate).filter(Objects::nonNull).min(Date::compareTo).orElse(null);
+            if (firstLog != null) {
+                client.setCreated(firstLog);
+                clientDAO.update(client);
+            }
         }
     }
 
@@ -773,7 +791,7 @@ public class Migration {
         @SqlQuery("SELECT * FROM clients WHERE id = :id")
         Client get(@Bind("id") int id);
 
-        @SqlUpdate("UPDATE clients SET status = :status, owes_status = :owesStatus, periodical = :periodical, last_name = last_name, archived = :archived, display_name = :displayName, display_phone = :displayPhone WHERE id = :id")
+        @SqlUpdate("UPDATE clients SET status = :status, owes_status = :owesStatus, periodical = :periodical, last_name = last_name, archived = :archived, display_name = :displayName, display_phone = :displayPhone, created = :created WHERE id = :id")
         void update(@BindBean Client client);
     }
 
@@ -834,6 +852,10 @@ public class Migration {
     private interface LogDAO {
         @SqlUpdate("INSERT INTO logs (client_id, years, alarm_user_name, alarm_user_id, alert, alarm_complete, alarm_date, alarm_time, log_date, priority, note, seconds_spent, archived) VALUES (:clientId, :years, :alarmUserName, :alarmUserId, :alert, :alarmComplete, :alarmDate, :alarmTime, :logDate, :priority, :note, :secondsSpent, :archived)")
         void create(@BindMap Map<String, ?> log);
+
+        @RegisterFieldMapper(Log.class)
+        @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId")
+        List<Log> getForClient(@Bind("clientId") int clientId);
     }
 
     private interface FilingDAO {
@@ -877,6 +899,11 @@ public class Migration {
         void create(@BindMap Map<String, ?> smartViewLine);
     }
 
+    private interface ChecklistDAO {
+        @SqlUpdate("INSERT INTO checklist_items (client_id, tax_year_id, memo, sort_number, finished, translated) VALUES (:clientId, :taxYearId, :memo, :sortNumber, :finished, :translated)")
+        void create(@BindMap Map<String, ?> checklist);
+    }
+
     public static void main(String[] args) {
         String root = "C:\\Users\\shalo\\Downloads\\buchsbaum-main\\buchsbaum-main\\lib\\fm_uploads\\";
         Migration migration = new Migration(root);
@@ -888,19 +915,19 @@ public class Migration {
         System.out.println("Clients uploaded");
 
         System.out.println("Uploading contacts...");
-       List<String[]> contacts = migration.parseCSV(root + "contacts.csv");
-       migration.csvToContact(contacts);
-       System.out.println("Contacts completed.");
+        List<String[]> contacts = migration.parseCSV(root + "contacts.csv");
+        migration.csvToContact(contacts);
+        System.out.println("Contacts completed.");
 
-       System.out.println("Uploading exchange rates...");
-       List<String[]> exchangeRates = migration.parseCSV(root + "exchange_rates.csv");
-       migration.csvToExchangeRate(exchangeRates);
-       System.out.println("Exchange rates completed.");
+        System.out.println("Uploading exchange rates...");
+        List<String[]> exchangeRates = migration.parseCSV(root + "exchange_rates.csv");
+        migration.csvToExchangeRate(exchangeRates);
+        System.out.println("Exchange rates completed.");
 
-       System.out.println("Uploading fbar breakdowns...");
-       List<String[]> fbarBreakdowns = migration.parseCSV(root + "fbar_breakdowns.csv");
-       migration.csvToFbarBreakdown(fbarBreakdowns);
-       System.out.println("Fbar breakdowns completed.");
+        System.out.println("Uploading fbar breakdowns...");
+        List<String[]> fbarBreakdowns = migration.parseCSV(root + "fbar_breakdowns.csv");
+        migration.csvToFbarBreakdown(fbarBreakdowns);
+        System.out.println("Fbar breakdowns completed.");
 
         System.out.println("Uploading income breakdowns...");
         List<String[]> incomeBreakdowns = migration.parseCSV(root + "inc_breakdowns.csv");
@@ -1139,5 +1166,12 @@ public class Migration {
         List<String[]> smartViewLines = migration.parseCSV(root + "smartview_lines.csv");
         migration.csvToSmartViewLines(smartViewLines);
         System.out.println("Smartview lines completed.");
+
+        System.out.println("Uploading checklists...");
+        List<String[]> checklists = migration.parseCSV(root + "check_lists.csv");
+        migration.csvToChecklists(checklists);
+        System.out.println("Checklists completed.");
+
+        migration.setClientCreated();
     }
 }
