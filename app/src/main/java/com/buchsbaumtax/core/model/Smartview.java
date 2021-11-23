@@ -5,18 +5,31 @@ import java.util.Date;
 import java.util.List;
 
 public class Smartview {
-    private int id;
+    private Integer id;
     private String userName;
     private long userId;
     private String name;
     private long sortNumber;
     private boolean archived;
-    private Integer clientCount;
     private List<Integer> clientIds;
     private Date created;
     private Date updated;
 
-    public int getId() {
+    public Smartview() {
+    }
+
+    public Smartview(Integer id, String userName, long userId, String name, long sortNumber, boolean archived, Date created, Date updated) {
+        this.id = id;
+        this.userName = userName;
+        this.userId = userId;
+        this.name = name;
+        this.sortNumber = sortNumber;
+        this.archived = archived;
+        this.created = created;
+        this.updated = updated;
+    }
+
+    public Integer getId() {
         return id;
     }
 
@@ -38,14 +51,6 @@ public class Smartview {
 
     public boolean getArchived() {
         return archived;
-    }
-
-    public Integer getClientCount() {
-        return clientCount;
-    }
-
-    public void setClientCount(Integer clientCount) {
-        this.clientCount = clientCount;
     }
 
     public Date getCreated() {

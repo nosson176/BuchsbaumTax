@@ -1,7 +1,6 @@
 package com.buchsbaumtax.core.dao;
 
 import com.buchsbaumtax.core.model.Smartview;
-import com.buchsbaumtax.core.model.SmartviewLine;
 import com.sifradigital.framework.db.Dao;
 import org.jdbi.v3.sqlobject.config.RegisterFieldMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
@@ -22,11 +21,11 @@ public interface SmartviewDAO {
     @SqlQuery("SELECT * FROM smartviews ORDER BY id")
     List<Smartview> getAll();
 
-    @RegisterFieldMapper(SmartviewLine.class)
-    @SqlQuery("SELECT * FROM smartview_lines WHERE smartview_id = :smartviewId ORDER BY id")
-    List<SmartviewLine> getSmartviewLines(@Bind("smartviewId") int smartviewId);
+    @RegisterFieldMapper(Smartview.class)
+    @SqlQuery("SELECT * FROM smartviews WHERE user_id = :userId ORDER BY id")
+    List<Smartview> getByUser(@Bind("userId") int userId);
 
-    @SqlUpdate("UPDATE smartviews SET name = :name, sort_number = :sortNumber, archived = :archived, client_count = :clientCount, client_ids = :clientIds, updated = NOW() WHERE id = :id")
+    @SqlUpdate("UPDATE smartviews SET name = :name, sort_number = :sortNumber, archived = :archived, client_ids = :clientIds, updated = NOW() WHERE id = :id")
     void update(@BindBean Smartview smartview);
 
     @GetGeneratedKeys

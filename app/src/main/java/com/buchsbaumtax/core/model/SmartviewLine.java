@@ -4,7 +4,7 @@ package com.buchsbaumtax.core.model;
 import java.util.Date;
 
 public class SmartviewLine {
-    private int id;
+    private Integer id;
     private Date created;
     private Date updated;
     private long smartviewId;
@@ -15,7 +15,7 @@ public class SmartviewLine {
     private String operator;
     private String type;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -29,6 +29,10 @@ public class SmartviewLine {
 
     public long getSmartviewId() {
         return smartviewId;
+    }
+
+    public void setSmartviewId(long smartviewId) {
+        this.smartviewId = smartviewId;
     }
 
     public long getQuery() {
