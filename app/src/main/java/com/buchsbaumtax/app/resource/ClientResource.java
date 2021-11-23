@@ -54,7 +54,7 @@ public class ClientResource {
     @GET
     @Path("/history")
     public List<Client> getClientHistory(@Authenticated User user) {
-        return Database.dao(ClientHistoryDAO.class).getLast20(user.getId());
+        return Database.dao(ClientHistoryDAO.class).getRecentByUser(user.getId(), 20);
     }
 
     // logs CRUD
