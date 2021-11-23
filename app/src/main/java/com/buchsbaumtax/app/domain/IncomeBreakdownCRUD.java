@@ -16,7 +16,7 @@ public class IncomeBreakdownCRUD {
         validate(incomeBreakdown);
         int incomeBreakdownId = Database.dao(IncomeBreakdownDAO.class).create(incomeBreakdown);
         IncomeBreakdown createdBreakdown = Database.dao(IncomeBreakdownDAO.class).get(incomeBreakdownId);
-        Double amountUSD = new ConvertToUSD().convertToUSD(createdBreakdown.getAmount(), createdBreakdown.getCurrency(), createdBreakdown.getYears());
+        Double amountUSD = ConvertToUSD.convertToUSD(createdBreakdown.getAmount(), createdBreakdown.getCurrency(), createdBreakdown.getYears());
         createdBreakdown.setAmountUSD(amountUSD);
         return createdBreakdown;
     }
@@ -28,7 +28,7 @@ public class IncomeBreakdownCRUD {
         }
         Database.dao(IncomeBreakdownDAO.class).update(incomeBreakdown);
         IncomeBreakdown updatedBreakdown = Database.dao(IncomeBreakdownDAO.class).get(incomeBreakdownId);
-        Double amountUSD = new ConvertToUSD().convertToUSD(updatedBreakdown.getAmount(), updatedBreakdown.getCurrency(), updatedBreakdown.getYears());
+        Double amountUSD = ConvertToUSD.convertToUSD(updatedBreakdown.getAmount(), updatedBreakdown.getCurrency(), updatedBreakdown.getYears());
         updatedBreakdown.setAmountUSD(amountUSD);
         return updatedBreakdown;
     }
