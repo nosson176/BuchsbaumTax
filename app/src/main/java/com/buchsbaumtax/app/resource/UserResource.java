@@ -1,12 +1,15 @@
 package com.buchsbaumtax.app.resource;
 
-import com.buchsbaumtax.core.dao.UserDAO;
+import com.buchsbaumtax.app.config.Role;
+import com.buchsbaumtax.app.domain.UserCRUD;
+import com.buchsbaumtax.app.dto.BaseResponse;
+import com.buchsbaumtax.app.dto.UpdatePasswordRequest;
 import com.buchsbaumtax.core.model.User;
+import com.buchsbaumtax.core.model.create.UserCreate;
 import com.sifradigital.framework.auth.Authenticated;
-import com.sifradigital.framework.db.Database;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.*;
 import java.util.List;
 
 @Authenticated
@@ -14,6 +17,33 @@ import java.util.List;
 public class UserResource {
     @GET
     public List<User> getAllUsers() {
-        return Database.dao(UserDAO.class).getAll();
+        return new UserCRUD().getAll();
+    }
+
+    @POST
+    @RolesAllowed(Role.ADMIN)
+    public User createUser(UserCreate userCreate) {
+        return new UserCRUD().create(userCreate);
+    }
+
+    @PUT
+    @RolesAllowed(Role.ADMIN)
+    @Path("/{userId}")
+    public User updateUser(@PathParam("userId") int userId, User user) {
+        return new UserCRUD().update(userId, user);
+    }
+
+    @DELETE
+    @RolesAllowed(Role.ADMIN)
+    @Path("/{userId}")
+    public BaseResponse deleteUser(@PathParam("userId") int userId) {
+        return new UserCRUD().delete(userId);
+    }
+
+    @PUT
+    @RolesAllowed(Role.ADMIN)
+    @Path("/{userId}/password")
+    public BaseResponse updatePassword(@PathParam("userId") int userId, UpdatePasswordRequest updatePasswordRequest) {
+        return new UserCRUD().updatePassword(userId, updatePasswordRequest);
     }
 }

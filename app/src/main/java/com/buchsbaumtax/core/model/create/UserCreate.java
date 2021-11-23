@@ -1,26 +1,16 @@
-package com.buchsbaumtax.core.model;
+package com.buchsbaumtax.core.model.create;
 
-import java.security.Principal;
-import java.util.Date;
-
-public class User implements Principal {
-
-    private int id;
+public class UserCreate {
     private String firstName;
     private String lastName;
     private String username;
+    private String userType;
+    private String password;
     private boolean sendLoginNotifications;
     private boolean notifyOfLogins;
     private Integer secondsInDay;
     private boolean allowTexting;
     private boolean selectable;
-    private String userType;
-    private Date created;
-    private Date updated;
-
-    public int getId() {
-        return id;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -32,6 +22,18 @@ public class User implements Principal {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public boolean isSendLoginNotifications() {
@@ -52,22 +54,5 @@ public class User implements Principal {
 
     public boolean isSelectable() {
         return selectable;
-    }
-
-    public String getUserType() {
-        return userType;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
-
-    @Override
-    public String getName() {
-        return firstName + " " + lastName;
     }
 }

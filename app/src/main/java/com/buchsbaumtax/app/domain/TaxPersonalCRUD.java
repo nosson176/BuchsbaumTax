@@ -16,6 +16,7 @@ public class TaxPersonalCRUD {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         int taxPersonalId = Database.dao(TaxPersonalDAO.class).create(taxPersonal);
+        new DisplayFields().setDisplayName(clientId);
         return Database.dao(TaxPersonalDAO.class).get(taxPersonalId);
     }
 
@@ -25,6 +26,7 @@ public class TaxPersonalCRUD {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         Database.dao(TaxPersonalDAO.class).update(taxPersonal);
+        new DisplayFields().setDisplayName(clientId);
         return Database.dao(TaxPersonalDAO.class).get(taxPersonalId);
     }
 
