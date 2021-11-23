@@ -22,8 +22,8 @@ public interface TimeSlipDAO {
     List<TimeSlip> getForUser(@Bind("userId") int userId);
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO time_slips (user_id) VALUES (:userId)")
-    int create(@Bind("userId") int userId);
+    @SqlUpdate("INSERT INTO time_slips (user_id, time_in, time_out, memo) VALUES (:userId, :timeIn, :timeOut, :memo)")
+    int create(@BindBean TimeSlip timeSlip);
 
     @SqlUpdate("UPDATE time_slips SET user_id = :userId, time_in = :timeIn, time_out = :timeOut, memo = :memo WHERE id = :id")
     void update(@BindBean TimeSlip timeSlip);
@@ -31,5 +31,8 @@ public interface TimeSlipDAO {
     @RegisterFieldMapper(TimeSlip.class)
     @SqlQuery("SELECT * FROM time_slips WHERE id = :id")
     TimeSlip get(@Bind("id") int id);
+
+    @SqlUpdate("DELETE FROM time_slips WHERE id = :id")
+    void delete(@Bind("id") int id);
 }
 

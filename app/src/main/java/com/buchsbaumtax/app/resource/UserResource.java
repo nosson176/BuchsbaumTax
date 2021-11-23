@@ -62,14 +62,20 @@ public class UserResource {
     }
 
     @POST
-    @Path("/current/time-slips/start")
-    public TimeSlip clockIn(@Authenticated User user) {
-        return new TimeSlipCRUD().clockIn(user);
+    @Path("/current/time-slips")
+    public TimeSlip createTimeSlip(@Authenticated User user, TimeSlip timeSlip) {
+        return new TimeSlipCRUD().create(user, timeSlip);
     }
 
     @PUT
-    @Path("/current/time-slips/end")
-    public TimeSlip clockOut(@Authenticated User user) {
-        return new TimeSlipCRUD().clockOut(user);
+    @Path("/current/time-slips/{timeSlipId}")
+    public TimeSlip updateTimeSlip(@Authenticated User user, @PathParam("timeSlipId") int timeSlipId, TimeSlip timeSlip) {
+        return new TimeSlipCRUD().update(user, timeSlipId, timeSlip);
+    }
+
+    @DELETE
+    @Path("/current/time-slips/{timeSlipId}")
+    public BaseResponse deleteTimeSlip(@Authenticated User user, @PathParam("timeSlipId") int timeSlipId) {
+        return new TimeSlipCRUD().delete(user, timeSlipId);
     }
 }
