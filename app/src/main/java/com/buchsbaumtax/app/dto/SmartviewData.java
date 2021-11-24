@@ -1,6 +1,6 @@
 package com.buchsbaumtax.app.dto;
 
-import com.buchsbaumtax.core.dao.SmartviewLineDAO;
+import com.buchsbaumtax.core.dao.SmartviewDAO;
 import com.buchsbaumtax.core.model.Smartview;
 import com.buchsbaumtax.core.model.SmartviewLine;
 import com.sifradigital.framework.db.Database;
@@ -25,7 +25,7 @@ public class SmartviewData {
         this.sortNumber = smartview.getSortNumber();
         this.archived = smartview.getArchived();
         this.clientIds = smartview.getClientIds();
-        this.smartviewLines = Database.dao(SmartviewLineDAO.class).getForSmartview(smartview.getId());
+        this.smartviewLines = Database.dao(SmartviewDAO.class).getSmartviewLines(smartview.getId());
     }
 
     public int getId() {

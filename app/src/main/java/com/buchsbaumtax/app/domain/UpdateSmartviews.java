@@ -2,7 +2,6 @@ package com.buchsbaumtax.app.domain;
 
 import com.buchsbaumtax.core.dao.ClientDAO;
 import com.buchsbaumtax.core.dao.SmartviewDAO;
-import com.buchsbaumtax.core.dao.SmartviewLineDAO;
 import com.buchsbaumtax.core.model.Client;
 import com.buchsbaumtax.core.model.Smartview;
 import com.buchsbaumtax.core.model.SmartviewLine;
@@ -22,7 +21,7 @@ public class UpdateSmartviews {
         List<Smartview> smartviews = Database.dao(SmartviewDAO.class).getAll();
 
         for (Smartview smartview : smartviews) {
-            List<SmartviewLine> smartviewLines = Database.dao(SmartviewLineDAO.class).getForSmartview(smartview.getId());
+            List<SmartviewLine> smartviewLines = Database.dao(SmartviewDAO.class).getSmartviewLines(smartview.getId());
 
             List<Client> clients;
             StringBuilder fromBuilder = new StringBuilder();
@@ -73,7 +72,7 @@ public class UpdateSmartviews {
                 List<Integer> clientIds = clients.stream().map(Client::getId).collect(Collectors.toList());
                 smartview.setClientIds(clientIds);
             }
-            Database.dao(SmartviewDAO.class).update(smartview);
+            Database.dao(SmartviewDAO.class).updateSmartview(smartview);
         }
     }
 
