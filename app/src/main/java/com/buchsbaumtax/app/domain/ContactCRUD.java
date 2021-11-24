@@ -15,6 +15,7 @@ public class ContactCRUD {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         int contactId = Database.dao(ContactDAO.class).create(contact);
+        new DisplayFields().setDisplayPhone(clientId);
         return Database.dao(ContactDAO.class).get(contactId);
     }
 
@@ -24,6 +25,7 @@ public class ContactCRUD {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         Database.dao(ContactDAO.class).update(contact);
+        new DisplayFields().setDisplayPhone(clientId);
         return Database.dao(ContactDAO.class).get(contactId);
     }
 

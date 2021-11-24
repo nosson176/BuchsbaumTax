@@ -17,6 +17,7 @@ public class IncomeBreakdown {
     private String taxGroup;
     private String category;
     private boolean archived;
+    private Double amountUSD;
 
     public int getId() {
         return id;
@@ -80,5 +81,13 @@ public class IncomeBreakdown {
 
     public boolean isArchived() {
         return archived;
+    }
+
+    public Double getAmountUSD() {
+        return amountUSD;
+    }
+
+    public void setAmountUSD(Double amountUSD) {
+        this.amountUSD = amountUSD;
     }
 }

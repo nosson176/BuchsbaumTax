@@ -271,6 +271,13 @@ CREATE TABLE time_slips (
     updated TIMESTAMPTZ DEFAULT now()
 );
 
+CREATE TABLE client_history(
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users ON DELETE CASCADE,
+    client_id INTEGER REFERENCES clients ON DELETE CASCADE,
+    created TIMESTAMPTZ DEFAULT NOW()
+)
+
 -- CREATE TABLE textees (
 --     id SERIAL PRIMARY KEY,
 --     inactive BOOLEAN NOT NULL DEFAULT FALSE,

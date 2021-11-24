@@ -15,7 +15,10 @@ public class IncomeBreakdownCRUD {
         }
         validate(incomeBreakdown);
         int incomeBreakdownId = Database.dao(IncomeBreakdownDAO.class).create(incomeBreakdown);
-        return Database.dao(IncomeBreakdownDAO.class).get(incomeBreakdownId);
+        IncomeBreakdown createdBreakdown = Database.dao(IncomeBreakdownDAO.class).get(incomeBreakdownId);
+        Double amountUSD = ConvertToUSD.convertToUSD(createdBreakdown.getAmount(), createdBreakdown.getCurrency(), createdBreakdown.getYears());
+        createdBreakdown.setAmountUSD(amountUSD);
+        return createdBreakdown;
     }
 
     public IncomeBreakdown update(int clientId, int incomeBreakdownId, IncomeBreakdown incomeBreakdown) {
@@ -24,7 +27,10 @@ public class IncomeBreakdownCRUD {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         Database.dao(IncomeBreakdownDAO.class).update(incomeBreakdown);
-        return Database.dao(IncomeBreakdownDAO.class).get(incomeBreakdownId);
+        IncomeBreakdown updatedBreakdown = Database.dao(IncomeBreakdownDAO.class).get(incomeBreakdownId);
+        Double amountUSD = ConvertToUSD.convertToUSD(updatedBreakdown.getAmount(), updatedBreakdown.getCurrency(), updatedBreakdown.getYears());
+        updatedBreakdown.setAmountUSD(amountUSD);
+        return updatedBreakdown;
     }
 
     private void validate(IncomeBreakdown incomeBreakdown) {
