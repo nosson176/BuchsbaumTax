@@ -261,6 +261,16 @@ CREATE TABLE checklist_items (
     sort_number INTEGER
 );
 
+CREATE TABLE time_slips (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users ON DELETE CASCADE,
+    time_in TIMESTAMPTZ DEFAULT now(),
+    time_out TIMESTAMPTZ,
+    memo TEXT,
+    created TIMESTAMPTZ DEFAULT now(),
+    updated TIMESTAMPTZ DEFAULT now()
+);
+
 CREATE TABLE client_history(
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users ON DELETE CASCADE,
@@ -493,18 +503,6 @@ CREATE TABLE client_history(
 --     floor FLOAT,
 --     apply_percentage FLOAT,
 --     filing_type TEXT
--- );
---
--- CREATE TABLE time_slips (
---     id SERIAL PRIMARY KEY,
---     user_id INTEGER REFERENCES users ON DELETE CASCADE,
---     time_in TIMESTAMPTZ,
---     time_out TIMESTAMPTZ,
---     memo TEXT,
---     seconds_in_shift INTEGER,
---     all_ot BOOLEAN NOT NULL DEFAULT FALSE,
---     created TIMESTAMPTZ DEFAULT now(),
---     updated TIMESTAMPTZ DEFAULT now()
 -- );
 --
 -- CREATE TABLE user_notifications (

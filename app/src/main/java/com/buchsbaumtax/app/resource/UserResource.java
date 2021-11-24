@@ -1,9 +1,11 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.config.Role;
-import com.buchsbaumtax.app.domain.UserCRUD;
+import com.buchsbaumtax.app.domain.user.TimeSlipCRUD;
+import com.buchsbaumtax.app.domain.user.UserCRUD;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.UpdatePasswordRequest;
+import com.buchsbaumtax.core.model.TimeSlip;
 import com.buchsbaumtax.core.model.User;
 import com.buchsbaumtax.core.model.create.UserCreate;
 import com.sifradigital.framework.auth.Authenticated;
@@ -45,5 +47,36 @@ public class UserResource {
     @Path("/{userId}/password")
     public BaseResponse updatePassword(@PathParam("userId") int userId, UpdatePasswordRequest updatePasswordRequest) {
         return new UserCRUD().updatePassword(userId, updatePasswordRequest);
+    }
+
+    @GET
+    @Path("/current/time-slips")
+    public List<TimeSlip> getUserTimeSlips(@Authenticated User user) {
+        return new TimeSlipCRUD().getUserTimeSlips(user);
+    }
+
+    @GET
+    @RolesAllowed(Role.ADMIN)
+    @Path("/time-slips")
+    public List<TimeSlip> getAllTimeSlips() {
+        return new TimeSlipCRUD().getAllTimeSlips();
+    }
+
+    @POST
+    @Path("/current/time-slips")
+    public TimeSlip createTimeSlip(@Authenticated User user, TimeSlip timeSlip) {
+        return new TimeSlipCRUD().create(user, timeSlip);
+    }
+
+    @PUT
+    @Path("/current/time-slips/{timeSlipId}")
+    public TimeSlip updateTimeSlip(@Authenticated User user, @PathParam("timeSlipId") int timeSlipId, TimeSlip timeSlip) {
+        return new TimeSlipCRUD().update(user, timeSlipId, timeSlip);
+    }
+
+    @DELETE
+    @Path("/current/time-slips/{timeSlipId}")
+    public BaseResponse deleteTimeSlip(@Authenticated User user, @PathParam("timeSlipId") int timeSlipId) {
+        return new TimeSlipCRUD().delete(user, timeSlipId);
     }
 }

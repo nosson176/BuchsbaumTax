@@ -1,4 +1,4 @@
-package com.buchsbaumtax.app.domain;
+package com.buchsbaumtax.app.domain.user;
 
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.UpdatePasswordRequest;
