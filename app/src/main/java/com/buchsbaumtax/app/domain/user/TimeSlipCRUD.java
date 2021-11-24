@@ -21,7 +21,7 @@ public class TimeSlipCRUD {
     }
 
     public TimeSlip create(User user, TimeSlip timeSlip) {
-        if (!user.getUserType().equals(Role.ADMIN) || user.getId() != timeSlip.getUserId()) {
+        if (!user.getUserType().equals(Role.ADMIN) && user.getId() != timeSlip.getUserId()) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         int id = Database.dao(TimeSlipDAO.class).create(timeSlip);
@@ -29,17 +29,18 @@ public class TimeSlipCRUD {
     }
 
     public TimeSlip update(User user, int timeSlipId, TimeSlip timeSlip) {
-        if (!user.getUserType().equals(Role.ADMIN) || user.getId() != timeSlip.getUserId() || timeSlipId != timeSlip.getId()) {
+        TimeSlip oldTimeSlip = Database.dao(TimeSlipDAO.class).get(timeSlipId);
+        if ((!user.getUserType().equals(Role.ADMIN) && user.getId() != oldTimeSlip.getUserId()) || timeSlipId != timeSlip.getId()) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
 
         Database.dao(TimeSlipDAO.class).update(timeSlip);
-        return timeSlip;
+        return Database.dao(TimeSlipDAO.class).get(timeSlipId);
     }
 
     public BaseResponse delete(User user, int timeSlipId) {
         TimeSlip timeSlip = Database.dao(TimeSlipDAO.class).get(timeSlipId);
-        if (!user.getUserType().equals(Role.ADMIN) || user.getId() != timeSlip.getUserId() || timeSlipId != timeSlip.getId()) {
+        if ((!user.getUserType().equals(Role.ADMIN) && user.getId() != timeSlip.getUserId()) || timeSlipId != timeSlip.getId()) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
 

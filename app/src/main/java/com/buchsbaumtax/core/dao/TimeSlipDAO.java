@@ -25,7 +25,7 @@ public interface TimeSlipDAO {
     @SqlUpdate("INSERT INTO time_slips (user_id, time_in, time_out, memo) VALUES (:userId, :timeIn, :timeOut, :memo)")
     int create(@BindBean TimeSlip timeSlip);
 
-    @SqlUpdate("UPDATE time_slips SET user_id = :userId, time_in = :timeIn, time_out = :timeOut, memo = :memo WHERE id = :id")
+    @SqlUpdate("UPDATE time_slips SET time_in = :timeIn, time_out = :timeOut, memo = :memo WHERE id = :id")
     void update(@BindBean TimeSlip timeSlip);
 
     @RegisterFieldMapper(TimeSlip.class)
