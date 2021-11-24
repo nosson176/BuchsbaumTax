@@ -21,7 +21,7 @@ public class UpdateSmartviews {
         List<Smartview> smartviews = Database.dao(SmartviewDAO.class).getAll();
 
         for (Smartview smartview : smartviews) {
-            List<SmartviewLine> smartviewLines = Database.dao(SmartviewDAO.class).getSmartviewLines(smartview.getId());
+            List<SmartviewLine> smartviewLines = smartview.getSmartviewLines();
 
             List<Client> clients;
             StringBuilder fromBuilder = new StringBuilder();

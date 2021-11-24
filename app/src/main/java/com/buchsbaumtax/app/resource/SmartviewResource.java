@@ -1,7 +1,6 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.SmartviewCRUD;
-import com.buchsbaumtax.app.dto.SmartviewData;
 import com.buchsbaumtax.core.model.Smartview;
 import com.buchsbaumtax.core.model.User;
 import com.sifradigital.framework.auth.Authenticated;
@@ -13,8 +12,8 @@ import java.util.List;
 @Path("/smartviews")
 public class SmartviewResource {
     @POST
-    public Smartview createSmartview(@Authenticated User user, SmartviewData smartviewData) {
-        return new SmartviewCRUD().create(user, smartviewData);
+    public Smartview createSmartview(@Authenticated User user, Smartview smartview) {
+        return new SmartviewCRUD().create(user, smartview);
     }
 
     @GET
@@ -24,7 +23,7 @@ public class SmartviewResource {
 
     @PUT
     @Path("/{smartviewId}")
-    public Smartview updateSmartview(@Authenticated User user, @PathParam("smartviewId") int smartviewId, SmartviewData smartviewData) {
-        return new SmartviewCRUD().update(user, smartviewId, smartviewData);
+    public Smartview updateSmartview(@Authenticated User user, @PathParam("smartviewId") int smartviewId, Smartview smartview) {
+        return new SmartviewCRUD().update(user, smartviewId, smartview);
     }
 }

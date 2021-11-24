@@ -15,6 +15,22 @@ public class SmartviewLine {
     private String operator;
     private String type;
 
+    public SmartviewLine() {
+    }
+
+    public SmartviewLine(Integer id, Date created, Date updated, long smartviewId, long query, String classToJoin, String fieldToSearch, String searchValue, String operator, String type) {
+        this.id = id;
+        this.created = created;
+        this.updated = updated;
+        this.smartviewId = smartviewId;
+        this.query = query;
+        this.classToJoin = classToJoin;
+        this.fieldToSearch = fieldToSearch;
+        this.searchValue = searchValue;
+        this.operator = operator;
+        this.type = type;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -14,19 +14,9 @@ public class Smartview {
     private List<Integer> clientIds;
     private Date created;
     private Date updated;
+    private List<SmartviewLine> smartviewLines;
 
     public Smartview() {
-    }
-
-    public Smartview(Integer id, String userName, long userId, String name, long sortNumber, boolean archived, Date created, Date updated) {
-        this.id = id;
-        this.userName = userName;
-        this.userId = userId;
-        this.name = name;
-        this.sortNumber = sortNumber;
-        this.archived = archived;
-        this.created = created;
-        this.updated = updated;
     }
 
     public Integer getId() {
@@ -37,8 +27,16 @@ public class Smartview {
         return userName;
     }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public long getUserId() {
         return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public String getName() {
@@ -67,5 +65,17 @@ public class Smartview {
 
     public void setClientIds(List<Integer> clientIds) {
         this.clientIds = clientIds;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public List<SmartviewLine> getSmartviewLines() {
+        return smartviewLines;
+    }
+
+    public void setSmartviewLines(List<SmartviewLine> smartviewLines) {
+        this.smartviewLines = smartviewLines;
     }
 }
