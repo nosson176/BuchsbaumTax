@@ -53,6 +53,9 @@ public interface SmartviewDAO {
     @SqlUpdate("UPDATE smartview_lines SET query = :query, class_to_join = :classToJoin, field_to_search = :fieldToSearch, search_value = :searchValue, operator = :operator, type = :type, updated = now() WHERE id = :id")
     void updateSmartviewLine(@BindBean SmartviewLine smartviewLine);
 
+    @SqlUpdate("DELETE FROM smartview_lines WHERE smartview_id = :smartviewId")
+    void deleteSmartviewLines(@Bind("smartviewId") int smartviewId);
+
     default Smartview create(Smartview smartview) {
         int id = createSmartview(smartview);
         for (SmartviewLine smartviewLine : smartview.getSmartviewLines()) {
@@ -65,14 +68,11 @@ public interface SmartviewDAO {
     default Smartview update(Smartview smartview) {
         updateSmartview(smartview);
 
+        deleteSmartviewLines(smartview.getId());
+
         for (SmartviewLine smartviewLine : smartview.getSmartviewLines()) {
-            if (smartviewLine.getId() == null) {
-                smartviewLine.setSmartviewId(smartview.getId());
-                createSmartviewLine(smartviewLine);
-            }
-            else if (smartviewLine.getSmartviewId() == smartview.getId()) {
-                updateSmartviewLine(smartviewLine);
-            }
+            smartviewLine.setSmartviewId(smartview.getId());
+            createSmartviewLine(smartviewLine);
         }
 
         return Database.dao(SmartviewDAO.class).get(smartview.getId());
