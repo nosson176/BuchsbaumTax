@@ -12,7 +12,9 @@ import java.util.List;
 public class SmartviewCRUD {
 
     public Smartview create(User user, Smartview smartview) {
-        return Database.dao(SmartviewDAO.class).create(user, smartview);
+        smartview.setUserId(user.getId());
+        smartview.setUserName(user.getUsername());
+        return Database.dao(SmartviewDAO.class).create(smartview);
     }
 
     public List<Smartview> getForUser(User user) {

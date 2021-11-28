@@ -1,6 +1,7 @@
 package com.buchsbaumtax.core.model;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class Smartview {
     private List<Integer> clientIds;
     private Date created;
     private Date updated;
-    private List<SmartviewLine> smartviewLines;
+    private List<SmartviewLine> smartviewLines = new ArrayList<>();
 
     public Smartview() {
     }
@@ -73,9 +74,5 @@ public class Smartview {
 
     public List<SmartviewLine> getSmartviewLines() {
         return smartviewLines;
-    }
-
-    public void setSmartviewLines(List<SmartviewLine> smartviewLines) {
-        this.smartviewLines = smartviewLines;
     }
 }

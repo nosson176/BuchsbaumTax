@@ -5,7 +5,6 @@ import com.buchsbaumtax.core.model.SmartviewLine;
 import org.jdbi.v3.core.result.LinkedHashMapRowReducer;
 import org.jdbi.v3.core.result.RowView;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 public class SmartviewReducer implements LinkedHashMapRowReducer<Integer, Smartview> {
@@ -15,9 +14,6 @@ public class SmartviewReducer implements LinkedHashMapRowReducer<Integer, Smartv
                 id -> rowView.getRow(Smartview.class));
 
         if (rowView.getColumn("id", Integer.class) != null) {
-            if (smartview.getSmartviewLines() == null) {
-                smartview.setSmartviewLines(new ArrayList<>());
-            }
             smartview.getSmartviewLines().add(rowView.getRow(SmartviewLine.class));
         }
     }
