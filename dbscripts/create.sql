@@ -11,6 +11,8 @@ CREATE TABLE clients (
     updated TIMESTAMPTZ DEFAULT NOW()
 );
 
+CREATE INDEX clients_fts ON clients USING gin(to_tsvector('simple', status||' '||owes_status||' '||periodical||' '||last_name||' '||display_name||' '||display_phone));
+
 CREATE TABLE contacts (
     id SERIAL PRIMARY KEY,
     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
@@ -23,6 +25,9 @@ CREATE TABLE contacts (
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
     archived BOOLEAN NOT NULL DEFAULT FALSE
 );
+
+CREATE INDEX ON contacts (client_id);
+CREATE INDEX contacts_fts ON contacts USING gin(to_tsvector('simple', contact_type||' '||main_detail||' '||secondary_detail||' '||memo||' '||state||' '||zip));
 
 CREATE TABLE exchange_rates (
     id SERIAL PRIMARY KEY,
@@ -50,6 +55,9 @@ CREATE TABLE fbar_breakdowns (
     archived BOOLEAN NOT NULL DEFAULT FALSE
 );
 
+CREATE INDEX ON fbar_breakdowns (client_id);
+CREATE INDEX fbar_fts ON fbar_breakdowns USING gin(to_tsvector('simple', depend||' '||description||' '||documents||' '|| currency||' '||part||' '||tax_type||' '||tax_group||' '||category));
+
 CREATE TABLE income_breakdowns (
     id SERIAL PRIMARY KEY,
     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
@@ -68,6 +76,9 @@ CREATE TABLE income_breakdowns (
     archived BOOLEAN NOT NULL DEFAULT FALSE,
     depend TEXT
 );
+
+CREATE INDEX ON income_breakdowns (client_id);
+CREATE INDEX income_fts ON income_breakdowns USING gin(to_tsvector('simple', depend||' '||description||' '||documents||' '|| currency||' '||job||' '||tax_type||' '||tax_group||' '||category));
 
 CREATE TABLE year_details (
     year TEXT PRIMARY KEY,
@@ -105,6 +116,8 @@ CREATE TABLE tax_years (
     archived BOOLEAN NOT NULL DEFAULT FALSE,
     irs_history BOOLEAN NOT NULL DEFAULT FALSE
 );
+
+CREATE INDEX ON tax_years (client_id);
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
@@ -146,6 +159,9 @@ CREATE TABLE logs (
     alerted BOOLEAN NOT NULL DEFAULT FALSE
 );
 
+CREATE INDEX ON logs (client_id);
+CREATE INDEX logs_fts ON logs USING gin(to_tsvector('simple', alarm_time||' '||note));
+
 CREATE TABLE tax_personals (
     id SERIAL PRIMARY KEY,
     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
@@ -161,6 +177,9 @@ CREATE TABLE tax_personals (
     informal TEXT,
     archived BOOLEAN NOT NULL DEFAULT FALSE
 );
+
+CREATE INDEX ON tax_personals (client_id);
+CREATE INDEX tp_fts ON tax_personals USING gin(to_tsvector('simple', category||' '||first_name||' '||middle_initial||' '||last_name||' '||ssn||' '||informal||' '||relation||' '||language));
 
 CREATE TABLE filings (
     id SERIAL PRIMARY KEY,
@@ -190,6 +209,27 @@ CREATE TABLE filings (
     amount FLOAT
 );
 
+CREATE INDEX ON filings (tax_year_id);
+CREATE INDEX filings_fts ON filings USING gin(to_tsvector('simple', currency||' '||memo||' '||state||' '||filing_type||' '||file_type||' '||status_detail||' '||status||' '||tax_form));
+
+CREATE TABLE fees (
+    id SERIAL PRIMARY KEY,
+    client_id INTEGER REFERENCES clients ON DELETE CASCADE,
+    year TEXT,
+    status TEXT,
+    status_detail TEXT,
+    fee_type TEXT,
+    manual_amount FLOAT,
+    paid_amount FLOAT,
+    include BOOLEAN NOT NULL DEFAULT TRUE,
+    rate FLOAT,
+    date_fee DATE,
+    sum BOOLEAN NOT NULL DEFAULT FALSE,
+    archived BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE INDEX ON fees (client_id);
+
 CREATE TABLE value_lists (
     id SERIAL PRIMARY KEY,
     sort_order INTEGER,
@@ -211,22 +251,6 @@ CREATE TABLE tax_groups(
     sub_type TEXT
 );
 
-CREATE TABLE fees (
-    id SERIAL PRIMARY KEY,
-    client_id INTEGER REFERENCES clients ON DELETE CASCADE,
-    year TEXT,
-    status TEXT,
-    status_detail TEXT,
-    fee_type TEXT,
-    manual_amount FLOAT,
-    paid_amount FLOAT,
-    include BOOLEAN NOT NULL DEFAULT TRUE,
-    rate FLOAT,
-    date_fee DATE,
-    sum BOOLEAN NOT NULL DEFAULT FALSE,
-    archived BOOLEAN NOT NULL DEFAULT FALSE
-);
-
 CREATE TABLE smartviews (
     id SERIAL PRIMARY KEY,
     user_name TEXT,
@@ -234,7 +258,7 @@ CREATE TABLE smartviews (
     name TEXT,
     sort_number INTEGER,
     archived BOOLEAN NOT NULL DEFAULT FALSE,
-    client_count INTEGER,
+    client_ids INTEGER[],
     created TIMESTAMPTZ DEFAULT now(),
     updated TIMESTAMPTZ DEFAULT now()
 );
@@ -247,7 +271,9 @@ CREATE TABLE smartview_lines (
     query INTEGER,
     class_to_join TEXT,
     field_to_search TEXT,
-    search_value TEXT
+    search_value TEXT,
+    operator TEXT,
+    type TEXT
 );
 
 CREATE TABLE checklist_items (

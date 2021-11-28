@@ -2,6 +2,7 @@ package com.buchsbaumtax.migration;
 
 import com.buchsbaumtax.app.domain.DisplayFields;
 import com.buchsbaumtax.core.model.*;
+import com.google.common.base.CaseFormat;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.RFC4180Parser;
@@ -19,6 +20,7 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.io.FileReader;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.text.SimpleDateFormat;
@@ -564,19 +566,67 @@ public class Migration {
 
             map.put("smartViewId", smartViewIds.get(row[0]));
             map.put("query", castToInt(row[1]));
-            String[] classMethod = new String[]{null, null};
+
+            String className;
+            String fieldName = null;
+            String[] classField = new String[]{null, null};
             if (row[2] != null && !row[2].equals("")) {
-                classMethod = row[2].split("::");
+                if (row[2].equals("TAX_YEAR::tax_year_status_detail")) {
+                    row[2] = "FILING::status_detail";
+                }
+                else if (row[2].equals("LOG::employee_alarm")) {
+                    row[2] = "LOG::alarm_user_name";
+                }
+                classField = row[2].split("::");
             }
-            if (classMethod.length == 2) {
-                map.put("classToJoin", classMethod[0]);
-                map.put("fieldToSearch", classMethod[1]);
+
+            map.put("classToJoin", null);
+            map.put("fieldToSearch", null);
+            map.put("type", null);
+            if (classField[0] != null) {
+                if (classField[0].equals("CLIENT_FLAGS")) {
+                    classField[0] = "CLIENT_FLAG";
+                }
+                className = "com.buchsbaumtax.core.model." + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, classField[0]);
+                if (classField.length == 2 && classField[1] != null) {
+                    fieldName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, classField[1]);
+                    map.put("fieldToSearch", fieldName);
+                }
+                try {
+                    Class<?> c = Class.forName(className);
+                    for (Field field : c.getDeclaredFields()) {
+                        if (fieldName != null && fieldName.equals(field.getName())) {
+                            map.put("type", field.getType().getSimpleName());
+                        }
+                    }
+                    map.put("classToJoin", c.getSimpleName());
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-            else {
-                map.put("classToJoin", classMethod[0]);
-                map.put("fieldToSearch", null);
+
+            String searchValue = row[3];
+            String operator = null;
+            if (searchValue != null) {
+                if (searchValue.charAt(0) == '>' || searchValue.charAt(0) == '<') {
+                    operator = String.valueOf(searchValue.charAt(0));
+                    searchValue = searchValue.substring(1);
+                }
+                else if (searchValue.charAt(0) == '\u2265') {
+                    operator = ">=";
+                    searchValue = searchValue.substring(1);
+                }
+                else if (searchValue.charAt(0) == '\u2264') {
+                    operator = "<=";
+                    searchValue = searchValue.substring(1);
+                }
+                else {
+                    operator = "=";
+                }
             }
-            map.put("searchValue", row[3]);
+            map.put("operator", operator);
+            map.put("searchValue", searchValue);
 
             smartViewLineDAO.create(map);
         }
@@ -891,7 +941,7 @@ public class Migration {
     }
 
     private interface SmartViewLineDAO {
-        @SqlUpdate("INSERT INTO smartview_lines (smartview_id, query, class_to_join, field_to_search, search_value) VALUES (:smartViewId, :query, :classToJoin, :fieldToSearch, :searchValue)")
+        @SqlUpdate("INSERT INTO smartview_lines (smartview_id, query, class_to_join, field_to_search, search_value, operator, type) VALUES (:smartViewId, :query, :classToJoin, :fieldToSearch, :searchValue, :operator, :type)")
         void create(@BindMap Map<String, ?> smartViewLine);
     }
 

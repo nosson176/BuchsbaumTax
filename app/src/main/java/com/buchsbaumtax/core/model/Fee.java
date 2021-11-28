@@ -1,10 +1,8 @@
 package com.buchsbaumtax.core.model;
 
-
 import java.util.Date;
 
 public class Fee {
-
     private long id;
     private long clientId;
     private String year;

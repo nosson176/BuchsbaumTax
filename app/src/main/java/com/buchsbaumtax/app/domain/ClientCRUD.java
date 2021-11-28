@@ -1,7 +1,9 @@
 package com.buchsbaumtax.app.domain;
 
 import com.buchsbaumtax.core.dao.ClientDAO;
+import com.buchsbaumtax.core.dao.SmartviewDAO;
 import com.buchsbaumtax.core.model.Client;
+import com.buchsbaumtax.core.model.Smartview;
 import com.sifradigital.framework.db.Database;
 
 import java.util.List;
@@ -18,6 +20,15 @@ public class ClientCRUD {
 
     public Client get(int clientId) {
         return Database.dao(ClientDAO.class).get(clientId);
+    }
+
+    public List<Client> getFiltered(int smartviewId) {
+        Smartview smartview = Database.dao(SmartviewDAO.class).get(smartviewId);
+        return Database.dao(ClientDAO.class).getBulk(smartview.getClientIds());
+    }
+
+    public List<Client> getFiltered(String q) {
+        return Database.dao(ClientDAO.class).getFiltered(q + ":*");
     }
 
     public Client update(int clientId, Client client) {

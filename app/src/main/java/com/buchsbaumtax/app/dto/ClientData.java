@@ -11,7 +11,8 @@ public class ClientData {
 
     private int id;
     private String lastName;
-    private String currentStatus;
+    private String status;
+    private String owesStatus;
     private boolean archived;
     private String periodical;
     private String displayName;
@@ -29,7 +30,8 @@ public class ClientData {
     public ClientData(Client client, List<TaxYearData> taxYearData) {
         this.id = client.getId();
         this.lastName = client.getLastName();
-        this.currentStatus = client.getStatus();
+        this.status = client.getStatus();
+        this.owesStatus = client.getOwesStatus();
         this.archived = client.isArchived();
         this.periodical = client.getPeriodical();
         this.displayName = client.getDisplayName();
@@ -53,8 +55,12 @@ public class ClientData {
         return lastName;
     }
 
-    public String getCurrentStatus() {
-        return currentStatus;
+    public String getStatus() {
+        return status;
+    }
+
+    public String getOwesStatus() {
+        return owesStatus;
     }
 
     public boolean isArchived() {
