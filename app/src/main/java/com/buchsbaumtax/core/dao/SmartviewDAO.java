@@ -55,11 +55,9 @@ public interface SmartviewDAO {
 
     default Smartview create(Smartview smartview) {
         int id = createSmartview(smartview);
-        if (smartview.getSmartviewLines() != null) {
-            for (SmartviewLine smartviewLine : smartview.getSmartviewLines()) {
-                smartviewLine.setSmartviewId(id);
-                createSmartviewLine(smartviewLine);
-            }
+        for (SmartviewLine smartviewLine : smartview.getSmartviewLines()) {
+            smartviewLine.setSmartviewId(id);
+            createSmartviewLine(smartviewLine);
         }
         return get(id);
     }
@@ -67,15 +65,13 @@ public interface SmartviewDAO {
     default Smartview update(Smartview smartview) {
         updateSmartview(smartview);
 
-        if (smartview.getSmartviewLines() != null) {
-            for (SmartviewLine smartviewLine : smartview.getSmartviewLines()) {
-                if (smartviewLine.getId() == null) {
-                    smartviewLine.setSmartviewId(smartview.getId());
-                    createSmartviewLine(smartviewLine);
-                }
-                else if (smartviewLine.getSmartviewId() == smartview.getId()) {
-                    updateSmartviewLine(smartviewLine);
-                }
+        for (SmartviewLine smartviewLine : smartview.getSmartviewLines()) {
+            if (smartviewLine.getId() == null) {
+                smartviewLine.setSmartviewId(smartview.getId());
+                createSmartviewLine(smartviewLine);
+            }
+            else if (smartviewLine.getSmartviewId() == smartview.getId()) {
+                updateSmartviewLine(smartviewLine);
             }
         }
 
