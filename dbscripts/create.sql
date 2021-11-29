@@ -302,7 +302,7 @@ CREATE TABLE client_history(
     user_id INTEGER REFERENCES users ON DELETE CASCADE,
     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
     created TIMESTAMPTZ DEFAULT NOW()
-)
+);
 
 -- CREATE TABLE textees (
 --     id SERIAL PRIMARY KEY,
