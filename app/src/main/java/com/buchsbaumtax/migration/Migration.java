@@ -8,6 +8,7 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.RFC4180Parser;
 import com.opencsv.RFC4180ParserBuilder;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
+import com.sifradigital.framework.util.PasswordUtils;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
@@ -307,7 +308,7 @@ public class Migration {
             else {
                 map.put("userType", row[8]);
             }
-            map.put("password", "1000:a55d2a919684268d8d14138f177119ec50a707cd42436edc:7e7a159e2e57b31f2523e750cb9ac98d85e50d332dd1ac0a");
+            map.put("password", PasswordUtils.hashPassword("vFT3v^Wk5.M85zLR"));
 
             userDAO.create(map);
         }
@@ -659,7 +660,7 @@ public class Migration {
             User user = userDAO.getByUsername(row[0]);
 
             if (user != null) {
-                map.put("userId", userDAO.getByUsername(row[0]).getId());
+                map.put("userId", user.getId());
             }
             else {
                 map.put("userId", null);
@@ -671,6 +672,29 @@ public class Migration {
             timeSlipDAO.create(map);
         }
 
+    }
+
+    private void csvToClientFlags(List<String[]> clientFlags) {
+        ClientFlagDAO clientFlagDAO = handle.attach(ClientFlagDAO.class);
+        UserDAO userDAO = handle.attach(UserDAO.class);
+
+        for (String[] row : clientFlags) {
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("clientId", clientIds.get(row[0]));
+
+            User user = userDAO.getByUsername(row[1]);
+
+            if (user != null) {
+                map.put("userId", user.getId());
+            }
+            else {
+                map.put("userId", null);
+            }
+            map.put("flag", castToInt(row[2]));
+
+            clientFlagDAO.create(map);
+        }
     }
 
     private Map<String, Object> setFilingData(List<String> row) {
@@ -955,6 +979,11 @@ public class Migration {
         void create(@BindMap Map<String, ?> timeSlips);
     }
 
+    private interface ClientFlagDAO {
+        @SqlUpdate("INSERT INTO client_flags (client_id, user_id, flag) VALUES (:clientId, :userId, :flag)")
+        void create(@BindMap Map<String, ?> clientFlags);
+    }
+
     public static void main(String[] args) {
         String root = "C:\\Users\\shalo\\Downloads\\buchsbaum-main\\buchsbaum-main\\lib\\fm_uploads\\";
         Migration migration = new Migration(root);
@@ -1200,6 +1229,13 @@ public class Migration {
         fbarStatusDetails.addAll(fbarStatusDetailData);
         valueLists.put("fbar_status_detail", fbarStatusDetails);
 
+        List<String[]> docs = new ArrayList<>();
+        columns = new String[]{"", "value"};
+        docs.add(columns);
+        docs.add(new String[]{"", "HAS"});
+        docs.add(new String[]{"", "NEEDS"});
+        valueLists.put("doc", docs);
+
         migration.csvToValueList(valueLists);
         System.out.println("Value list completed.");
 
@@ -1227,6 +1263,12 @@ public class Migration {
         List<String[]> timeSlips = migration.parseCSV(root + "timeslips.csv");
         migration.csvToTimeSlips(timeSlips);
         System.out.println("Time slips completed.");
+
+        System.out.println("Uploading client flags...");
+        List<String[]> clientFlags = migration.parseCSV(root + "client_flags.csv");
+        migration.csvToClientFlags(clientFlags);
+        System.out.println("Client flags completed.");
+
 
         migration.setClientCreated();
     }
