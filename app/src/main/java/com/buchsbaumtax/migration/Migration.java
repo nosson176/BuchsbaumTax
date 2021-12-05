@@ -535,6 +535,29 @@ public class Migration {
         }
     }
 
+    private void csvToClientFlags(List<String[]> clientFlags) {
+        ClientFlagDAO clientFlagDAO = handle.attach(ClientFlagDAO.class);
+        UserDAO userDAO = handle.attach(UserDAO.class);
+
+        for (String[] row : clientFlags) {
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("clientId", clientIds.get(row[0]));
+
+            User user = userDAO.getByUsername(row[1]);
+
+            if (user != null) {
+                map.put("userId", user.getId());
+            }
+            else {
+                map.put("userId", null);
+            }
+            map.put("flag", castToInt(row[2]));
+
+            clientFlagDAO.create(map);
+        }
+    }
+
     private void csvToSmartViews(List<String[]> smartViews) {
         SmartViewDAO smartViewDAO = handle.attach(SmartViewDAO.class);
         UserDAO userDAO = handle.attach(UserDAO.class);
@@ -672,29 +695,6 @@ public class Migration {
             timeSlipDAO.create(map);
         }
 
-    }
-
-    private void csvToClientFlags(List<String[]> clientFlags) {
-        ClientFlagDAO clientFlagDAO = handle.attach(ClientFlagDAO.class);
-        UserDAO userDAO = handle.attach(UserDAO.class);
-
-        for (String[] row : clientFlags) {
-            Map<String, Object> map = new HashMap<>();
-
-            map.put("clientId", clientIds.get(row[0]));
-
-            User user = userDAO.getByUsername(row[1]);
-
-            if (user != null) {
-                map.put("userId", user.getId());
-            }
-            else {
-                map.put("userId", null);
-            }
-            map.put("flag", castToInt(row[2]));
-
-            clientFlagDAO.create(map);
-        }
     }
 
     private Map<String, Object> setFilingData(List<String> row) {
@@ -1229,6 +1229,13 @@ public class Migration {
         fbarStatusDetails.addAll(fbarStatusDetailData);
         valueLists.put("fbar_status_detail", fbarStatusDetails);
 
+        List<String[]> fbarFilings = new ArrayList<>();
+        columns = new String[]{"fmId", "value", "show", "sortOrder"};
+        fbarFilings.add(columns);
+        List<String[]> fbarFilingsData = migration.parseCSV(root + "fbar_filings.csv");
+        fbarFilings.addAll(fbarFilingsData);
+        valueLists.put("fbar_filing", fbarFilings);
+
         List<String[]> docs = new ArrayList<>();
         columns = new String[]{"", "value"};
         docs.add(columns);
@@ -1243,6 +1250,11 @@ public class Migration {
         List<String[]> fees = migration.parseCSV(root + "fees.csv");
         migration.csvToFees(fees);
         System.out.println("Fees completed.");
+
+        System.out.println("Uploading client flags...");
+        List<String[]> clientFlags = migration.parseCSV(root + "client_flags.csv");
+        migration.csvToClientFlags(clientFlags);
+        System.out.println("Client flags completed.");
 
         System.out.println("Uploading smartviews...");
         List<String[]> smartViews = migration.parseCSV(root + "smartviews.csv");
@@ -1263,11 +1275,6 @@ public class Migration {
         List<String[]> timeSlips = migration.parseCSV(root + "timeslips.csv");
         migration.csvToTimeSlips(timeSlips);
         System.out.println("Time slips completed.");
-
-        System.out.println("Uploading client flags...");
-        List<String[]> clientFlags = migration.parseCSV(root + "client_flags.csv");
-        migration.csvToClientFlags(clientFlags);
-        System.out.println("Client flags completed.");
 
 
         migration.setClientCreated();
