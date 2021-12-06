@@ -3,6 +3,8 @@ package com.buchsbaumtax.app.dto;
 import com.buchsbaumtax.core.model.Value;
 
 public class ValueObject {
+
+    private int id;
     private int sortOrder;
     private String value;
     private Integer parentId;
@@ -10,6 +12,7 @@ public class ValueObject {
     private boolean include;
 
     public ValueObject(Value value) {
+        this.id = value.getId();
         this.sortOrder = value.getSortOrder();
         this.value = value.getValue();
         this.parentId = value.getParentId();
