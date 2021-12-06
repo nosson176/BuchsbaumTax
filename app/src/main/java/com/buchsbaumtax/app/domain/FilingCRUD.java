@@ -5,6 +5,8 @@ import com.buchsbaumtax.core.dao.FilingDAO;
 import com.buchsbaumtax.core.model.Filing;
 import com.sifradigital.framework.db.Database;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 public class FilingCRUD {
@@ -28,5 +30,13 @@ public class FilingCRUD {
     public BaseResponse delete(int filingId) {
         Database.dao(FilingDAO.class).delete(filingId);
         return new BaseResponse(true);
+    }
+
+    public Filing update(int filingId, Filing filing) {
+        if (filing.getId() != filingId) {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
+        Database.dao(FilingDAO.class).update(filing);
+        return Database.dao(FilingDAO.class).get(filingId);
     }
 }
