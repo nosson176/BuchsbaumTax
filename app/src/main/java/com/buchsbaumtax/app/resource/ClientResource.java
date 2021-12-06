@@ -160,6 +160,12 @@ public class ClientResource {
         return new FilingCRUD().delete(filingId);
     }
 
+    @PUT
+    @Path("/filings/{filingId}")
+    public Filing updateFiling(@PathParam("filingId") int filingId, Filing filing) {
+        return new FilingCRUD().update(filingId, filing);
+    }
+
     // fees CRUD
     @POST
     @Path("/fees")

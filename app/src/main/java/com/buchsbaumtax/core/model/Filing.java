@@ -5,6 +5,7 @@ import java.util.Date;
 
 public class Filing {
 
+    private int id;
     private String currency;
     private boolean completed;
     private int taxYearId;
@@ -29,6 +30,10 @@ public class Filing {
     private String taxForm;
     private int sortOrder;
     private double amount;
+
+    public int getId() {
+        return id;
+    }
 
     public String getCurrency() {
         return currency;
