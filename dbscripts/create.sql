@@ -304,6 +304,13 @@ CREATE TABLE client_history(
     created TIMESTAMPTZ DEFAULT NOW()
 );
 
+CREATE TABLE client_flags (
+    id SERIAL PRIMARY KEY,
+    client_id INTEGER REFERENCES clients ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users ON DELETE CASCADE,
+    flag INTEGER
+);
+
 -- CREATE TABLE textees (
 --     id SERIAL PRIMARY KEY,
 --     inactive BOOLEAN NOT NULL DEFAULT FALSE,
@@ -343,13 +350,6 @@ CREATE TABLE client_history(
 --     description TEXT,
 --     created TIMESTAMPTZ DEFAULT now(),
 --     updated TIMESTAMPTZ DEFAULT now()
--- );
---
--- CREATE TABLE client_flags (
---     id SERIAL PRIMARY KEY,
---     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
---     user_id INTEGER REFERENCES users ON DELETE CASCADE,
---     flag INTEGER
 -- );
 --
 -- CREATE TABLE counties (
