@@ -4,6 +4,8 @@ package com.buchsbaumtax.core.model;
 import java.util.Date;
 
 public class Filing {
+    public static final String FILING_TYPE_FEDERAL = "federal";
+    public static final String FILING_TYPE_STATE = "state";
 
     private int id;
     private String currency;
@@ -30,6 +32,15 @@ public class Filing {
     private String taxForm;
     private int sortOrder;
     private double amount;
+
+    public Filing() {
+    }
+
+    public Filing(int taxYearId, Date dateFiled, String filingType) {
+        this.taxYearId = taxYearId;
+        this.dateFiled = dateFiled;
+        this.filingType = filingType;
+    }
 
     public int getId() {
         return id;
