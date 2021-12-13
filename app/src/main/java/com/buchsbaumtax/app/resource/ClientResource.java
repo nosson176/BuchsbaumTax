@@ -3,6 +3,7 @@ package com.buchsbaumtax.app.resource;
 import com.buchsbaumtax.app.domain.*;
 import com.buchsbaumtax.app.domain.taxyear.CreateTaxYear;
 import com.buchsbaumtax.app.domain.taxyear.GetClientData;
+import com.buchsbaumtax.app.domain.taxyear.UpdateTaxYear;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.ClientData;
 import com.buchsbaumtax.core.dao.ClientHistoryDAO;
@@ -49,6 +50,12 @@ public class ClientResource {
     @Path("/{clientId}/tax-years")
     public TaxYear createTaxYears(@PathParam("clientId") int clientId, TaxYear taxYear) {
         return new CreateTaxYear().createTaxYear(clientId, taxYear);
+    }
+
+    @PUT
+    @Path("/{clientId}/tax-years/{id}")
+    public TaxYear updateTaxYear(@PathParam("id") int taxYearId, @PathParam("clientId") int clientId, TaxYear taxYear) {
+        return new UpdateTaxYear().updateTaxYear(taxYearId, clientId, taxYear);
     }
 
     @GET

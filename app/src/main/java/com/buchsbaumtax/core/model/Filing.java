@@ -36,9 +36,8 @@ public class Filing {
     public Filing() {
     }
 
-    public Filing(int taxYearId, Date dateFiled, String filingType) {
+    public Filing(int taxYearId, String filingType) {
         this.taxYearId = taxYearId;
-        this.dateFiled = dateFiled;
         this.filingType = filingType;
     }
 

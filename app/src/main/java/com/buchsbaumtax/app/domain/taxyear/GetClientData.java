@@ -8,8 +8,8 @@ import com.buchsbaumtax.core.dao.ClientHistoryDAO;
 import com.buchsbaumtax.core.dao.TaxYearDAO;
 import com.buchsbaumtax.core.model.*;
 import com.sifradigital.framework.db.Database;
-import org.apache.commons.lang3.math.NumberUtils;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +19,7 @@ public class GetClientData {
         Client client = Database.dao(ClientDAO.class).get(clientId);
         List<TaxYear> taxYears = Database.dao(TaxYearDAO.class).getByClient(client.getId());
         List<TaxYearData> taxYearData = taxYears.stream().map(TaxYearData::new).collect(Collectors.toList()).stream()
-                .sorted((ty1, ty2) -> Integer.compare(NumberUtils.toInt(ty2.getYear(), -1), NumberUtils.toInt(ty1.getYear(), -1)))
+                .sorted(Comparator.reverseOrder())
                 .collect(Collectors.toList());
 
         Database.dao(ClientHistoryDAO.class).create(user.getId(), clientId);

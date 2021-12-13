@@ -10,7 +10,6 @@ import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import java.util.Date;
 
 public class CreateTaxYear {
 
@@ -21,7 +20,7 @@ public class CreateTaxYear {
         }
 
         int id = Database.dao(TaxYearDAO.class).create(taxYear, clientId);
-        Filing filing = new Filing(id, new Date(), Filing.FILING_TYPE_FEDERAL);
+        Filing filing = new Filing(id, Filing.FILING_TYPE_FEDERAL);
         Database.dao(FilingDAO.class).create(filing);
 
         return Database.dao(TaxYearDAO.class).get(id);
