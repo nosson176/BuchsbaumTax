@@ -7,7 +7,7 @@ import com.sifradigital.framework.db.Database;
 
 import java.util.List;
 
-public class TaxYearData {
+public class TaxYearData implements Comparable<TaxYearData> {
     private int id;
     private int clientId;
     private String year;
@@ -46,5 +46,22 @@ public class TaxYearData {
 
     public List<Filing> getFilings() {
         return filings;
+    }
+
+    @Override
+    public int compareTo(TaxYearData ty) {
+        if (getYear() == null) {
+            return -1;
+        }
+        if (ty.getYear() == null) {
+            return 1;
+        }
+        if (getYear().equals("DELETE") && !ty.getYear().equals("DELETE")) {
+            return -1;
+        }
+        else if (!getYear().equals("DELETE") && ty.getYear().equals("DELETE")) {
+            return 1;
+        }
+        return getYear().compareTo(ty.getYear());
     }
 }

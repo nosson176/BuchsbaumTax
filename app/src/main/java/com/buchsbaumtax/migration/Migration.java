@@ -384,7 +384,7 @@ public class Migration {
             map.put("fileType", row[16]);
             map.put("rebate", castToDouble(row[18]));
             map.put("taxYearId", taxYearIds.get(row[0]));
-            map.put("filingType", "federal");
+            map.put("filingType", Filing.FILING_TYPE_FEDERAL);
 
             filingDAO.create(map);
 
@@ -392,7 +392,7 @@ public class Migration {
                 ArrayList<String> stateFiling = new ArrayList<>(Arrays.asList(row).subList(24, 36));
                 Map<String, Object> stateMap = setFilingData(stateFiling);
                 stateMap.put("state", row[23]);
-                stateMap.put("filingType", "state");
+                stateMap.put("filingType", Filing.FILING_TYPE_STATE);
                 stateMap.put("fileType", null);
                 stateMap.put("taxYearId", taxYearIds.get(row[0]));
 
@@ -403,7 +403,7 @@ public class Migration {
                 ArrayList<String> state2Filing = new ArrayList<>(Arrays.asList(row).subList(37, 49));
                 Map<String, Object> state2Map = setFilingData(state2Filing);
                 state2Map.put("state", row[36]);
-                state2Map.put("filingType", "state");
+                state2Map.put("filingType", Filing.FILING_TYPE_STATE);
                 state2Map.put("fileType", null);
                 state2Map.put("taxYearId", taxYearIds.get(row[0]));
 
