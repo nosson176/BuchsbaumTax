@@ -30,6 +30,6 @@ public interface LogDAO {
     List<Log> getAll();
 
     @RegisterFieldMapper(Log.class)
-    @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId")
+    @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId ORDER BY log_date DESC")
     List<Log> getForClient(@Bind("clientId") int clientId);
 }

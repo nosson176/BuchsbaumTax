@@ -8,9 +8,9 @@ public class Checklist {
     private long clientId;
     private boolean finished;
     private String memo;
-    private long taxYearId;
+    private Long taxYearId;
     private boolean translated;
-    private long sortNumber;
+    private Long sortNumber;
 
 
     public long getId() {
@@ -33,7 +33,7 @@ public class Checklist {
         return memo;
     }
 
-    public long getTaxYearId() {
+    public Long getTaxYearId() {
         return taxYearId;
     }
 
@@ -41,7 +41,7 @@ public class Checklist {
         return translated;
     }
 
-    public long getSortNumber() {
+    public Long getSortNumber() {
         return sortNumber;
     }
 }

@@ -29,6 +29,6 @@ public interface FeeDAO {
     Fee get(@Bind("id") int id);
 
     @RegisterFieldMapper(Fee.class)
-    @SqlQuery("SELECT * FROM fees WHERE client_id = :clientId")
+    @SqlQuery("SELECT * FROM fees WHERE client_id = :clientId ORDER BY date_fee DESC")
     List<Fee> getForClient(@Bind("clientId") int clientId);
 }

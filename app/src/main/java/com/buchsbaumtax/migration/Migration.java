@@ -35,6 +35,7 @@ public class Migration {
     private Handle handle;
     private Map<String, Integer> clientIds = new HashMap<>();
     private Map<String, Integer> taxYearIds = new HashMap<>();
+    private List<String> yearDetailIds = new ArrayList<>();
     private Map<String, Integer> taxGroupIds = new HashMap<>();
     private Map<String, Integer> smartViewIds = new HashMap<>();
     private Map<String, String> statusMap = new HashMap<>();
@@ -180,7 +181,7 @@ public class Migration {
             map.put("taxType", taxTypeMap.get(row[4]));
             map.put("part", row[5]);
             map.put("currency", row[6]);
-            map.put("frequency", castToInt(row[7]));
+            map.put("frequency", castToDouble(row[7]));
             map.put("documents", row[8]);
             map.put("description", row[9]);
             map.put("amount", castToDouble(row[10]));
@@ -205,7 +206,7 @@ public class Migration {
             map.put("taxType", taxTypeMap.get(row[4]));
             map.put("job", row[5]);
             map.put("currency", row[6]);
-            map.put("frequency", castToInt(row[7]));
+            map.put("frequency", castToDouble(row[7]));
             map.put("documents", row[8]);
             map.put("description", row[9]);
             map.put("amount", castToDouble(row[10]));
@@ -222,38 +223,16 @@ public class Migration {
         YearDetailDAO yearDetailDAO = handle.attach(YearDetailDAO.class);
 
         for (String[] row : yearDetails) {
-            Map<String, Object> map = new HashMap<>();
-
-            map.put("year", row[0]);
-            map.put("deductionMarriedFilingJointly", castToInt(row[1]));
-            map.put("deductionHeadOfHousehold", castToInt(row[2]));
-            map.put("deductionSingleAndMarriedFilingSeparately", castToInt(row[3]));
-            map.put("deductionMarriedFilingJointlyAmount", castToInt(row[4]));
-            map.put("deductionMarriedFilingSeparatelyAmount", castToInt(row[5]));
-            map.put("deductionSingleAndHeadOfHouseholdAmount", castToInt(row[6]));
-            map.put("ceilingSingleAndHeadOfHousehold", castToInt(row[7]));
-            map.put("exemption", castToInt(row[8]));
-            map.put("credit8812AnnualDeduction", castToInt(row[9]));
-            map.put("ceilingSelfEmployment", castToInt(row[10]));
-            map.put("exclusion2555", castToInt(row[11]));
-            map.put("foreignAnnual", row[12]);
-            map.put("foreignMonthly", row[13]);
-            map.put("foreignSecondaryAnnual", row[14]);
-            map.put("foreignSecondaryMonthly", row[15]);
-            map.put("dollarAnnual", row[16]);
-            map.put("dollarMonthly", row[17]);
-            map.put("dollarSecondaryAnnual", row[18]);
-            map.put("dollarSecondaryMonthly", row[19]);
-            map.put("additional8812ChildCredit", row[20]);
-            map.put("ceilingMarriedFilingJointly", castToInt(row[21]));
-            map.put("ceilingMarriedFilingSeparately", castToInt(row[22]));
+            Map<String, Object> map = createYearDetail(row[0], castToInt(row[1]), castToInt(row[2]), castToInt(row[3]), castToInt(row[4]), castToInt(row[5]), castToInt(row[6]), castToInt(row[7]), castToInt(row[8]), castToInt(row[9]), castToInt(row[10]), castToInt(row[11]), row[12], row[13], row[14], row[15], row[16], row[17], row[18], row[19], row[20], castToInt(row[21]), castToInt(row[22]));
 
             yearDetailDAO.create(map);
+            yearDetailIds.add(row[0]);
         }
     }
 
     private void csvToTaxYears(List<String[]> taxYears) {
         TaxYearDAO taxYearDAO = handle.attach(TaxYearDAO.class);
+        YearDetailDAO yearDetailDAO = handle.attach(YearDetailDAO.class);
 
         for (String[] row : taxYears) {
             Map<String, Object> map = new HashMap<>();
@@ -264,6 +243,11 @@ public class Migration {
             map.put("irsHistory", castToBoolean(row[4]));
 
             try {
+                if (row[2] != null && !yearDetailIds.contains(row[2])) {
+                    Map<String, Object> yearDetailMap = createYearDetail(row[2], null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+                    yearDetailIds.add(row[2]);
+                    yearDetailDAO.create(yearDetailMap);
+                }
                 int taxYearId = taxYearDAO.create(map);
                 taxYearIds.put(row[0], taxYearId);
             }
@@ -271,6 +255,36 @@ public class Migration {
                 e.printStackTrace();
             }
         }
+    }
+
+    private Map<String, Object> createYearDetail(String year, Integer deductionMarriedFilingJointly, Integer deductionHeadOfHousehold, Integer deductionSingleAndMarriedFilingSeparately, Integer deductionMarriedFilingJointlyAmount, Integer deductionMarriedFilingSeparatelyAmount, Integer deductionSingleAndHeadOfHouseholdAmount, Integer ceilingSingleAndHeadOfHousehold, Integer exemption, Integer credit8812AnnualDeduction, Integer ceilingSelfEmployment, Integer exclusion2555, String foreignAnnual, String foreignMonthly, String foreignSecondaryAnnual, String foreignSecondaryMonthly, String dollarAnnual, String dollarMonthly, String dollarSecondaryAnnual, String dollarSecondaryMonthly, String additional8812ChildCredit, Integer ceilingMarriedFilingJointly, Integer ceilingMarriedFilingSeparately) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("year", year);
+        map.put("deductionMarriedFilingJointly", deductionMarriedFilingJointly);
+        map.put("deductionHeadOfHousehold", deductionHeadOfHousehold);
+        map.put("deductionSingleAndMarriedFilingSeparately", deductionSingleAndMarriedFilingSeparately);
+        map.put("deductionMarriedFilingJointlyAmount", deductionMarriedFilingJointlyAmount);
+        map.put("deductionMarriedFilingSeparatelyAmount", deductionMarriedFilingSeparatelyAmount);
+        map.put("deductionSingleAndHeadOfHouseholdAmount", deductionSingleAndHeadOfHouseholdAmount);
+        map.put("ceilingSingleAndHeadOfHousehold", ceilingSingleAndHeadOfHousehold);
+        map.put("exemption", exemption);
+        map.put("credit8812AnnualDeduction", credit8812AnnualDeduction);
+        map.put("ceilingSelfEmployment", ceilingSelfEmployment);
+        map.put("exclusion2555", exclusion2555);
+        map.put("foreignAnnual", foreignAnnual);
+        map.put("foreignMonthly", foreignMonthly);
+        map.put("foreignSecondaryAnnual", foreignSecondaryAnnual);
+        map.put("foreignSecondaryMonthly", foreignSecondaryMonthly);
+        map.put("dollarAnnual", dollarAnnual);
+        map.put("dollarMonthly", dollarMonthly);
+        map.put("dollarSecondaryAnnual", dollarSecondaryAnnual);
+        map.put("dollarSecondaryMonthly", dollarSecondaryMonthly);
+        map.put("additional8812ChildCredit", additional8812ChildCredit);
+        map.put("ceilingMarriedFilingJointly", ceilingMarriedFilingJointly);
+        map.put("ceilingMarriedFilingSeparately", ceilingMarriedFilingSeparately);
+
+        return map;
     }
 
     private void csvToUser(List<String[]> users) {
@@ -427,7 +441,7 @@ public class Migration {
                 Map<String, Object> extMap = new HashMap<>();
                 extMap.put("status", row[58]);
                 extMap.put("statusDate", parseDate(row[59]));
-                extMap.put("amount", castToInt(row[60]));
+                extMap.put("amount", castToDouble(row[60]));
                 extMap.put("completed", castToBoolean(row[61]));
                 extMap.put("taxForm", row[62]);
                 extMap.put("dateFiled", parseDate(row[63]));

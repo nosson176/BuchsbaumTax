@@ -30,6 +30,6 @@ public interface FbarBreakdownDAO {
     List<FbarBreakdown> getAll();
 
     @RegisterFieldMapper(FbarBreakdown.class)
-    @SqlQuery("SELECT * FROM fbar_breakdowns WHERE client_id = :clientId")
+    @SqlQuery("SELECT * FROM fbar_breakdowns WHERE client_id = :clientId ORDER BY category DESC, tax_group")
     List<FbarBreakdown> getForClient(@Bind("clientId") int clientId);
 }

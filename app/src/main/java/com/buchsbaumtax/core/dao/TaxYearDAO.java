@@ -23,7 +23,7 @@ public interface TaxYearDAO {
     TaxYear get(@Bind("id") int id);
 
     @RegisterFieldMapper(TaxYear.class)
-    @SqlQuery("SELECT * FROM tax_years WHERE client_id = :clientId")
+    @SqlQuery("SELECT * FROM tax_years WHERE client_id = :clientId ORDER BY year DESC")
     List<TaxYear> getByClient(@Bind("clientId") int clientId);
 
     @SqlUpdate("UPDATE tax_years SET client_id = :clientId, year = :year, archived = :archived, irs_history = :irsHistory WHERE id = :id")

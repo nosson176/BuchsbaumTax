@@ -30,6 +30,6 @@ public interface IncomeBreakdownDAO {
     List<IncomeBreakdown> getAll();
 
     @RegisterFieldMapper(IncomeBreakdown.class)
-    @SqlQuery("SELECT * FROM income_breakdowns WHERE client_id = :clientId")
+    @SqlQuery("SELECT * FROM income_breakdowns WHERE client_id = :clientId ORDER BY category DESC, tax_group")
     List<IncomeBreakdown> getForClient(@Bind("clientId") int clientId);
 }
