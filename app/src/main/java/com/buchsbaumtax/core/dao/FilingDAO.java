@@ -32,6 +32,6 @@ public interface FilingDAO {
     void delete(@Bind("id") int id);
 
     @RegisterFieldMapper(Filing.class)
-    @SqlQuery("SELECT * FROM filings WHERE tax_year_id = :taxYearId")
+    @SqlQuery("SELECT * FROM filings WHERE tax_year_id = :taxYearId ORDER BY date_filed DESC")
     List<Filing> getByTaxYear(@Bind("taxYearId") int taxYearId);
 }

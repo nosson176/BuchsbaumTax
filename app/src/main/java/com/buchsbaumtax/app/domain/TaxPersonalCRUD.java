@@ -7,7 +7,6 @@ import com.sifradigital.framework.validation.Validator;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import java.util.Date;
 
 public class TaxPersonalCRUD {
     public TaxPersonal create(int clientId, TaxPersonal taxPersonal) {
@@ -33,7 +32,6 @@ public class TaxPersonalCRUD {
     private void validate(TaxPersonal taxPersonal) {
         new Validator()
                 .required(taxPersonal.getClientId())
-                .before(taxPersonal.getDateOfBirth(), new Date())
                 .validateAndGuard();
     }
 }

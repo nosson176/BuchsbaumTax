@@ -30,7 +30,7 @@ public interface TaxPersonalDAO {
 
 
     @RegisterFieldMapper(TaxPersonal.class)
-    @SqlQuery("SELECT * FROM tax_personals WHERE client_id = :clientId")
+    @SqlQuery("SELECT * FROM tax_personals WHERE client_id = :clientId ORDER BY category DESC, first_name")
     List<TaxPersonal> getForClient(@Bind("clientId") int clientId);
 
 }
