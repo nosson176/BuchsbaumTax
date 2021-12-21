@@ -26,7 +26,7 @@ public interface SmartviewDAO {
     @RegisterFieldMapper(value = Smartview.class, prefix = "s")
     @RegisterFieldMapper(SmartviewLine.class)
     @UseRowReducer(SmartviewReducer.class)
-    @SqlQuery("SELECT s.id as s_id, s.user_name s_user_name, s.user_id as s_user_id, s.name as s_name, s.sort_number as s_sort_number, s.archived as s_archived, s.client_ids as s_client_ids, s.created as s_created, s.updated as s_updated, sl.* FROM smartviews s JOIN smartview_lines sl ON s.id = sl.smartview_id ORDER BY id")
+    @SqlQuery("SELECT s.id as s_id, s.user_name s_user_name, s.user_id as s_user_id, s.name as s_name, s.sort_number as s_sort_number, s.archived as s_archived, s.client_ids as s_client_ids, s.created as s_created, s.updated as s_updated, sl.* FROM smartviews s LEFT JOIN smartview_lines sl ON s.id = sl.smartview_id ORDER BY id")
     List<Smartview> getAll();
 
     @RegisterFieldMapper(value = Smartview.class, prefix = "s")

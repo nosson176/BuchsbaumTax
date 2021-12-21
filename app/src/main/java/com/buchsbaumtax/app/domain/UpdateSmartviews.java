@@ -33,7 +33,7 @@ public class UpdateSmartviews {
             boolean first = true;
 
             if (smartviewLines == null || smartviewLines.isEmpty()) {
-                smartview.setClientIds(null);
+                smartview.setClientIds(new ArrayList<>());
             }
             else {
                 List<String> fields = new ArrayList<>();
@@ -124,7 +124,7 @@ public class UpdateSmartviews {
         else if (field.equals("year_name")) {
             return String.format("(tax_years.year = '%s') ", searchValue);
         }
-        else if (components.length >= 2 && field.contains("paid") || field.contains("owes")) {
+        else if (components.length >= 2 && field.contains("paid") || field.contains("owes") && (operator != null && searchValue != null)) {
             return String.format("(filings.filing_type = '%s' AND filings.%s %s %s) ", components[1], components[0], operator, searchValue);
         }
         else if (field.equals("extension_form")) {
