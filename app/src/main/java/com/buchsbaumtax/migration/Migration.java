@@ -717,7 +717,10 @@ public class Migration {
         map.put("status", row.get(0));
         map.put("statusDetail", row.get(1));
         map.put("statusDate", parseDate(row.get(2)));
-        map.put("memo", row.get(3));
+        String memo = row.get(3);
+        if (memo != null)
+            memo = memo.replace("\u000b", "\n");
+        map.put("memo", memo);
         map.put("includeInRefund", castToBoolean(row.get(4)));
         map.put("owes", castToDouble(row.get(5)));
         map.put("paid", castToDouble(row.get(6)));
