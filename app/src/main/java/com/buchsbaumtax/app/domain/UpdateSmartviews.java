@@ -59,7 +59,7 @@ public class UpdateSmartviews {
         for (Smartview smartview : smartviews) {
             List<SmartviewLine> smartviewLines = smartview.getSmartviewLines();
             Set<Integer> clientIds = new HashSet<>();
-            List<?> filteredData = new ArrayList<>();
+            List<?> finalList = new ArrayList<>();
 
             for (SmartviewLine line : smartviewLines) {
                 String classToJoin = line.getClassToJoin();
@@ -68,6 +68,7 @@ public class UpdateSmartviews {
                 String operator = line.getOperator();
 
                 List<?> data = dataMap.get(classToJoin);
+                List<?> filteredData = new ArrayList<>();
                 if (data != null) {
                     Map<String, String> fieldTranslations = new HashMap<>();
                     fieldTranslations.put("comment", "memo");
@@ -155,31 +156,39 @@ public class UpdateSmartviews {
                             }
                         }).collect(Collectors.toList());
                     }
+                    if (filteredData != null && !filteredData.isEmpty()) {
+                        if (finalList.isEmpty()) {
+                            finalList = filteredData;
+                        }
+                        else {
+                            finalList = finalList.stream()
+                                    .filter(filteredData::contains)
+                                    .collect(Collectors.toList());
+                        }
+                    }
                 }
             }
-            if (filteredData != null && !filteredData.isEmpty()) {
-                clientIds = filteredData.stream().map(f -> {
+            clientIds = finalList.stream().map(f -> {
+                try {
+                    return (int)FieldUtils.readField(f, "clientId", true);
+                }
+                catch (Exception e) {
                     try {
-                        return (int)FieldUtils.readField(f, "clientId", true);
+                        int taxYearId = (int)FieldUtils.readField(f, "taxYearId", true);
+                        TaxYear taxYear = taxYears.stream().filter(ty -> ty.getId() == taxYearId).findFirst().get();
+                        return taxYear.getClientId();
                     }
-                    catch (Exception e) {
+                    catch (Exception ex) {
                         try {
-                            int taxYearId = (int)FieldUtils.readField(f, "taxYearId", true);
-                            TaxYear taxYear = taxYears.stream().filter(ty -> ty.getId() == taxYearId).findFirst().get();
-                            return taxYear.getClientId();
+                            return (int)FieldUtils.readField(f, "id", true);
                         }
-                        catch (Exception ex) {
-                            try {
-                                return (int)FieldUtils.readField(f, "id", true);
-                            }
-                            catch (Exception exception) {
-                                Logger.error("Error translating filtered data of type {} to client ids", f.getClass().getSimpleName(), exception);
-                                return null;
-                            }
+                        catch (Exception exception) {
+                            Logger.error("Error translating filtered data of type {} to client ids", f.getClass().getSimpleName(), exception);
+                            return null;
                         }
                     }
-                }).collect(Collectors.toSet());
-            }
+                }
+            }).collect(Collectors.toSet());
             List<Integer> clientIdList = new ArrayList<>(clientIds);
 
             smartview.setClientIds(clientIdList);
