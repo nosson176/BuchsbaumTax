@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Fee {
     private long id;
-    private long clientId;
+    private int clientId;
     private String year;
     private String status;
     private String statusDetail;
@@ -22,7 +22,7 @@ public class Fee {
         return id;
     }
 
-    public long getClientId() {
+    public int getClientId() {
         return clientId;
     }
 

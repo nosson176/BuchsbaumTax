@@ -28,4 +28,8 @@ public interface TaxYearDAO {
 
     @SqlUpdate("UPDATE tax_years SET client_id = :clientId, year = :year, archived = :archived, irs_history = :irsHistory WHERE id = :id")
     void update(@BindBean TaxYear taxYear);
+
+    @RegisterFieldMapper(TaxYear.class)
+    @SqlQuery("SELECT * FROM tax_years ORDER BY id")
+    List<TaxYear> getAll();
 }

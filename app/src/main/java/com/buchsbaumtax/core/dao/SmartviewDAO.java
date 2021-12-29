@@ -8,10 +8,7 @@ import com.sifradigital.framework.db.Database;
 import org.jdbi.v3.sqlobject.config.RegisterFieldMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
-import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
-import org.jdbi.v3.sqlobject.statement.SqlQuery;
-import org.jdbi.v3.sqlobject.statement.SqlUpdate;
-import org.jdbi.v3.sqlobject.statement.UseRowReducer;
+import org.jdbi.v3.sqlobject.statement.*;
 
 import java.util.List;
 
@@ -37,6 +34,9 @@ public interface SmartviewDAO {
 
     @SqlUpdate("UPDATE smartviews SET name = :name, sort_number = :sortNumber, archived = :archived, client_ids = :clientIds, updated = NOW() WHERE id = :id")
     void updateSmartview(@BindBean Smartview smartview);
+
+    @SqlBatch("UPDATE smartviews SET name = :name, sort_number = :sortNumber, archived = :archived, client_ids = :clientIds, updated = NOW() WHERE id = :id")
+    void bulkUpdateSmartviews(@BindBean List<Smartview> smartviews);
 
     @GetGeneratedKeys
     @SqlUpdate("INSERT INTO smartviews (user_name, user_id, name, sort_number, archived) VALUES (:userName, :userId, :name, :sortNumber, :archived)")
