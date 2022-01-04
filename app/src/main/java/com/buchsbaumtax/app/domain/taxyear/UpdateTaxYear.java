@@ -8,8 +8,9 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 public class UpdateTaxYear {
-    public TaxYear updateTaxYear(int taxYearId, int clientId, TaxYear taxYear) {
-        if (taxYearId != taxYear.getId() || clientId != taxYear.getClientId()) {
+    public TaxYear updateTaxYear(int taxYearId, TaxYear taxYear) {
+        TaxYear oldTaxYear = Database.dao(TaxYearDAO.class).get(taxYearId);
+        if (taxYearId != taxYear.getId() || oldTaxYear == null) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         Database.dao(TaxYearDAO.class).update(taxYear);

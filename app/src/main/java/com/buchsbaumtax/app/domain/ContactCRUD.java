@@ -9,23 +9,23 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 public class ContactCRUD {
-    public Contact create(int clientId, Contact contact) {
+    public Contact create(Contact contact) {
         validate(contact);
-        if (contact.getClientId() != clientId) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
         int contactId = Database.dao(ContactDAO.class).create(contact);
-        new DisplayFields().setDisplayPhone(clientId);
+        Contact newContact = Database.dao(ContactDAO.class).get(contactId);
+        new DisplayFields().setDisplayPhone(newContact.getClientId());
         return Database.dao(ContactDAO.class).get(contactId);
     }
 
-    public Contact update(int clientId, int contactId, Contact contact) {
+    public Contact update(int contactId, Contact contact) {
         validate(contact);
-        if (contact.getId() != contactId || contact.getClientId() != clientId) {
+        Contact oldContact = Database.dao(ContactDAO.class).get(contactId);
+        if (contact.getId() != contactId || oldContact == null) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         Database.dao(ContactDAO.class).update(contact);
-        new DisplayFields().setDisplayPhone(clientId);
+        Contact updatedContact = Database.dao(ContactDAO.class).get(contactId);
+        new DisplayFields().setDisplayPhone(updatedContact.getClientId());
         return Database.dao(ContactDAO.class).get(contactId);
     }
 

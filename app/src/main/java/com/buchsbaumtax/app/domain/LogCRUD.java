@@ -9,18 +9,16 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 public class LogCRUD {
-    public Log create(int clientId, Log log) {
-        if (log.getClientId() != clientId) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
+    public Log create(Log log) {
         validate(log);
         int logId = Database.dao(LogDAO.class).create(log);
         return Database.dao(LogDAO.class).get(logId);
     }
 
-    public Log update(int clientId, int logId, Log log) {
+    public Log update(int logId, Log log) {
         validate(log);
-        if (log.getId() != logId || log.getClientId() != clientId) {
+        Log oldLog = Database.dao(LogDAO.class).get(logId);
+        if (log.getId() != logId || oldLog == null) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         Database.dao(LogDAO.class).update(log);

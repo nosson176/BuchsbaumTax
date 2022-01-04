@@ -16,7 +16,7 @@ public interface TaxYearDAO {
 
     @GetGeneratedKeys
     @SqlUpdate("INSERT INTO tax_years (client_id, year, archived, irs_history) VALUES (:clientId, :year, :archived, :irsHistory)")
-    int create(@BindBean TaxYear taxYear, @Bind("clientId") int clientId);
+    int create(@BindBean TaxYear taxYear);
 
     @RegisterFieldMapper(TaxYear.class)
     @SqlQuery("SELECT * FROM tax_years WHERE id = :id")

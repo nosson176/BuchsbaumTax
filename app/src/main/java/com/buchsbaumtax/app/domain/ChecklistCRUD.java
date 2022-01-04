@@ -19,7 +19,8 @@ public class ChecklistCRUD {
     }
 
     public Checklist update(int checklistId, Checklist checklist) {
-        if (checklist.getId() != checklistId) {
+        Checklist oldChecklist = Database.dao(ChecklistDAO.class).get(checklistId);
+        if (checklist.getId() != checklistId || oldChecklist == null) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         Database.dao(ChecklistDAO.class).update(checklist);

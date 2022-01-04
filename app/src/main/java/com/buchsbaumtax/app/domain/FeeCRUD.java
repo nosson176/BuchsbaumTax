@@ -19,7 +19,8 @@ public class FeeCRUD {
     }
 
     public Fee update(Fee fee, int feeId) {
-        if (feeId != fee.getId()) {
+        Fee oldFee = Database.dao(FeeDAO.class).get(feeId);
+        if (feeId != fee.getId() || oldFee == null) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         Database.dao(FeeDAO.class).update(fee);

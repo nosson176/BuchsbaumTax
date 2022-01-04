@@ -6,6 +6,8 @@ import com.buchsbaumtax.core.model.Client;
 import com.buchsbaumtax.core.model.Smartview;
 import com.sifradigital.framework.db.Database;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 public class ClientCRUD {
@@ -32,6 +34,10 @@ public class ClientCRUD {
     }
 
     public Client update(int clientId, Client client) {
+        Client oldClient = Database.dao(ClientDAO.class).get(clientId);
+        if (oldClient == null || clientId != client.getId()) {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
         Database.dao(ClientDAO.class).update(client);
         return Database.dao(ClientDAO.class).get(clientId);
     }

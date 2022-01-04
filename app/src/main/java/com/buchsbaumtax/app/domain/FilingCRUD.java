@@ -33,7 +33,8 @@ public class FilingCRUD {
     }
 
     public Filing update(int filingId, Filing filing) {
-        if (filing.getId() != filingId) {
+        Filing oldFiling = Database.dao(FilingDAO.class).get(filingId);
+        if (filing.getId() != filingId || oldFiling == null) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         Database.dao(FilingDAO.class).update(filing);
