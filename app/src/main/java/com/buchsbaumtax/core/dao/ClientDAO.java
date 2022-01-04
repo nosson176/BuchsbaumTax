@@ -12,10 +12,10 @@ import java.util.List;
 
 @Dao
 public interface ClientDAO {
-    final String MATCHING_CLIENTS = "matching_clients(id) AS (SELECT c.* FROM clients c, words WHERE to_tsquery('simple', w) @@ to_tsvector('simple', CONCAT_WS(' ', last_name))), ";
-    final String MATCHING_CONTACTS = "matching_contacts AS (SELECT co.* FROM contacts co, words WHERE to_tsquery('simple', w) @@ to_tsvector('simple', CONCAT_WS(' ', main_detail, memo))), ";
-    final String MATCHING_PERSONALS = "matching_personals AS (SELECT tp.* FROM tax_personals tp, words WHERE to_tsquery('simple', w) @@ to_tsvector('simple', CONCAT_WS(' ', first_name, last_name, ssn, informal)))";
-    final String WITH = "WITH words(w) AS (VALUES (:q)), " + MATCHING_CLIENTS + MATCHING_CONTACTS + MATCHING_PERSONALS;
+    final String MATCHING_CLIENTS = "matching_clients(id) AS (SELECT c.* FROM clients c WHERE last_name ~ (:q)), ";
+    final String MATCHING_CONTACTS = "matching_contacts AS (SELECT co.* FROM contacts co WHERE (main_detail, memo)::text ~ (:q)), ";
+    final String MATCHING_PERSONALS = "matching_personals AS (SELECT tp.* FROM tax_personals tp WHERE (first_name, last_name, ssn, informal)::text ~ (:q))";
+    final String WITH = "WITH " + MATCHING_CLIENTS + MATCHING_CONTACTS + MATCHING_PERSONALS;
     final String SELECT_CLIENTS = "SELECT c.* FROM matching_clients c UNION ";
     final String SELECT_CONTACTS = "SELECT c.* FROM matching_contacts co JOIN clients c ON co.client_id = c.id UNION ";
     final String SELECT_PERSONALS = "SELECT c.* FROM matching_personals p JOIN clients c ON p.client_id = c.id";
@@ -41,6 +41,10 @@ public interface ClientDAO {
     @AllowUnusedBindings
     @SqlQuery(WITH + SELECT)
     List<Client> getFiltered(@Bind("q") String q);
+
+    @RegisterFieldMapper(Client.class)
+    @SqlQuery("<query>")
+    List<Client> getFilteredWithFields(@Define("query") String query);
 
     @GetGeneratedKeys
     @SqlUpdate("INSERT INTO clients (status, owes_status, periodical, last_name, archived, display_name, display_phone) VALUES (:status, :owesStatus, :periodical, :lastName, :archived, :displayName, :displayPhone)")
