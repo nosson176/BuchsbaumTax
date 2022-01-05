@@ -2,13 +2,12 @@ package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.FbarBreakdownCRUD;
 import com.buchsbaumtax.app.dto.BaseResponse;
+import com.buchsbaumtax.core.dao.FbarBreakdownDAO;
 import com.buchsbaumtax.core.model.FbarBreakdown;
 import com.sifradigital.framework.auth.Authenticated;
+import com.sifradigital.framework.db.Database;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import java.util.List;
 
 @Authenticated
@@ -17,6 +16,11 @@ public class FbarBreakdownResource {
     @POST
     public FbarBreakdown createFbarBreakdown(FbarBreakdown fbarBreakdown) {
         return new FbarBreakdownCRUD().create(fbarBreakdown);
+    }
+
+    @GET
+    public List<FbarBreakdown> getAllFbarBreakdowns() {
+        return Database.dao(FbarBreakdownDAO.class).getAll();
     }
 
     @PUT

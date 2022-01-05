@@ -2,13 +2,12 @@ package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.TaxPersonalCRUD;
 import com.buchsbaumtax.app.dto.BaseResponse;
+import com.buchsbaumtax.core.dao.TaxPersonalDAO;
 import com.buchsbaumtax.core.model.TaxPersonal;
 import com.sifradigital.framework.auth.Authenticated;
+import com.sifradigital.framework.db.Database;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import java.util.List;
 
 @Authenticated
@@ -17,6 +16,11 @@ public class TaxPersonalResource {
     @POST
     public TaxPersonal createTaxPersonal(TaxPersonal taxPersonal) {
         return new TaxPersonalCRUD().create(taxPersonal);
+    }
+
+    @GET
+    public List<TaxPersonal> getAllTaxPersonals() {
+        return Database.dao(TaxPersonalDAO.class).getAll();
     }
 
     @PUT

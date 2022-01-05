@@ -15,6 +15,10 @@ import java.util.List;
 @Dao
 public interface TaxYearDAO {
 
+    @RegisterFieldMapper(TaxYear.class)
+    @SqlQuery("SELECT * FROM tax_years ORDER BY id")
+    List<TaxYear> getAll();
+
     @GetGeneratedKeys
     @SqlUpdate("INSERT INTO tax_years (client_id, year, archived, irs_history) VALUES (:clientId, :year, :archived, :irsHistory)")
     int create(@BindBean TaxYear taxYear);
