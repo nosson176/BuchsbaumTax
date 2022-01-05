@@ -30,7 +30,7 @@ public class ClientCRUD {
     }
 
     public List<Client> getFiltered(String q) {
-        return Database.dao(ClientDAO.class).getFiltered(q + ":*");
+        return Database.dao(ClientDAO.class).getFiltered(q);
     }
 
     public List<Client> getFiltered(String q, String field) {
@@ -43,10 +43,10 @@ public class ClientCRUD {
         StringBuilder query = new StringBuilder();
         query.append("SELECT c.* FROM clients c ");
         if (!table.equals("clients")) {
-            query.append(String.format("JOIN %s t ON c.id = t.client_id WHERE t.%s ~ '%s'", table, fieldName, q));
+            query.append(String.format("JOIN %s t ON c.id = t.client_id WHERE t.%s ILIKE '%%%s%%'", table, fieldName, q));
         }
         else {
-            query.append(String.format("WHERE %s ~ '%s'", fieldName, q));
+            query.append(String.format("WHERE %s ILIKE '%%%s%%'", fieldName, q));
         }
         String queryString = query.toString();
         return Database.dao(ClientDAO.class).getFilteredWithFields(queryString);

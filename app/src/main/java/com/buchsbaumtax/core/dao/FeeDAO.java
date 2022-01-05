@@ -14,10 +14,10 @@ import java.util.List;
 @Dao
 public interface FeeDAO {
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO fees (client_id, year, status, status_detail, fee_type, manual_amount, paid_amount, include, rate, date_fee, sum, archived) VALUES (:clientId, :year, :status, :statusDetail, :feeType, :manualAmount, :paidAmount, :include, :rate, :dateFee, :sum, :archived)")
+    @SqlUpdate("INSERT INTO fees (client_id, year, status, status_detail, fee_type, manual_amount, paid_amount, include, rate, date_fee, sum, archived, notes) VALUES (:clientId, :year, :status, :statusDetail, :feeType, :manualAmount, :paidAmount, :include, :rate, :dateFee, :sum, :archived, :notes)")
     int create(@BindBean Fee fee);
 
-    @SqlUpdate("UPDATE fees SET client_id = :clientId, year = :year, status = :status, status_detail = :statusDetail, fee_type = :feeType, manual_amount = :manualAmount, paid_amount = :paidAmount, include = :include, rate = :rate, date_fee = :dateFee, sum = :sum, archived = :archived WHERE id = :id")
+    @SqlUpdate("UPDATE fees SET client_id = :clientId, year = :year, status = :status, status_detail = :statusDetail, fee_type = :feeType, manual_amount = :manualAmount, paid_amount = :paidAmount, include = :include, rate = :rate, date_fee = :dateFee, sum = :sum, archived = :archived, notes = :notes WHERE id = :id")
     void update(@BindBean Fee fee);
 
     @RegisterFieldMapper(Fee.class)

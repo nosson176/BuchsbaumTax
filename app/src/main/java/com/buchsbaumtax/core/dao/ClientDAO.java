@@ -12,9 +12,9 @@ import java.util.List;
 
 @Dao
 public interface ClientDAO {
-    final String MATCHING_CLIENTS = "matching_clients(id) AS (SELECT c.* FROM clients c WHERE last_name ~ (:q)), ";
-    final String MATCHING_CONTACTS = "matching_contacts AS (SELECT co.* FROM contacts co WHERE (main_detail, memo)::text ~ (:q)), ";
-    final String MATCHING_PERSONALS = "matching_personals AS (SELECT tp.* FROM tax_personals tp WHERE (first_name, last_name, ssn, informal)::text ~ (:q))";
+    final String MATCHING_CLIENTS = "matching_clients(id) AS (SELECT c.* FROM clients c WHERE last_name ILIKE CONCAT('%', :q, '%')), ";
+    final String MATCHING_CONTACTS = "matching_contacts AS (SELECT co.* FROM contacts co WHERE (main_detail, memo)::text ILIKE CONCAT('%', :q, '%')), ";
+    final String MATCHING_PERSONALS = "matching_personals AS (SELECT tp.* FROM tax_personals tp WHERE (first_name, last_name, ssn, informal)::text ILIKE CONCAT('%', :q, '%'))";
     final String WITH = "WITH " + MATCHING_CLIENTS + MATCHING_CONTACTS + MATCHING_PERSONALS;
     final String SELECT_CLIENTS = "SELECT c.* FROM matching_clients c UNION ";
     final String SELECT_CONTACTS = "SELECT c.* FROM matching_contacts co JOIN clients c ON co.client_id = c.id UNION ";
