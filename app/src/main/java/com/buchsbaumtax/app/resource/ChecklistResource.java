@@ -1,6 +1,7 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.ChecklistCRUD;
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.model.Checklist;
 import com.sifradigital.framework.auth.Authenticated;
 
@@ -18,6 +19,11 @@ public class ChecklistResource {
     @GET
     public List<Checklist> getAllChecklists() {
         return new ChecklistCRUD().getAll();
+    }
+
+    @PUT
+    public BaseResponse bulkUpdateChecklists(List<Checklist> checklists) {
+        return new ChecklistCRUD().bulkUpdate(checklists);
     }
 
     @PUT

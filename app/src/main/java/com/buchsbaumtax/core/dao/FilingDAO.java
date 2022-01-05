@@ -6,6 +6,7 @@ import org.jdbi.v3.sqlobject.config.RegisterFieldMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
+import org.jdbi.v3.sqlobject.statement.SqlBatch;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
@@ -34,4 +35,7 @@ public interface FilingDAO {
     @RegisterFieldMapper(Filing.class)
     @SqlQuery("SELECT * FROM filings WHERE tax_year_id = :taxYearId ORDER BY date_filed DESC")
     List<Filing> getByTaxYear(@Bind("taxYearId") int taxYearId);
+
+    @SqlBatch("UPDATE filings SET tax_form = :taxForm, status = :status, status_detail = :statusDetail, status_date = :statusDate, memo = :memo, include_in_refund = :includeInRefund, owes = :owes, paid = :paid, include_fee = :includeFee, owes_fee = :owesFee, paid_fee = :paidFee, file_type = :fileType, refund = :refund, rebate = :rebate, completed = :completed, delivery_contact = :deliveryContact, second_delivery_contact = :secondDeliveryContact, date_filed = :dateFiled, currency = :currency, filing_type = :filingType, state = :state, tax_year_id = :taxYearId, sort_order = :sortOrder, amount = :amount WHERE id = :id")
+    void bulkUpdate(@BindBean List<Filing> filings);
 }

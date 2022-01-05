@@ -1,6 +1,7 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.FeeCRUD;
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.model.Fee;
 import com.sifradigital.framework.auth.Authenticated;
 
@@ -18,6 +19,11 @@ public class FeeResource {
     @GET
     public List<Fee> getAllFees() {
         return new FeeCRUD().getAll();
+    }
+
+    @PUT
+    public BaseResponse bulkUpdateFees(List<Fee> fees) {
+        return new FeeCRUD().bulkUpdate(fees);
     }
 
     @PUT

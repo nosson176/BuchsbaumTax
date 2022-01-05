@@ -6,6 +6,7 @@ import org.jdbi.v3.sqlobject.config.RegisterFieldMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
+import org.jdbi.v3.sqlobject.statement.SqlBatch;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
@@ -32,4 +33,7 @@ public interface ContactDAO {
     @RegisterFieldMapper(Contact.class)
     @SqlQuery("SELECT * FROM contacts WHERE client_id = :clientId ORDER BY contact_type DESC")
     List<Contact> getForClient(@Bind("clientId") int clientId);
+
+    @SqlBatch("UPDATE contacts SET client_id = :clientId, contact_type = :contactType, memo = :memo, main_detail = :mainDetail, secondary_detail = :secondaryDetail, state = :state, zip = :zip, enabled = :enabled, archived = :archived WHERE id = :id")
+    void bulkUpdate(@BindBean List<Contact> contacts);
 }

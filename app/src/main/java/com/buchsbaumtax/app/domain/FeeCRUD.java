@@ -1,5 +1,6 @@
 package com.buchsbaumtax.app.domain;
 
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.FeeDAO;
 import com.buchsbaumtax.core.model.Fee;
 import com.sifradigital.framework.db.Database;
@@ -25,5 +26,10 @@ public class FeeCRUD {
         }
         Database.dao(FeeDAO.class).update(fee);
         return Database.dao(FeeDAO.class).get(feeId);
+    }
+
+    public BaseResponse bulkUpdate(List<Fee> fees) {
+        Database.dao(FeeDAO.class).bulkUpdate(fees);
+        return new BaseResponse(true);
     }
 }

@@ -21,6 +21,11 @@ public class FilingResource {
         return new FilingCRUD().create(filing);
     }
 
+    @PUT
+    public BaseResponse bulkUpdateFilings(List<Filing> filings) {
+        return new FilingCRUD().bulkUpdate(filings);
+    }
+
     @GET
     @Path("/{filingId}")
     public Filing getFiling(@PathParam("filingId") int filingId) {

@@ -40,4 +40,9 @@ public class FilingCRUD {
         Database.dao(FilingDAO.class).update(filing);
         return Database.dao(FilingDAO.class).get(filingId);
     }
+
+    public BaseResponse bulkUpdate(List<Filing> filings) {
+        Database.dao(FilingDAO.class).bulkUpdate(filings);
+        return new BaseResponse(true);
+    }
 }

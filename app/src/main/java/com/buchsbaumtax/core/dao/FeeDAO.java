@@ -6,6 +6,7 @@ import org.jdbi.v3.sqlobject.config.RegisterFieldMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
+import org.jdbi.v3.sqlobject.statement.SqlBatch;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
@@ -31,4 +32,7 @@ public interface FeeDAO {
     @RegisterFieldMapper(Fee.class)
     @SqlQuery("SELECT * FROM fees WHERE client_id = :clientId ORDER BY date_fee DESC")
     List<Fee> getForClient(@Bind("clientId") int clientId);
+
+    @SqlBatch("UPDATE fees SET client_id = :clientId, year = :year, status = :status, status_detail = :statusDetail, fee_type = :feeType, manual_amount = :manualAmount, paid_amount = :paidAmount, include = :include, rate = :rate, date_fee = :dateFee, sum = :sum, archived = :archived WHERE id = :id")
+    void bulkUpdate(@BindBean List<Fee> fees);
 }

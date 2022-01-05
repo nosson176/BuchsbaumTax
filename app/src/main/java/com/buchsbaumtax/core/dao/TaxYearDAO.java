@@ -6,6 +6,7 @@ import org.jdbi.v3.sqlobject.config.RegisterFieldMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
+import org.jdbi.v3.sqlobject.statement.SqlBatch;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
@@ -28,4 +29,7 @@ public interface TaxYearDAO {
 
     @SqlUpdate("UPDATE tax_years SET client_id = :clientId, year = :year, archived = :archived, irs_history = :irsHistory WHERE id = :id")
     void update(@BindBean TaxYear taxYear);
+
+    @SqlBatch("UPDATE tax_years SET client_id = :clientId, year = :year, archived = :archived, irs_history = :irsHistory WHERE id = :id")
+    void bulkUpdate(@BindBean List<TaxYear> taxYears);
 }

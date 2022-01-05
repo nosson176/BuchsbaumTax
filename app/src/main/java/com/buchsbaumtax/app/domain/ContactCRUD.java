@@ -1,5 +1,6 @@
 package com.buchsbaumtax.app.domain;
 
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.ContactDAO;
 import com.buchsbaumtax.core.model.Contact;
 import com.sifradigital.framework.db.Database;
@@ -7,6 +8,7 @@ import com.sifradigital.framework.validation.Validator;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 public class ContactCRUD {
     public Contact create(Contact contact) {
@@ -33,5 +35,10 @@ public class ContactCRUD {
         new Validator()
                 .required(contact.getClientId(), "client is required")
                 .validateAndGuard();
+    }
+
+    public BaseResponse bulkUpdate(List<Contact> contacts) {
+        Database.dao(ContactDAO.class).bulkUpdate(contacts);
+        return new BaseResponse(true);
     }
 }

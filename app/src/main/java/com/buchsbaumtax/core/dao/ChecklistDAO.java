@@ -6,6 +6,7 @@ import org.jdbi.v3.sqlobject.config.RegisterFieldMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
+import org.jdbi.v3.sqlobject.statement.SqlBatch;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
@@ -31,4 +32,7 @@ public interface ChecklistDAO {
     @RegisterFieldMapper(Checklist.class)
     @SqlQuery("SELECT * FROM checklist_items WHERE client_id = :clientId")
     List<Checklist> getForClient(@Bind("clientId") int clientId);
+
+    @SqlBatch("UPDATE checklist_items SET archived = :archived, client_id = :clientId, finished = :finished, memo = :memo, tax_year_id = :taxYearId, translated = :translated, sort_number = :sortNumber WHERE id = :id")
+    void bulkUpdate(@BindBean List<Checklist> checklists);
 }

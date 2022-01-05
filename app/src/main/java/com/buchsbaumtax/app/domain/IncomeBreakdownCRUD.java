@@ -1,5 +1,6 @@
 package com.buchsbaumtax.app.domain;
 
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.IncomeBreakdownDAO;
 import com.buchsbaumtax.core.model.IncomeBreakdown;
 import com.sifradigital.framework.db.Database;
@@ -7,6 +8,7 @@ import com.sifradigital.framework.validation.Validator;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 public class IncomeBreakdownCRUD {
     public IncomeBreakdown create(IncomeBreakdown incomeBreakdown) {
@@ -29,6 +31,11 @@ public class IncomeBreakdownCRUD {
         Double amountUSD = ConvertToUSD.convertToUSD(updatedBreakdown.getAmount(), updatedBreakdown.getCurrency(), updatedBreakdown.getYears());
         updatedBreakdown.setAmountUSD(amountUSD);
         return updatedBreakdown;
+    }
+
+    public BaseResponse bulkUpdate(List<IncomeBreakdown> incomeBreakdowns) {
+        Database.dao(IncomeBreakdownDAO.class).bulkUpdate(incomeBreakdowns);
+        return new BaseResponse(true);
     }
 
     private void validate(IncomeBreakdown incomeBreakdown) {
