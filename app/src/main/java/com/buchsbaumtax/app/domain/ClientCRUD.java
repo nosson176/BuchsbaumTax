@@ -6,6 +6,8 @@ import com.buchsbaumtax.core.model.Client;
 import com.buchsbaumtax.core.model.Smartview;
 import com.sifradigital.framework.db.Database;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 public class ClientCRUD {
@@ -28,7 +30,26 @@ public class ClientCRUD {
     }
 
     public List<Client> getFiltered(String q) {
-        return Database.dao(ClientDAO.class).getFiltered(q + ":*");
+        return Database.dao(ClientDAO.class).getFiltered(q);
+    }
+
+    public List<Client> getFiltered(String q, String field) {
+        String[] fieldArray = field.split("::");
+        if (fieldArray.length < 2) {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
+        String table = fieldArray[0];
+        String fieldName = fieldArray[1];
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT c.* FROM clients c ");
+        if (!table.equals("clients")) {
+            query.append(String.format("JOIN %s t ON c.id = t.client_id WHERE t.%s ILIKE '%%%s%%'", table, fieldName, q));
+        }
+        else {
+            query.append(String.format("WHERE %s ILIKE '%%%s%%'", fieldName, q));
+        }
+        String queryString = query.toString();
+        return Database.dao(ClientDAO.class).getFilteredWithFields(queryString);
     }
 
     public Client update(int clientId, Client client) {

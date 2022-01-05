@@ -16,6 +16,7 @@ public class Fee {
     private Date dateFee;
     private boolean sum;
     private boolean archived;
+    private String notes;
 
 
     public long getId() {
@@ -68,5 +69,9 @@ public class Fee {
 
     public boolean getArchived() {
         return archived;
+    }
+
+    public String getNotes() {
+        return notes;
     }
 }

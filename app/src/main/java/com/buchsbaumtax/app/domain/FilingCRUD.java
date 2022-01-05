@@ -2,7 +2,9 @@ package com.buchsbaumtax.app.domain;
 
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.FilingDAO;
+import com.buchsbaumtax.core.dao.TaxYearDAO;
 import com.buchsbaumtax.core.model.Filing;
+import com.buchsbaumtax.core.model.TaxYear;
 import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.WebApplicationException;
@@ -23,6 +25,14 @@ public class FilingCRUD {
     }
 
     public Filing create(Filing filing) {
+        TaxYear taxYear = Database.dao(TaxYearDAO.class).get(filing.getTaxYearId());
+        if (taxYear != null) {
+            int clientId = Database.dao(TaxYearDAO.class).get(filing.getTaxYearId()).getClientId();
+            if (clientId != 0) {
+                filing.setClientId(clientId);
+            }
+        }
+
         int id = Database.dao(FilingDAO.class).create(filing);
         return Database.dao(FilingDAO.class).get(id);
     }
