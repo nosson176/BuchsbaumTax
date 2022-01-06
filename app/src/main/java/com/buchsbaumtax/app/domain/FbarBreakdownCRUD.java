@@ -1,6 +1,5 @@
 package com.buchsbaumtax.app.domain;
 
-import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.FbarBreakdownDAO;
 import com.buchsbaumtax.core.model.FbarBreakdown;
 import com.sifradigital.framework.db.Database;
@@ -9,6 +8,7 @@ import com.sifradigital.framework.validation.Validator;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FbarBreakdownCRUD {
     public FbarBreakdown create(FbarBreakdown fbarBreakdown) {
@@ -33,9 +33,9 @@ public class FbarBreakdownCRUD {
         return updatedBreakdown;
     }
 
-    public BaseResponse bulkUpdate(List<FbarBreakdown> fbarBreakdowns) {
-        Database.dao(FbarBreakdownDAO.class).bulkUpdate(fbarBreakdowns);
-        return new BaseResponse(true);
+    public List<FbarBreakdown> update(List<FbarBreakdown> fbarBreakdowns) {
+        Database.dao(FbarBreakdownDAO.class).update(fbarBreakdowns);
+        return fbarBreakdowns.stream().map(f -> Database.dao(FbarBreakdownDAO.class).get(f.getId())).collect(Collectors.toList());
     }
 
     private void validate(FbarBreakdown fbarBreakdown) {

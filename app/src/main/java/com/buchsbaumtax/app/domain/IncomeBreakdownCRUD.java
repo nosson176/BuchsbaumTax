@@ -1,6 +1,5 @@
 package com.buchsbaumtax.app.domain;
 
-import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.IncomeBreakdownDAO;
 import com.buchsbaumtax.core.model.IncomeBreakdown;
 import com.sifradigital.framework.db.Database;
@@ -9,6 +8,7 @@ import com.sifradigital.framework.validation.Validator;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class IncomeBreakdownCRUD {
     public IncomeBreakdown create(IncomeBreakdown incomeBreakdown) {
@@ -33,9 +33,9 @@ public class IncomeBreakdownCRUD {
         return updatedBreakdown;
     }
 
-    public BaseResponse bulkUpdate(List<IncomeBreakdown> incomeBreakdowns) {
-        Database.dao(IncomeBreakdownDAO.class).bulkUpdate(incomeBreakdowns);
-        return new BaseResponse(true);
+    public List<IncomeBreakdown> update(List<IncomeBreakdown> incomeBreakdowns) {
+        Database.dao(IncomeBreakdownDAO.class).update(incomeBreakdowns);
+        return incomeBreakdowns.stream().map(i -> Database.dao(IncomeBreakdownDAO.class).get(i.getId())).collect(Collectors.toList());
     }
 
     private void validate(IncomeBreakdown incomeBreakdown) {

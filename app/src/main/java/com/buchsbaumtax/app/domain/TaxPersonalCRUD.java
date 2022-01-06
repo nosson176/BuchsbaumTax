@@ -1,6 +1,5 @@
 package com.buchsbaumtax.app.domain;
 
-import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.TaxPersonalDAO;
 import com.buchsbaumtax.core.model.TaxPersonal;
 import com.sifradigital.framework.db.Database;
@@ -9,6 +8,7 @@ import com.sifradigital.framework.validation.Validator;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TaxPersonalCRUD {
     public TaxPersonal create(TaxPersonal taxPersonal) {
@@ -31,9 +31,9 @@ public class TaxPersonalCRUD {
         return Database.dao(TaxPersonalDAO.class).get(taxPersonalId);
     }
 
-    public BaseResponse bulkUpdate(List<TaxPersonal> taxPersonals) {
-        Database.dao(TaxPersonalDAO.class).bulkUpdate(taxPersonals);
-        return new BaseResponse(true);
+    public List<TaxPersonal> update(List<TaxPersonal> taxPersonals) {
+        Database.dao(TaxPersonalDAO.class).update(taxPersonals);
+        return taxPersonals.stream().map(t -> Database.dao(TaxPersonalDAO.class).get(t.getId())).collect(Collectors.toList());
     }
 
     private void validate(TaxPersonal taxPersonal) {

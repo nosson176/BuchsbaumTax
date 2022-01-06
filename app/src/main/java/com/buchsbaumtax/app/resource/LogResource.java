@@ -1,7 +1,6 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.LogCRUD;
-import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.LogDAO;
 import com.buchsbaumtax.core.model.Log;
 import com.sifradigital.framework.auth.Authenticated;
@@ -25,8 +24,8 @@ public class LogResource {
     }
 
     @PUT
-    public BaseResponse bulkUpdateLogs(List<Log> logs) {
-        return new LogCRUD().bulkUpdate(logs);
+    public List<Log> updateLogs(List<Log> logs) {
+        return new LogCRUD().update(logs);
     }
 
     @PUT

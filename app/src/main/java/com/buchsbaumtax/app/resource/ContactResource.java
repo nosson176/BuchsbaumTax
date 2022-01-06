@@ -1,7 +1,6 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.ContactCRUD;
-import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.ContactDAO;
 import com.buchsbaumtax.core.model.Contact;
 import com.sifradigital.framework.auth.Authenticated;
@@ -24,8 +23,8 @@ public class ContactResource {
     }
 
     @PUT
-    public BaseResponse bulkUpdateContacts(List<Contact> contacts) {
-        return new ContactCRUD().bulkUpdate(contacts);
+    public List<Contact> updateContacts(List<Contact> contacts) {
+        return new ContactCRUD().update(contacts);
     }
 
     @PUT

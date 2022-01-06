@@ -1,7 +1,6 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.TaxPersonalCRUD;
-import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.TaxPersonalDAO;
 import com.buchsbaumtax.core.model.TaxPersonal;
 import com.sifradigital.framework.auth.Authenticated;
@@ -24,8 +23,8 @@ public class TaxPersonalResource {
     }
 
     @PUT
-    public BaseResponse bulkUpdateTaxPersonals(List<TaxPersonal> taxPersonals) {
-        return new TaxPersonalCRUD().bulkUpdate(taxPersonals);
+    public List<TaxPersonal> updateTaxPersonals(List<TaxPersonal> taxPersonals) {
+        return new TaxPersonalCRUD().update(taxPersonals);
     }
 
     @PUT

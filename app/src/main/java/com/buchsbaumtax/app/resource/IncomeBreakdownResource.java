@@ -1,7 +1,6 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.IncomeBreakdownCRUD;
-import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.IncomeBreakdownDAO;
 import com.buchsbaumtax.core.model.IncomeBreakdown;
 import com.sifradigital.framework.auth.Authenticated;
@@ -24,8 +23,8 @@ public class IncomeBreakdownResource {
     }
 
     @PUT
-    public BaseResponse bulkUpdateIncomeBreakdowns(List<IncomeBreakdown> incomeBreakdowns) {
-        return new IncomeBreakdownCRUD().bulkUpdate(incomeBreakdowns);
+    public List<IncomeBreakdown> updateIncomeBreakdowns(List<IncomeBreakdown> incomeBreakdowns) {
+        return new IncomeBreakdownCRUD().update(incomeBreakdowns);
     }
 
     @PUT

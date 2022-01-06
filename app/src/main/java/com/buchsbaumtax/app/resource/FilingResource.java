@@ -22,8 +22,8 @@ public class FilingResource {
     }
 
     @PUT
-    public BaseResponse bulkUpdateFilings(List<Filing> filings) {
-        return new FilingCRUD().bulkUpdate(filings);
+    public List<Filing> updateFilings(List<Filing> filings) {
+        return new FilingCRUD().update(filings);
     }
 
     @GET

@@ -31,9 +31,9 @@ public interface TaxYearDAO {
     @SqlQuery("SELECT * FROM tax_years WHERE client_id = :clientId ORDER BY year DESC")
     List<TaxYear> getByClient(@Bind("clientId") int clientId);
 
-    @SqlUpdate("UPDATE tax_years SET client_id = :clientId, year = :year, archived = :archived, irs_history = :irsHistory WHERE id = :id")
+    @SqlUpdate("UPDATE tax_years SET year = :year, archived = :archived, irs_history = :irsHistory WHERE id = :id")
     void update(@BindBean TaxYear taxYear);
 
-    @SqlBatch("UPDATE tax_years SET client_id = :clientId, year = :year, archived = :archived, irs_history = :irsHistory WHERE id = :id")
-    void bulkUpdate(@BindBean List<TaxYear> taxYears);
+    @SqlBatch("UPDATE tax_years SET year = :year, archived = :archived, irs_history = :irsHistory WHERE id = :id")
+    void update(@BindBean List<TaxYear> taxYears);
 }

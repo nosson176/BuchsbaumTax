@@ -19,7 +19,7 @@ public interface FbarBreakdownDAO {
     @SqlUpdate("INSERT INTO fbar_breakdowns (client_id, years, category, tax_group, tax_type, part, currency, frequency, documents, description, amount, depend, include, archived) VALUES (:clientId, :years, :category, :taxGroup, :taxType, :part, :currency, :frequency, :documents, :description, :amount, :depend, :include, :archived)")
     int create(@BindBean FbarBreakdown fbarBreakdown);
 
-    @SqlUpdate("UPDATE fbar_breakdowns SET client_id = :clientId, years = :years, category = :category, tax_group = :taxGroup, tax_type = :taxType, part = :part, currency = :currency, frequency = :frequency, documents = :documents, description = :description, amount = :amount, depend = :depend, include = :include, archived = :archived WHERE id = :id")
+    @SqlUpdate("UPDATE fbar_breakdowns SET years = :years, category = :category, tax_group = :taxGroup, tax_type = :taxType, part = :part, currency = :currency, frequency = :frequency, documents = :documents, description = :description, amount = :amount, depend = :depend, include = :include, archived = :archived WHERE id = :id")
     void update(@BindBean FbarBreakdown fbarBreakdown);
 
     @RegisterFieldMapper(FbarBreakdown.class)
@@ -34,6 +34,6 @@ public interface FbarBreakdownDAO {
     @SqlQuery("SELECT * FROM fbar_breakdowns WHERE client_id = :clientId ORDER BY category DESC, tax_group")
     List<FbarBreakdown> getForClient(@Bind("clientId") int clientId);
 
-    @SqlBatch("UPDATE fbar_breakdowns SET client_id = :clientId, years = :years, category = :category, tax_group = :taxGroup, tax_type = :taxType, part = :part, currency = :currency, frequency = :frequency, documents = :documents, description = :description, amount = :amount, depend = :depend, include = :include, archived = :archived WHERE id = :id")
-    void bulkUpdate(@BindBean List<FbarBreakdown> fbarBreakdowns);
+    @SqlBatch("UPDATE fbar_breakdowns SET years = :years, category = :category, tax_group = :taxGroup, tax_type = :taxType, part = :part, currency = :currency, frequency = :frequency, documents = :documents, description = :description, amount = :amount, depend = :depend, include = :include, archived = :archived WHERE id = :id")
+    void update(@BindBean List<FbarBreakdown> fbarBreakdowns);
 }

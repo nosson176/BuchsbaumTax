@@ -1,7 +1,6 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.FbarBreakdownCRUD;
-import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.FbarBreakdownDAO;
 import com.buchsbaumtax.core.model.FbarBreakdown;
 import com.sifradigital.framework.auth.Authenticated;
@@ -24,8 +23,8 @@ public class FbarBreakdownResource {
     }
 
     @PUT
-    public BaseResponse bulkUpdateFbarBreakdowns(List<FbarBreakdown> fbarBreakdowns) {
-        return new FbarBreakdownCRUD().bulkUpdate(fbarBreakdowns);
+    public List<FbarBreakdown> updateFbarBreakdowns(List<FbarBreakdown> fbarBreakdowns) {
+        return new FbarBreakdownCRUD().update(fbarBreakdowns);
     }
 
     @PUT

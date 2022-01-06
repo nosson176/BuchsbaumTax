@@ -1,6 +1,5 @@
 package com.buchsbaumtax.app.domain;
 
-import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.ChecklistDAO;
 import com.buchsbaumtax.core.model.Checklist;
 import com.sifradigital.framework.db.Database;
@@ -8,6 +7,7 @@ import com.sifradigital.framework.db.Database;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ChecklistCRUD {
     public Checklist create(Checklist checklist) {
@@ -28,8 +28,8 @@ public class ChecklistCRUD {
         return Database.dao(ChecklistDAO.class).get(checklistId);
     }
 
-    public BaseResponse bulkUpdate(List<Checklist> checklists) {
-        Database.dao(ChecklistDAO.class).bulkUpdate(checklists);
-        return new BaseResponse(true);
+    public List<Checklist> update(List<Checklist> checklists) {
+        Database.dao(ChecklistDAO.class).update(checklists);
+        return checklists.stream().map(c -> Database.dao(ChecklistDAO.class).get(c.getId())).collect(Collectors.toList());
     }
 }

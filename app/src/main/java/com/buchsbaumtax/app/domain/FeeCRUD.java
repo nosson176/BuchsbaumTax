@@ -1,6 +1,5 @@
 package com.buchsbaumtax.app.domain;
 
-import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.FeeDAO;
 import com.buchsbaumtax.core.model.Fee;
 import com.sifradigital.framework.db.Database;
@@ -8,6 +7,7 @@ import com.sifradigital.framework.db.Database;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FeeCRUD {
     public Fee create(Fee fee) {
@@ -28,8 +28,8 @@ public class FeeCRUD {
         return Database.dao(FeeDAO.class).get(feeId);
     }
 
-    public BaseResponse bulkUpdate(List<Fee> fees) {
-        Database.dao(FeeDAO.class).bulkUpdate(fees);
-        return new BaseResponse(true);
+    public List<Fee> update(List<Fee> fees) {
+        Database.dao(FeeDAO.class).update(fees);
+        return fees.stream().map(f -> Database.dao(FeeDAO.class).get(f.getId())).collect(Collectors.toList());
     }
 }

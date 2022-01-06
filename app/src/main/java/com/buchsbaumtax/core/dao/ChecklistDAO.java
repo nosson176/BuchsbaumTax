@@ -26,13 +26,13 @@ public interface ChecklistDAO {
     @SqlQuery("SELECT * FROM checklist_items")
     List<Checklist> getAll();
 
-    @SqlUpdate("UPDATE checklist_items set archived = :archived, client_id = :clientId, finished = :finished, memo = :memo, tax_year_id = :taxYearId, translated = :translated, sort_number = :sortNumber WHERE id = :id")
+    @SqlUpdate("UPDATE checklist_items set archived = :archived, finished = :finished, memo = :memo, tax_year_id = :taxYearId, translated = :translated, sort_number = :sortNumber WHERE id = :id")
     void update(@BindBean Checklist checklist);
 
     @RegisterFieldMapper(Checklist.class)
     @SqlQuery("SELECT * FROM checklist_items WHERE client_id = :clientId")
     List<Checklist> getForClient(@Bind("clientId") int clientId);
 
-    @SqlBatch("UPDATE checklist_items SET archived = :archived, client_id = :clientId, finished = :finished, memo = :memo, tax_year_id = :taxYearId, translated = :translated, sort_number = :sortNumber WHERE id = :id")
-    void bulkUpdate(@BindBean List<Checklist> checklists);
+    @SqlBatch("UPDATE checklist_items SET archived = :archived, finished = :finished, memo = :memo, tax_year_id = :taxYearId, translated = :translated, sort_number = :sortNumber WHERE id = :id")
+    void update(@BindBean List<Checklist> checklists);
 }

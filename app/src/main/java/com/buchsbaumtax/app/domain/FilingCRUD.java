@@ -8,6 +8,7 @@ import com.sifradigital.framework.db.Database;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FilingCRUD {
     public List<Filing> getAll() {
@@ -41,8 +42,8 @@ public class FilingCRUD {
         return Database.dao(FilingDAO.class).get(filingId);
     }
 
-    public BaseResponse bulkUpdate(List<Filing> filings) {
-        Database.dao(FilingDAO.class).bulkUpdate(filings);
-        return new BaseResponse(true);
+    public List<Filing> update(List<Filing> filings) {
+        Database.dao(FilingDAO.class).update(filings);
+        return filings.stream().map(f -> Database.dao(FilingDAO.class).get(f.getId())).collect(Collectors.toList());
     }
 }

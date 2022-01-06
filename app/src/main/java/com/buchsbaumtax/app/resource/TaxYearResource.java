@@ -2,7 +2,6 @@ package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.taxyear.CreateTaxYear;
 import com.buchsbaumtax.app.domain.taxyear.UpdateTaxYear;
-import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.TaxYearDAO;
 import com.buchsbaumtax.core.model.TaxYear;
 import com.sifradigital.framework.auth.Authenticated;
@@ -25,8 +24,8 @@ public class TaxYearResource {
     }
 
     @PUT
-    public BaseResponse bulkUpdateTaxYears(List<TaxYear> taxYears) {
-        return new UpdateTaxYear().bulkUpdate(taxYears);
+    public List<TaxYear> updateTaxYears(List<TaxYear> taxYears) {
+        return new UpdateTaxYear().updateTaxYears(taxYears);
     }
 
     @PUT
