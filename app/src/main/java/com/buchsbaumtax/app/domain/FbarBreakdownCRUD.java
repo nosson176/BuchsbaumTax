@@ -7,13 +7,12 @@ import com.sifradigital.framework.validation.Validator;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class FbarBreakdownCRUD {
-    public FbarBreakdown create(int clientId, FbarBreakdown fbarBreakdown) {
+    public FbarBreakdown create(FbarBreakdown fbarBreakdown) {
         validate(fbarBreakdown);
-        if (fbarBreakdown.getClientId() != clientId) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
         int fbarBreakdownId = Database.dao(FbarBreakdownDAO.class).create(fbarBreakdown);
         FbarBreakdown createdBreakdown = Database.dao(FbarBreakdownDAO.class).get(fbarBreakdownId);
         Double amountUSD = ConvertToUSD.convertToUSD(createdBreakdown.getAmount(), createdBreakdown.getCurrency(), createdBreakdown.getYears());
@@ -21,9 +20,10 @@ public class FbarBreakdownCRUD {
         return createdBreakdown;
     }
 
-    public FbarBreakdown update(int clientId, int fbarBreakdownId, FbarBreakdown fbarBreakdown) {
+    public FbarBreakdown update(int fbarBreakdownId, FbarBreakdown fbarBreakdown) {
         validate(fbarBreakdown);
-        if (fbarBreakdown.getId() != fbarBreakdownId || fbarBreakdown.getClientId() != clientId) {
+        FbarBreakdown oldBreakdown = Database.dao(FbarBreakdownDAO.class).get(fbarBreakdownId);
+        if (fbarBreakdown.getId() != fbarBreakdownId || oldBreakdown == null) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         Database.dao(FbarBreakdownDAO.class).update(fbarBreakdown);
@@ -31,6 +31,11 @@ public class FbarBreakdownCRUD {
         Double amountUSD = ConvertToUSD.convertToUSD(updatedBreakdown.getAmount(), updatedBreakdown.getCurrency(), updatedBreakdown.getYears());
         updatedBreakdown.setAmountUSD(amountUSD);
         return updatedBreakdown;
+    }
+
+    public List<FbarBreakdown> update(List<FbarBreakdown> fbarBreakdowns) {
+        Database.dao(FbarBreakdownDAO.class).update(fbarBreakdowns);
+        return fbarBreakdowns.stream().map(f -> Database.dao(FbarBreakdownDAO.class).get(f.getId())).collect(Collectors.toList());
     }
 
     private void validate(FbarBreakdown fbarBreakdown) {

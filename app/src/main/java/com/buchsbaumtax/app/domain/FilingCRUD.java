@@ -10,6 +10,7 @@ import com.sifradigital.framework.db.Database;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FilingCRUD {
     public List<Filing> getAll() {
@@ -43,10 +44,16 @@ public class FilingCRUD {
     }
 
     public Filing update(int filingId, Filing filing) {
-        if (filing.getId() != filingId) {
+        Filing oldFiling = Database.dao(FilingDAO.class).get(filingId);
+        if (filing.getId() != filingId || oldFiling == null) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         Database.dao(FilingDAO.class).update(filing);
         return Database.dao(FilingDAO.class).get(filingId);
+    }
+
+    public List<Filing> update(List<Filing> filings) {
+        Database.dao(FilingDAO.class).update(filings);
+        return filings.stream().map(f -> Database.dao(FilingDAO.class).get(f.getId())).collect(Collectors.toList());
     }
 }

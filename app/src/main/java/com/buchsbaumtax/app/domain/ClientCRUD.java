@@ -53,6 +53,10 @@ public class ClientCRUD {
     }
 
     public Client update(int clientId, Client client) {
+        Client oldClient = Database.dao(ClientDAO.class).get(clientId);
+        if (oldClient == null || clientId != client.getId()) {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
         Database.dao(ClientDAO.class).update(client);
         return Database.dao(ClientDAO.class).get(clientId);
     }
