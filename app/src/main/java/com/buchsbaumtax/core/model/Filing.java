@@ -32,6 +32,7 @@ public class Filing {
     private String taxForm;
     private int sortOrder;
     private double amount;
+    private Integer clientId;
 
     public Filing() {
     }
@@ -140,5 +141,13 @@ public class Filing {
 
     public double getAmount() {
         return amount;
+    }
+
+    public Integer getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(Integer clientId) {
+        this.clientId = clientId;
     }
 }
