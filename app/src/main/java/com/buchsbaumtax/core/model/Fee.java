@@ -3,7 +3,7 @@ package com.buchsbaumtax.core.model;
 import java.util.Date;
 
 public class Fee {
-    private long id;
+    private int id;
     private int clientId;
     private String year;
     private String status;
@@ -16,9 +16,10 @@ public class Fee {
     private Date dateFee;
     private boolean sum;
     private boolean archived;
+    private String notes;
 
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
@@ -68,5 +69,9 @@ public class Fee {
 
     public boolean getArchived() {
         return archived;
+    }
+
+    public String getNotes() {
+        return notes;
     }
 }

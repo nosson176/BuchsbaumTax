@@ -3,7 +3,7 @@ package com.buchsbaumtax.core.model;
 
 public class Checklist {
 
-    private long id;
+    private int id;
     private boolean archived;
     private long clientId;
     private boolean finished;
@@ -13,7 +13,7 @@ public class Checklist {
     private Long sortNumber;
 
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 

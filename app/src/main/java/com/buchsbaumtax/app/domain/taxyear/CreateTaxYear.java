@@ -1,25 +1,15 @@
 package com.buchsbaumtax.app.domain.taxyear;
 
-import com.buchsbaumtax.core.dao.ClientDAO;
 import com.buchsbaumtax.core.dao.FilingDAO;
 import com.buchsbaumtax.core.dao.TaxYearDAO;
-import com.buchsbaumtax.core.model.Client;
 import com.buchsbaumtax.core.model.Filing;
 import com.buchsbaumtax.core.model.TaxYear;
 import com.sifradigital.framework.db.Database;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-
 public class CreateTaxYear {
 
-    public TaxYear createTaxYear(int clientId, TaxYear taxYear) {
-        Client client = Database.dao(ClientDAO.class).get(clientId);
-        if (client == null) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
-
-        int id = Database.dao(TaxYearDAO.class).create(taxYear, clientId);
+    public TaxYear createTaxYear(TaxYear taxYear) {
+        int id = Database.dao(TaxYearDAO.class).create(taxYear);
         Filing filing = new Filing(id, Filing.FILING_TYPE_FEDERAL);
         Database.dao(FilingDAO.class).create(filing);
 

@@ -7,26 +7,33 @@ import com.sifradigital.framework.validation.Validator;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TaxPersonalCRUD {
-    public TaxPersonal create(int clientId, TaxPersonal taxPersonal) {
+    public TaxPersonal create(TaxPersonal taxPersonal) {
         validate(taxPersonal);
-        if (taxPersonal.getClientId() != clientId) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
         int taxPersonalId = Database.dao(TaxPersonalDAO.class).create(taxPersonal);
-        new DisplayFields().setDisplayName(clientId);
+        TaxPersonal newPersonal = Database.dao(TaxPersonalDAO.class).get(taxPersonalId);
+        new DisplayFields().setDisplayName(newPersonal.getClientId());
         return Database.dao(TaxPersonalDAO.class).get(taxPersonalId);
     }
 
-    public TaxPersonal update(int clientId, int taxPersonalId, TaxPersonal taxPersonal) {
+    public TaxPersonal update(int taxPersonalId, TaxPersonal taxPersonal) {
         validate(taxPersonal);
-        if (taxPersonal.getId() != taxPersonalId || taxPersonal.getClientId() != clientId) {
+        TaxPersonal oldTaxPersonal = Database.dao(TaxPersonalDAO.class).get(taxPersonalId);
+        if (taxPersonal.getId() != taxPersonalId || oldTaxPersonal == null) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         Database.dao(TaxPersonalDAO.class).update(taxPersonal);
-        new DisplayFields().setDisplayName(clientId);
+        TaxPersonal updatePersonal = Database.dao(TaxPersonalDAO.class).get(taxPersonalId);
+        new DisplayFields().setDisplayName(updatePersonal.getClientId());
         return Database.dao(TaxPersonalDAO.class).get(taxPersonalId);
+    }
+
+    public List<TaxPersonal> update(List<TaxPersonal> taxPersonals) {
+        Database.dao(TaxPersonalDAO.class).update(taxPersonals);
+        return taxPersonals.stream().map(t -> Database.dao(TaxPersonalDAO.class).get(t.getId())).collect(Collectors.toList());
     }
 
     private void validate(TaxPersonal taxPersonal) {

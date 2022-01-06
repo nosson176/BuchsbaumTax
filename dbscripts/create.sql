@@ -207,7 +207,8 @@ CREATE TABLE filings (
     state TEXT,
     tax_year_id INTEGER,
     sort_order INTEGER,
-    amount FLOAT
+    amount FLOAT,
+    client_id INTEGER REFERENCES clients
 );
 
 CREATE INDEX ON filings (tax_year_id);
@@ -226,7 +227,8 @@ CREATE TABLE fees (
     rate FLOAT,
     date_fee DATE,
     sum BOOLEAN NOT NULL DEFAULT FALSE,
-    archived BOOLEAN NOT NULL DEFAULT FALSE
+    archived BOOLEAN NOT NULL DEFAULT FALSE,
+    notes TEXT
 );
 
 CREATE INDEX ON fees (client_id);
