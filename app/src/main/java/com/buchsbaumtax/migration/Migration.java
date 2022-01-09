@@ -630,6 +630,23 @@ public class Migration {
     }
 
     private void csvToSmartViewLines(List<String[]> smartViews) {
+        Map<String, String> classFieldMap = new HashMap<>();
+
+        classFieldMap.put("FEE::tax_year", "fee::year");
+        classFieldMap.put("CONTACT::type", "contact::contact_type");
+        classFieldMap.put("LOG::employee_alarm", "log::alarm_user_name");
+        classFieldMap.put("LOG::date_of_log", "log::log_date");
+        classFieldMap.put("TAX_YEAR::year_name", "tax_year::year");
+        classFieldMap.put("TAX_YEAR::tax_form", "filing::tax_form");
+        classFieldMap.put("TAX_YEAR::comment", "filing::memo");
+        classFieldMap.put("TAX_YEAR::delivery", "filing::delivery_contact");
+        classFieldMap.put("TAX_YEAR::tax_state", "filing::state");
+        classFieldMap.put("TAX_YEAR::date_filed", "filing::date_filed");
+        classFieldMap.put("TAX_YEAR::tax_year_status_detail", "filing::status_detail");
+        classFieldMap.put("CLIENT_FLAGS::flag_name", "client_flag::flag");
+        classFieldMap.put("CLIENT_FLAGS::user_name", "client_flag::user_id");
+
+
         SmartViewLineDAO smartViewLineDAO = handle.attach(SmartViewLineDAO.class);
 
         for (String[] row : smartViews) {
@@ -641,36 +658,35 @@ public class Migration {
             String className;
             String fieldName = null;
             String[] classField = new String[]{null, null};
-            if (row[2] != null && !row[2].equals("")) {
-                if (row[2].equals("TAX_YEAR::tax_year_status_detail")) {
-                    row[2] = "FILING::status_detail";
-                }
-                else if (row[2].equals("LOG::employee_alarm")) {
-                    row[2] = "LOG::alarm_user_name";
-                }
-                classField = row[2].split("::");
-            }
-
             map.put("classToJoin", null);
             map.put("fieldToSearch", null);
+            if (classFieldMap.containsKey(row[2])) {
+                String value = classFieldMap.get(row[2]);
+                classField = value.split("::");
+            }
+            else if (row[2] != null && !row[2].equals("")) {
+                classField = row[2].split("::");
+            }
+            if (classField.length > 1 && classField[0] != null && classField[1] != null) {
+                map.put("classToJoin", classField[0].toLowerCase() + "s");
+                map.put("fieldToSearch", classField[1].toLowerCase());
+            }
+
+            String type = null;
             map.put("type", null);
             if (classField[0] != null) {
-                if (classField[0].equals("CLIENT_FLAGS")) {
-                    classField[0] = "CLIENT_FLAG";
-                }
                 className = "com.buchsbaumtax.core.model." + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, classField[0]);
                 if (classField.length == 2 && classField[1] != null) {
                     fieldName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, classField[1]);
-                    map.put("fieldToSearch", fieldName);
                 }
                 try {
                     Class<?> c = Class.forName(className);
                     for (Field field : c.getDeclaredFields()) {
                         if (fieldName != null && fieldName.equals(field.getName())) {
-                            map.put("type", field.getType().getSimpleName());
+                            type = field.getType().getSimpleName();
+                            map.put("type", type);
                         }
                     }
-                    map.put("classToJoin", c.getSimpleName());
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -697,6 +713,12 @@ public class Migration {
                 }
             }
             map.put("operator", operator);
+            if (type != null && type.equals("boolean")) {
+                searchValue = String.valueOf(Boolean.valueOf(searchValue));
+            }
+            else if (searchValue != null && searchValue.equalsIgnoreCase("today")) {
+                searchValue = "now()";
+            }
             map.put("searchValue", searchValue);
 
             smartViewLineDAO.create(map);
