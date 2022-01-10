@@ -9,6 +9,7 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.util.List;
+import java.util.Set;
 
 @Dao
 public interface ClientDAO {
@@ -45,6 +46,10 @@ public interface ClientDAO {
     @RegisterFieldMapper(Client.class)
     @SqlQuery("<query>")
     List<Client> getFilteredWithFields(@Define("query") String query);
+
+    @RegisterFieldMapper(Client.class)
+    @SqlQuery("<query>")
+    Set<Integer> getClientIdsByQuery(@Define("query") String query);
 
     @GetGeneratedKeys
     @SqlUpdate("INSERT INTO clients (status, owes_status, periodical, last_name, archived, display_name, display_phone) VALUES (:status, :owesStatus, :periodical, :lastName, :archived, :displayName, :displayPhone)")

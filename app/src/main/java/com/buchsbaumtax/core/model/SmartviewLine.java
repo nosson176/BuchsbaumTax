@@ -8,7 +8,7 @@ public class SmartviewLine {
     private Date created;
     private Date updated;
     private long smartviewId;
-    private Integer query;
+    private int query;
     private String classToJoin;
     private String fieldToSearch;
     private String searchValue;
@@ -18,7 +18,7 @@ public class SmartviewLine {
     public SmartviewLine() {
     }
 
-    public SmartviewLine(Integer id, Date created, Date updated, long smartviewId, Integer query, String classToJoin, String fieldToSearch, String searchValue, String operator, String type) {
+    public SmartviewLine(Integer id, Date created, Date updated, long smartviewId, int query, String classToJoin, String fieldToSearch, String searchValue, String operator, String type) {
         this.id = id;
         this.created = created;
         this.updated = updated;
@@ -51,7 +51,7 @@ public class SmartviewLine {
         this.smartviewId = smartviewId;
     }
 
-    public Integer getQuery() {
+    public int getQuery() {
         return query;
     }
 
