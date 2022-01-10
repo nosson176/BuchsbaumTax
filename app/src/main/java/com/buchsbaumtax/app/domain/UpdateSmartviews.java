@@ -32,13 +32,13 @@ public class UpdateSmartviews {
         Set<Integer> finalClientIds = new HashSet<>();
 
         // Group each smartview's by their unique query numbers
-        Map<Integer, List<SmartviewLine>> linesGroupedByQuery = smartviewLines.stream().collect(Collectors.groupingBy(SmartviewLine::getQuery));
+        Map<Integer, List<SmartviewLine>> linesGroupedByGroupNum = smartviewLines.stream().collect(Collectors.groupingBy(SmartviewLine::getGroupNum));
 
-        for (Integer key : linesGroupedByQuery.keySet()) {
-            List<SmartviewLine> groupLines = linesGroupedByQuery.get(key);
+        for (Integer key : linesGroupedByGroupNum.keySet()) {
+            List<SmartviewLine> groupLines = linesGroupedByGroupNum.get(key);
 
             // Group each group's line by the tables they reference
-            Map<String, List<SmartviewLine>> lineQueriesGroupedByTable = groupLines.stream().filter(s -> s.getClassToJoin() != null).collect(Collectors.groupingBy(SmartviewLine::getClassToJoin));
+            Map<String, List<SmartviewLine>> lineQueriesGroupedByTable = groupLines.stream().collect(Collectors.groupingBy(SmartviewLine::getTableName));
 
             Set<Integer> queryResults = null;
             for (String table : lineQueriesGroupedByTable.keySet()) {
@@ -62,7 +62,7 @@ public class UpdateSmartviews {
     }
 
     private Set<Integer> getClientIds(List<SmartviewLine> smartviewLines) {
-        String table = smartviewLines.get(0).getClassToJoin();
+        String table = smartviewLines.get(0).getTableName();
         StringBuilder query = new StringBuilder();
         query.append("SELECT DISTINCT(c.id) FROM clients c ");
 
@@ -72,7 +72,7 @@ public class UpdateSmartviews {
 
         boolean first = true;
         for (SmartviewLine smartviewLine : smartviewLines) {
-            String field = smartviewLine.getFieldToSearch();
+            String field = smartviewLine.getField();
             String searchValue = smartviewLine.getSearchValue();
             String operator = smartviewLine.getOperator();
 

@@ -272,9 +272,9 @@ CREATE TABLE smartview_lines (
     created TIMESTAMPTZ DEFAULT now(),
     updated TIMESTAMPTZ DEFAULT now(),
     smartview_id INTEGER REFERENCES smartviews ON DELETE CASCADE,
-    query INTEGER,
-    class_to_join TEXT,
-    field_to_search TEXT,
+    group_num INTEGER NOT NULL DEFAULT 0,
+    table_name TEXT NOT NULL,
+    field TEXT NOT NULL,
     search_value TEXT,
     operator TEXT,
     type TEXT
