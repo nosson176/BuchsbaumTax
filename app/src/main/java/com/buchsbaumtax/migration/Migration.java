@@ -642,6 +642,7 @@ public class Migration {
         classFieldMap.put("TAX_YEAR::delivery", "filing::delivery_contact");
         classFieldMap.put("TAX_YEAR::tax_state", "filing::state");
         classFieldMap.put("TAX_YEAR::date_filed", "filing::date_filed");
+        classFieldMap.put("TAX_YEAR::file_type", "filing::file_type");
         classFieldMap.put("TAX_YEAR::tax_year_status_detail", "filing::status_detail");
         classFieldMap.put("CLIENT_FLAGS::flag_name", "client_flag::flag");
         classFieldMap.put("CLIENT_FLAGS::user_name", "client_flag::user_id");
@@ -666,6 +667,9 @@ public class Migration {
             }
             else if (row[2] != null && !row[2].equals("")) {
                 classField = row[2].split("::");
+            }
+            if (classField[0] != null && classField[0].equals("TAX_YEAR")) {
+                classField = mapTaxYears(row[2], map, smartViewLineDAO);
             }
             if (classField.length > 1 && classField[0] != null && classField[1] != null) {
                 map.put("classToJoin", classField[0].toLowerCase() + "s");
@@ -724,6 +728,52 @@ public class Migration {
             smartViewLineDAO.create(map);
         }
 
+    }
+
+    private String[] mapTaxYears(String classField, Map<String, Object> map, SmartViewLineDAO smartViewLineDAO) {
+        Map<String, String> mappings = new HashMap<>();
+        mappings.put("tax_year_status_state", "state_status");
+        mappings.put("tax_year_status_federal", "federal_status");
+        mappings.put("extension_status", "ext_status");
+        mappings.put("extension_form", "ext_form");
+
+        String[] result = classField.split("::");
+        if (result.length > 1) {
+            String fieldToSearch = result[1];
+            if (mappings.containsKey(fieldToSearch)) {
+                fieldToSearch = mappings.get(fieldToSearch);
+            }
+            String[] searchParts = fieldToSearch.split("_");
+            map.put("classToJoin", "filings");
+            map.put("fieldToSearch", "filing_type");
+            map.put("type", "String");
+            map.put("operator", "=");
+            if (fieldToSearch.contains("status")) {
+                map.put("searchValue", searchParts[0]);
+
+                smartViewLineDAO.create(map);
+
+                if (fieldToSearch.contains("detail")) {
+                    return new String[]{"filing", "status_detail"};
+                }
+                return new String[]{"filing", "status"};
+            }
+            else if (fieldToSearch.contains("form")) {
+                map.put("searchValue", searchParts[0]);
+
+                smartViewLineDAO.create(map);
+
+                return new String[]{"filing", "tax_form"};
+            }
+            else if (fieldToSearch.contains("owes") || fieldToSearch.contains("paid")) {
+                map.put("searchValue", searchParts[1]);
+
+                smartViewLineDAO.create(map);
+
+                return new String[]{"filing", searchParts[0]};
+            }
+        }
+        return new String[]{null, null};
     }
 
     private void csvToChecklists(List<String[]> checklists) {
