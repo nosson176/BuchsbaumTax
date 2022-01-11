@@ -8,8 +8,8 @@ import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SmartviewCRUD {
 
@@ -23,14 +23,7 @@ public class SmartviewCRUD {
 
     public List<SmartviewData> getForUser(User user) {
         List<Smartview> smartviews = Database.dao(SmartviewDAO.class).getByUser(user.getId());
-        List<SmartviewData> smartviewData = new ArrayList<>();
-
-        for (Smartview smartview : smartviews) {
-            SmartviewData smartviewDataObject = new SmartviewLineUtils().convertToSmartviewData(smartview);
-            smartviewData.add(smartviewDataObject);
-        }
-
-        return smartviewData;
+        return smartviews.stream().map(s -> new SmartviewLineUtils().convertToSmartviewData(s)).collect(Collectors.toList());
     }
 
     public Smartview update(User user, int smartviewId, SmartviewData smartviewData) {

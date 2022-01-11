@@ -1,5 +1,7 @@
 package com.buchsbaumtax.app.dto;
 
+import com.buchsbaumtax.core.model.SmartviewLine;
+
 import java.util.Date;
 
 public class SmartviewLineData {
@@ -15,15 +17,15 @@ public class SmartviewLineData {
     public SmartviewLineData() {
     }
 
-    public SmartviewLineData(int id, Date created, Date updated, long smartviewId, int groupNum, String fieldName, String searchValue, String operator) {
-        this.id = id;
-        this.created = created;
-        this.updated = updated;
-        this.smartviewId = smartviewId;
-        this.groupNum = groupNum;
+    public SmartviewLineData(SmartviewLine smartviewLine, String fieldName) {
+        this.id = smartviewLine.getId();
+        this.created = smartviewLine.getCreated();
+        this.updated = smartviewLine.getUpdated();
+        this.smartviewId = smartviewLine.getSmartviewId();
+        this.groupNum = smartviewLine.getGroupNum();
         this.fieldName = fieldName;
-        this.searchValue = searchValue;
-        this.operator = operator;
+        this.searchValue = smartviewLine.getSearchValue();
+        this.operator = smartviewLine.getOperator();
     }
 
 

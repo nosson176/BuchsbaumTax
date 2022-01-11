@@ -1,6 +1,8 @@
 package com.buchsbaumtax.core.model;
 
 
+import com.buchsbaumtax.app.dto.SmartviewData;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,16 +22,16 @@ public class Smartview {
     public Smartview() {
     }
 
-    public Smartview(Integer id, String userName, long userId, String name, long sortNumber, boolean archived, List<Integer> clientIds, Date created, Date updated, List<SmartviewLine> smartviewLines) {
-        this.id = id;
-        this.userName = userName;
-        this.userId = userId;
-        this.name = name;
-        this.sortNumber = sortNumber;
-        this.archived = archived;
-        this.clientIds = clientIds;
-        this.created = created;
-        this.updated = updated;
+    public Smartview(SmartviewData smartviewData, List<SmartviewLine> smartviewLines) {
+        this.id = smartviewData.getId();
+        this.userName = smartviewData.getUserName();
+        this.userId = smartviewData.getUserId();
+        this.name = smartviewData.getName();
+        this.sortNumber = smartviewData.getSortNumber();
+        this.archived = smartviewData.isArchived();
+        this.clientIds = smartviewData.getClientIds();
+        this.created = smartviewData.getCreated();
+        this.updated = smartviewData.getUpdated();
         this.smartviewLines = smartviewLines;
     }
 

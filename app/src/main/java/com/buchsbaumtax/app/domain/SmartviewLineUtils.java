@@ -10,10 +10,10 @@ import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class SmartviewLineUtils {
     BidiMap<String, String> classFieldMap = new DualHashBidiMap<>();
@@ -105,28 +105,12 @@ public class SmartviewLineUtils {
     }
 
     public Smartview convertToSmartview(SmartviewData smartviewData) {
-        List<SmartviewLine> smartviewLines = new ArrayList<>();
-
-        for (SmartviewLineData data : smartviewData.getSmartviewLines()) {
-            String fieldName = data.getFieldName();
-            Map<String, String> values = getLineValues(fieldName, data.getSearchValue());
-
-            SmartviewLine smartviewLine = new SmartviewLine(data.getId(), data.getCreated(), data.getUpdated(), data.getSmartviewId(), data.getGroupNum(), values.get("table"), values.get("field"), values.get("searchValue"), data.getOperator(), values.get("type"));
-            smartviewLines.add(smartviewLine);
-        }
-
-        return new Smartview(smartviewData.getId(), smartviewData.getUserName(), smartviewData.getUserId(), smartviewData.getName(), smartviewData.getSortNumber(), smartviewData.isArchived(), smartviewData.getClientIds(), smartviewData.getCreated(), smartviewData.getUpdated(), smartviewLines);
+        List<SmartviewLine> smartviewLines = smartviewData.getSmartviewLines().stream().map(d -> new SmartviewLine(d, getLineValues(d.getFieldName(), d.getSearchValue()))).collect(Collectors.toList());
+        return new Smartview(smartviewData, smartviewLines);
     }
 
     public SmartviewData convertToSmartviewData(Smartview smartview) {
-        List<SmartviewLineData> smartviewLineDataList = new ArrayList<>();
-
-        for (SmartviewLine smartviewLine : smartview.getSmartviewLines()) {
-            String fieldName = reverseClassFieldMapping(smartviewLine.getTableName(), smartviewLine.getField());
-
-            SmartviewLineData data = new SmartviewLineData(smartviewLine.getId(), smartviewLine.getCreated(), smartviewLine.getUpdated(), smartviewLine.getSmartviewId(), smartviewLine.getGroupNum(), fieldName, smartviewLine.getSearchValue(), smartviewLine.getOperator());
-            smartviewLineDataList.add(data);
-        }
-        return new SmartviewData(smartview.getId(), smartview.getUserName(), smartview.getUserId(), smartview.getName(), smartview.getSortNumber(), smartview.isArchived(), smartview.getClientIds(), smartview.getCreated(), smartview.getUpdated(), smartviewLineDataList);
+        List<SmartviewLineData> smartviewLineDataList = smartview.getSmartviewLines().stream().map(s -> new SmartviewLineData(s, reverseClassFieldMapping(s.getTableName(), s.getField()))).collect(Collectors.toList());
+        return new SmartviewData(smartview, smartviewLineDataList);
     }
 }
