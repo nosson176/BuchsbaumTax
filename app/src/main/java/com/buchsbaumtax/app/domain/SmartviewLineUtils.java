@@ -10,6 +10,7 @@ import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ public class SmartviewLineUtils {
         classFieldMap.put("LOG::employee_alarm", "log::alarm_user_name");
         classFieldMap.put("LOG::date_of_log", "log::log_date");
         classFieldMap.put("TAX_YEAR::year_name", "tax_year::year");
+        classFieldMap.put("TAX_YEAR::IRS_HISTORY", "tax_year::irs_history");
         classFieldMap.put("TAX_YEAR::tax_form", "filing::tax_form");
         classFieldMap.put("TAX_YEAR::comment", "filing::memo");
         classFieldMap.put("TAX_YEAR::delivery", "filing::delivery_contact");
@@ -105,8 +107,75 @@ public class SmartviewLineUtils {
     }
 
     public Smartview convertToSmartview(SmartviewData smartviewData) {
-        List<SmartviewLine> smartviewLines = smartviewData.getSmartviewLines().stream().map(d -> new SmartviewLine(d, getLineValues(d.getFieldName(), d.getSearchValue()))).collect(Collectors.toList());
+        List<SmartviewLine> smartviewLines = new ArrayList<>();
+
+        for (SmartviewLineData smartviewLineData : smartviewData.getSmartviewLines()) {
+            String fieldName = smartviewLineData.getFieldName();
+
+            if (fieldName.contains("TAX_YEAR") && !classFieldMap.containsKey(fieldName)) {
+                Map<String, String> values = new HashMap<>();
+                Map<String, String> taxYearValues = getTaxYearValues(fieldName);
+
+                if (!taxYearValues.isEmpty()) {
+                    values.put("table", "filings");
+                    values.put("field", "filing_type");
+                    values.put("type", "String");
+                    values.put("searchValue", taxYearValues.get("searchValue"));
+                    SmartviewLine smartviewLine = new SmartviewLine(smartviewLineData, values);
+                    smartviewLines.add(smartviewLine);
+                    Map<String, String> lineValues = getLineValues(taxYearValues.get("fieldName"), smartviewLineData.getSearchValue());
+                    SmartviewLine smartviewLine2 = new SmartviewLine(smartviewLineData, lineValues);
+                    smartviewLines.add(smartviewLine2);
+                }
+                else {
+                    SmartviewLine line = new SmartviewLine(smartviewLineData, getLineValues(smartviewLineData.getFieldName(), smartviewLineData.getSearchValue()));
+                    smartviewLines.add(line);
+                }
+            }
+            else {
+                SmartviewLine line = new SmartviewLine(smartviewLineData, getLineValues(smartviewLineData.getFieldName(), smartviewLineData.getSearchValue()));
+                smartviewLines.add(line);
+            }
+        }
         return new Smartview(smartviewData, smartviewLines);
+    }
+
+    public Map<String, String> getTaxYearValues(String fieldName) {
+        Map<String, String> mappings = new HashMap<>();
+        mappings.put("tax_year_status_state", "state_status");
+        mappings.put("tax_year_status_federal", "federal_status");
+        mappings.put("extension_status", "ext_status");
+        mappings.put("extension_form", "ext_form");
+
+        String[] result = fieldName.split("::");
+
+        String field = result[1];
+        if (mappings.containsKey(field)) {
+            field = mappings.get(field);
+        }
+
+        String[] searchParts = field.split("_");
+
+        Map<String, String> values = new HashMap<>();
+        if (fieldName.contains("status")) {
+            values.put("searchValue", searchParts[0]);
+
+            if (fieldName.contains("detail")) {
+                values.put("fieldName", "filing::status_detail");
+            }
+            else {
+                values.put("fieldName", "filing::status");
+            }
+        }
+        else if (fieldName.contains("form")) {
+            values.put("searchValue", searchParts[0]);
+            values.put("fieldName", "filing::tax_form");
+        }
+        else if (fieldName.contains("owes") || field.contains("paid")) {
+            values.put("searchValue", searchParts[1]);
+            values.put("fieldName", "filing::" + searchParts[0]);
+        }
+        return values;
     }
 
     public SmartviewData convertToSmartviewData(Smartview smartview) {

@@ -707,47 +707,19 @@ public class Migration {
     }
 
     private String[] mapTaxYears(String classField, Map<String, Object> map, SmartViewLineDAO smartViewLineDAO) {
-        Map<String, String> mappings = new HashMap<>();
-        mappings.put("tax_year_status_state", "state_status");
-        mappings.put("tax_year_status_federal", "federal_status");
-        mappings.put("extension_status", "ext_status");
-        mappings.put("extension_form", "ext_form");
+        Map<String, String> taxYearValues = new SmartviewLineUtils().getTaxYearValues(classField);
+        String fieldName = taxYearValues.get("fieldName");
 
-        String[] result = classField.split("::");
-        if (result.length > 1) {
-            String fieldName = result[1];
-            if (mappings.containsKey(fieldName)) {
-                fieldName = mappings.get(fieldName);
-            }
-            String[] searchParts = fieldName.split("_");
-            map.put("tableName", "filings");
-            map.put("field", "filing_type");
-            map.put("type", "String");
-            map.put("operator", "=");
-            if (fieldName.contains("status")) {
-                map.put("searchValue", searchParts[0]);
+        map.put("tableName", "filings");
+        map.put("field", "filing_type");
+        map.put("type", "String");
+        map.put("operator", "=");
+        map.put("searchValue", taxYearValues.get("searchValue"));
 
-                smartViewLineDAO.create(map);
+        smartViewLineDAO.create(map);
 
-                if (fieldName.contains("detail")) {
-                    return new String[]{"filing", "status_detail"};
-                }
-                return new String[]{"filing", "status"};
-            }
-            else if (fieldName.contains("form")) {
-                map.put("searchValue", searchParts[0]);
-
-                smartViewLineDAO.create(map);
-
-                return new String[]{"filing", "tax_form"};
-            }
-            else if (fieldName.contains("owes") || fieldName.contains("paid")) {
-                map.put("searchValue", searchParts[1]);
-
-                smartViewLineDAO.create(map);
-
-                return new String[]{"filing", searchParts[0]};
-            }
+        if (fieldName != null) {
+            return fieldName.split("::");
         }
         return new String[]{null, null};
     }
