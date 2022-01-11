@@ -1,11 +1,10 @@
-package com.buchsbaumtax.core.model;
-
+package com.buchsbaumtax.app.dto;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Smartview {
+public class SmartviewData {
     private Integer id;
     private String userName;
     private long userId;
@@ -15,12 +14,12 @@ public class Smartview {
     private List<Integer> clientIds;
     private Date created;
     private Date updated;
-    private List<SmartviewLine> smartviewLines = new ArrayList<>();
+    private List<SmartviewLineData> smartviewLines = new ArrayList<>();
 
-    public Smartview() {
+    public SmartviewData() {
     }
 
-    public Smartview(Integer id, String userName, long userId, String name, long sortNumber, boolean archived, List<Integer> clientIds, Date created, Date updated, List<SmartviewLine> smartviewLines) {
+    public SmartviewData(Integer id, String userName, long userId, String name, long sortNumber, boolean archived, List<Integer> clientIds, Date created, Date updated, List<SmartviewLineData> smartviewLines) {
         this.id = id;
         this.userName = userName;
         this.userId = userId;
@@ -33,6 +32,7 @@ public class Smartview {
         this.smartviewLines = smartviewLines;
     }
 
+
     public Integer getId() {
         return id;
     }
@@ -41,16 +41,8 @@ public class Smartview {
         return userName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     public long getUserId() {
         return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
     }
 
     public String getName() {
@@ -61,8 +53,12 @@ public class Smartview {
         return sortNumber;
     }
 
-    public boolean getArchived() {
+    public boolean isArchived() {
         return archived;
+    }
+
+    public List<Integer> getClientIds() {
+        return clientIds;
     }
 
     public Date getCreated() {
@@ -73,19 +69,15 @@ public class Smartview {
         return updated;
     }
 
-    public List<Integer> getClientIds() {
-        return clientIds;
-    }
-
-    public void setClientIds(List<Integer> clientIds) {
-        this.clientIds = clientIds;
-    }
-
-    public boolean isArchived() {
-        return archived;
-    }
-
-    public List<SmartviewLine> getSmartviewLines() {
+    public List<SmartviewLineData> getSmartviewLines() {
         return smartviewLines;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 }

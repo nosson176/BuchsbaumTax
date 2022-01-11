@@ -1,8 +1,8 @@
 package com.buchsbaumtax.migration;
 
 import com.buchsbaumtax.app.domain.DisplayFields;
+import com.buchsbaumtax.app.domain.SmartviewLineUtils;
 import com.buchsbaumtax.core.model.*;
-import com.google.common.base.CaseFormat;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.RFC4180Parser;
@@ -21,7 +21,6 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.io.FileReader;
-import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.text.SimpleDateFormat;
@@ -630,22 +629,7 @@ public class Migration {
     }
 
     private void csvToSmartViewLines(List<String[]> smartViews) {
-        Map<String, String> classFieldMap = new HashMap<>();
-
-        classFieldMap.put("FEE::tax_year", "fee::year");
-        classFieldMap.put("CONTACT::type", "contact::contact_type");
-        classFieldMap.put("LOG::employee_alarm", "log::alarm_user_name");
-        classFieldMap.put("LOG::date_of_log", "log::log_date");
-        classFieldMap.put("TAX_YEAR::year_name", "tax_year::year");
-        classFieldMap.put("TAX_YEAR::tax_form", "filing::tax_form");
-        classFieldMap.put("TAX_YEAR::comment", "filing::memo");
-        classFieldMap.put("TAX_YEAR::delivery", "filing::delivery_contact");
-        classFieldMap.put("TAX_YEAR::tax_state", "filing::state");
-        classFieldMap.put("TAX_YEAR::date_filed", "filing::date_filed");
-        classFieldMap.put("TAX_YEAR::file_type", "filing::file_type");
-        classFieldMap.put("TAX_YEAR::tax_year_status_detail", "filing::status_detail");
-        classFieldMap.put("CLIENT_FLAGS::flag_name", "client_flag::flag");
-        classFieldMap.put("CLIENT_FLAGS::user_name", "client_flag::user_id");
+        Map<String, String> classFieldMap = new SmartviewLineUtils().getClassFieldMap();
 
 
         SmartViewLineDAO smartViewLineDAO = handle.attach(SmartViewLineDAO.class);
@@ -683,23 +667,8 @@ public class Migration {
 
             String type = null;
             map.put("type", null);
-            if (classField[0] != null) {
-                className = "com.buchsbaumtax.core.model." + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, classField[0]);
-                if (classField.length == 2 && classField[1] != null) {
-                    fieldName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, classField[1]);
-                }
-                try {
-                    Class<?> c = Class.forName(className);
-                    for (Field field : c.getDeclaredFields()) {
-                        if (fieldName != null && fieldName.equals(field.getName())) {
-                            type = field.getType().getSimpleName();
-                            map.put("type", type);
-                        }
-                    }
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
+            if (classField.length > 1 && classField[0] != null && classField[1] != null) {
+                map.put("type", new SmartviewLineUtils().getType(classField[0], classField[1]));
             }
 
             String searchValue = row[3];
