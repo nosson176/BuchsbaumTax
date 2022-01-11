@@ -118,6 +118,7 @@ CREATE TABLE tax_years (
 );
 
 CREATE INDEX ON tax_years (client_id);
+CREATE INDEX tax_years_fts ON tax_years USING gin(to_tsvector('simple', year||' '||archived||' '||irs_history));
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
@@ -160,7 +161,7 @@ CREATE TABLE logs (
 );
 
 CREATE INDEX ON logs (client_id);
-CREATE INDEX logs_fts ON logs USING gin(to_tsvector('simple', alarm_time||' '||note));
+CREATE INDEX logs_fts ON logs USING gin(to_tsvector('simple', alarm_user_name||' '||alarm_complete||' '||' '||alarm_time||' '||note));
 
 CREATE TABLE tax_personals (
     id SERIAL PRIMARY KEY,
@@ -231,6 +232,7 @@ CREATE TABLE fees (
 );
 
 CREATE INDEX ON fees (client_id);
+CREATE INDEX fees_fts ON fees USING gin(to_tsvector('simple', year||' '||status||' '||status_detail||' '||fee_type||' '||manual_amount||' '||paid_amount||' '||include||' '||rate||' '||' '||sum));
 
 CREATE TABLE value_lists (
     id SERIAL PRIMARY KEY,
@@ -270,9 +272,9 @@ CREATE TABLE smartview_lines (
     created TIMESTAMPTZ DEFAULT now(),
     updated TIMESTAMPTZ DEFAULT now(),
     smartview_id INTEGER REFERENCES smartviews ON DELETE CASCADE,
-    query INTEGER,
-    class_to_join TEXT,
-    field_to_search TEXT,
+    group_num INTEGER NOT NULL DEFAULT 0,
+    table_name TEXT NOT NULL,
+    field TEXT NOT NULL,
     search_value TEXT,
     operator TEXT,
     type TEXT
@@ -312,6 +314,9 @@ CREATE TABLE client_flags (
     user_id INTEGER REFERENCES users ON DELETE CASCADE,
     flag INTEGER
 );
+
+CREATE INDEX ON client_flags(client_id);
+CREATE INDEX client_flags_fts ON client_flags USING gin(to_tsvector('simple', user_id||' '||flag));
 
 -- CREATE TABLE textees (
 --     id SERIAL PRIMARY KEY,

@@ -8,9 +8,9 @@ public class SmartviewLine {
     private Date created;
     private Date updated;
     private long smartviewId;
-    private long query;
-    private String classToJoin;
-    private String fieldToSearch;
+    private int groupNum;
+    private String tableName;
+    private String field;
     private String searchValue;
     private String operator;
     private String type;
@@ -18,14 +18,14 @@ public class SmartviewLine {
     public SmartviewLine() {
     }
 
-    public SmartviewLine(Integer id, Date created, Date updated, long smartviewId, long query, String classToJoin, String fieldToSearch, String searchValue, String operator, String type) {
+    public SmartviewLine(Integer id, Date created, Date updated, long smartviewId, int groupNum, String tableName, String field, String searchValue, String operator, String type) {
         this.id = id;
         this.created = created;
         this.updated = updated;
         this.smartviewId = smartviewId;
-        this.query = query;
-        this.classToJoin = classToJoin;
-        this.fieldToSearch = fieldToSearch;
+        this.groupNum = groupNum;
+        this.tableName = tableName;
+        this.field = field;
         this.searchValue = searchValue;
         this.operator = operator;
         this.type = type;
@@ -51,16 +51,16 @@ public class SmartviewLine {
         this.smartviewId = smartviewId;
     }
 
-    public long getQuery() {
-        return query;
+    public int getGroupNum() {
+        return groupNum;
     }
 
-    public String getClassToJoin() {
-        return classToJoin;
+    public String getTableName() {
+        return tableName;
     }
 
-    public String getFieldToSearch() {
-        return fieldToSearch;
+    public String getField() {
+        return field;
     }
 
     public String getSearchValue() {

@@ -630,47 +630,72 @@ public class Migration {
     }
 
     private void csvToSmartViewLines(List<String[]> smartViews) {
+        Map<String, String> classFieldMap = new HashMap<>();
+
+        classFieldMap.put("FEE::tax_year", "fee::year");
+        classFieldMap.put("CONTACT::type", "contact::contact_type");
+        classFieldMap.put("LOG::employee_alarm", "log::alarm_user_name");
+        classFieldMap.put("LOG::date_of_log", "log::log_date");
+        classFieldMap.put("TAX_YEAR::year_name", "tax_year::year");
+        classFieldMap.put("TAX_YEAR::tax_form", "filing::tax_form");
+        classFieldMap.put("TAX_YEAR::comment", "filing::memo");
+        classFieldMap.put("TAX_YEAR::delivery", "filing::delivery_contact");
+        classFieldMap.put("TAX_YEAR::tax_state", "filing::state");
+        classFieldMap.put("TAX_YEAR::date_filed", "filing::date_filed");
+        classFieldMap.put("TAX_YEAR::file_type", "filing::file_type");
+        classFieldMap.put("TAX_YEAR::tax_year_status_detail", "filing::status_detail");
+        classFieldMap.put("CLIENT_FLAGS::flag_name", "client_flag::flag");
+        classFieldMap.put("CLIENT_FLAGS::user_name", "client_flag::user_id");
+
+
         SmartViewLineDAO smartViewLineDAO = handle.attach(SmartViewLineDAO.class);
 
         for (String[] row : smartViews) {
             Map<String, Object> map = new HashMap<>();
 
             map.put("smartViewId", smartViewIds.get(row[0]));
-            map.put("query", castToInt(row[1]));
+            if (castToInt(row[1]) != null) {
+                map.put("groupNum", castToInt(row[1]));
+            }
+            else {
+                map.put("groupNum", 0);
+            }
 
             String className;
             String fieldName = null;
             String[] classField = new String[]{null, null};
-            if (row[2] != null && !row[2].equals("")) {
-                if (row[2].equals("TAX_YEAR::tax_year_status_detail")) {
-                    row[2] = "FILING::status_detail";
-                }
-                else if (row[2].equals("LOG::employee_alarm")) {
-                    row[2] = "LOG::alarm_user_name";
-                }
+            map.put("tableName", null);
+            map.put("field", null);
+            if (classFieldMap.containsKey(row[2])) {
+                String value = classFieldMap.get(row[2]);
+                classField = value.split("::");
+            }
+            else if (row[2] != null && !row[2].equals("")) {
                 classField = row[2].split("::");
             }
+            if (classField[0] != null && classField[0].equals("TAX_YEAR")) {
+                classField = mapTaxYears(row[2], map, smartViewLineDAO);
+            }
+            if (classField.length > 1 && classField[0] != null && classField[1] != null) {
+                map.put("tableName", classField[0].toLowerCase() + "s");
+                map.put("field", classField[1].toLowerCase());
+            }
 
-            map.put("classToJoin", null);
-            map.put("fieldToSearch", null);
+            String type = null;
             map.put("type", null);
             if (classField[0] != null) {
-                if (classField[0].equals("CLIENT_FLAGS")) {
-                    classField[0] = "CLIENT_FLAG";
-                }
                 className = "com.buchsbaumtax.core.model." + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, classField[0]);
                 if (classField.length == 2 && classField[1] != null) {
                     fieldName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, classField[1]);
-                    map.put("fieldToSearch", fieldName);
                 }
                 try {
                     Class<?> c = Class.forName(className);
                     for (Field field : c.getDeclaredFields()) {
                         if (fieldName != null && fieldName.equals(field.getName())) {
-                            map.put("type", field.getType().getSimpleName());
+                            type = field.getType().getSimpleName();
+                            map.put("type", type);
                         }
                     }
-                    map.put("classToJoin", c.getSimpleName());
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -697,11 +722,65 @@ public class Migration {
                 }
             }
             map.put("operator", operator);
+            if (type != null && type.equals("boolean")) {
+                searchValue = String.valueOf(Boolean.valueOf(searchValue));
+            }
+            else if (searchValue != null && searchValue.equalsIgnoreCase("today")) {
+                searchValue = "now()";
+            }
             map.put("searchValue", searchValue);
 
-            smartViewLineDAO.create(map);
+            if (map.get("tableName") != null && map.get("field") != null) {
+                smartViewLineDAO.create(map);
+            }
         }
 
+    }
+
+    private String[] mapTaxYears(String classField, Map<String, Object> map, SmartViewLineDAO smartViewLineDAO) {
+        Map<String, String> mappings = new HashMap<>();
+        mappings.put("tax_year_status_state", "state_status");
+        mappings.put("tax_year_status_federal", "federal_status");
+        mappings.put("extension_status", "ext_status");
+        mappings.put("extension_form", "ext_form");
+
+        String[] result = classField.split("::");
+        if (result.length > 1) {
+            String fieldName = result[1];
+            if (mappings.containsKey(fieldName)) {
+                fieldName = mappings.get(fieldName);
+            }
+            String[] searchParts = fieldName.split("_");
+            map.put("tableName", "filings");
+            map.put("field", "filing_type");
+            map.put("type", "String");
+            map.put("operator", "=");
+            if (fieldName.contains("status")) {
+                map.put("searchValue", searchParts[0]);
+
+                smartViewLineDAO.create(map);
+
+                if (fieldName.contains("detail")) {
+                    return new String[]{"filing", "status_detail"};
+                }
+                return new String[]{"filing", "status"};
+            }
+            else if (fieldName.contains("form")) {
+                map.put("searchValue", searchParts[0]);
+
+                smartViewLineDAO.create(map);
+
+                return new String[]{"filing", "tax_form"};
+            }
+            else if (fieldName.contains("owes") || fieldName.contains("paid")) {
+                map.put("searchValue", searchParts[1]);
+
+                smartViewLineDAO.create(map);
+
+                return new String[]{"filing", searchParts[0]};
+            }
+        }
+        return new String[]{null, null};
     }
 
     private void csvToChecklists(List<String[]> checklists) {
@@ -1019,7 +1098,7 @@ public class Migration {
     }
 
     private interface SmartViewLineDAO {
-        @SqlUpdate("INSERT INTO smartview_lines (smartview_id, query, class_to_join, field_to_search, search_value, operator, type) VALUES (:smartViewId, :query, :classToJoin, :fieldToSearch, :searchValue, :operator, :type)")
+        @SqlUpdate("INSERT INTO smartview_lines (smartview_id, group_num, table_name, field, search_value, operator, type) VALUES (:smartViewId, :groupNum, :tableName, :field, :searchValue, :operator, :type)")
         void create(@BindMap Map<String, ?> smartViewLine);
     }
 

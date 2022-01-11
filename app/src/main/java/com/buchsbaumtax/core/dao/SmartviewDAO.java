@@ -8,10 +8,7 @@ import com.sifradigital.framework.db.Database;
 import org.jdbi.v3.sqlobject.config.RegisterFieldMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
-import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
-import org.jdbi.v3.sqlobject.statement.SqlQuery;
-import org.jdbi.v3.sqlobject.statement.SqlUpdate;
-import org.jdbi.v3.sqlobject.statement.UseRowReducer;
+import org.jdbi.v3.sqlobject.statement.*;
 
 import java.util.List;
 
@@ -38,6 +35,9 @@ public interface SmartviewDAO {
     @SqlUpdate("UPDATE smartviews SET name = :name, sort_number = :sortNumber, archived = :archived, client_ids = :clientIds, updated = NOW() WHERE id = :id")
     void updateSmartview(@BindBean Smartview smartview);
 
+    @SqlBatch("UPDATE smartviews SET name = :name, sort_number = :sortNumber, archived = :archived, client_ids = :clientIds, updated = NOW() WHERE id = :id")
+    void bulkUpdateSmartviews(@BindBean List<Smartview> smartviews);
+
     @GetGeneratedKeys
     @SqlUpdate("INSERT INTO smartviews (user_name, user_id, name, sort_number, archived) VALUES (:userName, :userId, :name, :sortNumber, :archived)")
     int createSmartview(@BindBean Smartview smartview);
@@ -47,10 +47,10 @@ public interface SmartviewDAO {
     List<SmartviewLine> getSmartviewLines(@Bind("smartviewId") int smartviewId);
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO smartview_lines (smartview_id, query, class_to_join, field_to_search, search_value, operator, type) VALUES (:smartviewId, :query, :classToJoin, :fieldToSearch, :searchValue, :operator, :type)")
+    @SqlUpdate("INSERT INTO smartview_lines (smartview_id, group_num, table_name, field, search_value, operator, type) VALUES (:smartviewId, :groupNum, :tableName, :field, :searchValue, :operator, :type)")
     int createSmartviewLine(@BindBean SmartviewLine smartviewLine);
 
-    @SqlUpdate("UPDATE smartview_lines SET query = :query, class_to_join = :classToJoin, field_to_search = :fieldToSearch, search_value = :searchValue, operator = :operator, type = :type, updated = now() WHERE id = :id")
+    @SqlUpdate("UPDATE smartview_lines SET group_num = :groupNum, table_name = :tableName, field = :field, search_value = :searchValue, operator = :operator, type = :type, updated = now() WHERE id = :id")
     void updateSmartviewLine(@BindBean SmartviewLine smartviewLine);
 
     @SqlUpdate("DELETE FROM smartview_lines WHERE smartview_id = :smartviewId")

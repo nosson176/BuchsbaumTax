@@ -4,16 +4,16 @@ package com.buchsbaumtax.core.model;
 public class ClientFlag {
 
     private long id;
-    private long clientId;
+    private int clientId;
     private long userId;
-    private long flag;
+    private int flag;
 
 
     public long getId() {
         return id;
     }
 
-    public long getClientId() {
+    public int getClientId() {
         return clientId;
     }
 
@@ -21,7 +21,7 @@ public class ClientFlag {
         return userId;
     }
 
-    public long getFlag() {
+    public int getFlag() {
         return flag;
     }
 }
