@@ -1,7 +1,10 @@
 package com.buchsbaumtax.core.model;
 
 
+import com.buchsbaumtax.app.dto.SmartviewLineData;
+
 import java.util.Date;
+import java.util.Map;
 
 public class SmartviewLine {
     private Integer id;
@@ -18,17 +21,17 @@ public class SmartviewLine {
     public SmartviewLine() {
     }
 
-    public SmartviewLine(Integer id, Date created, Date updated, long smartviewId, int groupNum, String tableName, String field, String searchValue, String operator, String type) {
-        this.id = id;
-        this.created = created;
-        this.updated = updated;
-        this.smartviewId = smartviewId;
-        this.groupNum = groupNum;
-        this.tableName = tableName;
-        this.field = field;
-        this.searchValue = searchValue;
-        this.operator = operator;
-        this.type = type;
+    public SmartviewLine(SmartviewLineData smartviewLineData, Map<String, String> values) {
+        this.id = smartviewLineData.getId();
+        this.created = smartviewLineData.getCreated();
+        this.updated = smartviewLineData.getUpdated();
+        this.smartviewId = smartviewLineData.getSmartviewId();
+        this.groupNum = smartviewLineData.getGroupNum();
+        this.tableName = values.get("table");
+        this.field = values.get("field");
+        this.searchValue = values.get("searchValue");
+        this.operator = smartviewLineData.getOperator();
+        this.type = values.get("type");
     }
 
     public Integer getId() {
