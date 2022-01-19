@@ -13,12 +13,13 @@ import java.util.stream.Collectors;
 
 public class SmartviewCRUD {
 
-    public Smartview create(User user, SmartviewData smartviewData) {
+    public SmartviewData create(User user, SmartviewData smartviewData) {
         Smartview smartview = new SmartviewLineUtils().convertToSmartview(smartviewData);
 
         smartview.setUserId(user.getId());
         smartview.setUserName(user.getUsername());
-        return Database.dao(SmartviewDAO.class).create(smartview);
+        Smartview created = Database.dao(SmartviewDAO.class).create(smartview);
+        return new SmartviewLineUtils().convertToSmartviewData(created);
     }
 
     public List<SmartviewData> getForUser(User user) {
@@ -26,13 +27,14 @@ public class SmartviewCRUD {
         return smartviews.stream().map(s -> new SmartviewLineUtils().convertToSmartviewData(s)).collect(Collectors.toList());
     }
 
-    public Smartview update(User user, int smartviewId, SmartviewData smartviewData) {
+    public SmartviewData update(User user, int smartviewId, SmartviewData smartviewData) {
         Smartview oldSmartview = Database.dao(SmartviewDAO.class).get(smartviewId);
         if (user.getId() != oldSmartview.getUserId() || smartviewData.getId() != smartviewId) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
 
         Smartview smartview = new SmartviewLineUtils().convertToSmartview(smartviewData);
-        return Database.dao(SmartviewDAO.class).update(smartview);
+        Smartview updated = Database.dao(SmartviewDAO.class).update(smartview);
+        return new SmartviewLineUtils().convertToSmartviewData(updated);
     }
 }

@@ -4,9 +4,10 @@ package com.buchsbaumtax.core.model;
 import com.buchsbaumtax.app.dto.SmartviewLineData;
 import com.buchsbaumtax.app.dto.SmartviewLineField;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class SmartviewLine {
+public class SmartviewLine implements Serializable {
     private Integer id;
     private Date created;
     private Date updated;
@@ -68,6 +69,10 @@ public class SmartviewLine {
 
     public String getSearchValue() {
         return searchValue;
+    }
+
+    public void setSearchValue(String searchValue) {
+        this.searchValue = searchValue;
     }
 
     public String getOperator() {

@@ -1,5 +1,7 @@
 package com.buchsbaumtax.app.dto;
 
+import java.util.Objects;
+
 public class SmartviewLineField {
     private String tableName;
     private String fieldName;
@@ -45,5 +47,18 @@ public class SmartviewLineField {
 
     public String getSearchValue() {
         return searchValue;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SmartviewLineField that = (SmartviewLineField)o;
+        return Objects.equals(tableName, that.tableName) && Objects.equals(fieldName, that.fieldName) && Objects.equals(type, that.type) && Objects.equals(tableName2, that.tableName2) && Objects.equals(fieldName2, that.fieldName2) && Objects.equals(searchValue, that.searchValue);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableName, fieldName, type, tableName2, fieldName2, searchValue);
     }
 }
