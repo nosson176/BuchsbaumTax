@@ -46,6 +46,10 @@ public interface SmartviewDAO {
     @SqlQuery("SELECT * FROM smartview_lines WHERE smartview_id = :smartviewId ORDER BY id")
     List<SmartviewLine> getSmartviewLines(@Bind("smartviewId") int smartviewId);
 
+    @RegisterFieldMapper(SmartviewLine.class)
+    @SqlQuery("SELECT * FROM smartview_lines WHERE id = :smartviewLineId")
+    SmartviewLine getSmartviewLine(@Bind("smartviewLineId") int smartviewLineId);
+
     @GetGeneratedKeys
     @SqlUpdate("INSERT INTO smartview_lines (smartview_id, group_num, table_name, field, search_value, operator, type) VALUES (:smartviewId, :groupNum, :tableName, :field, :searchValue, :operator, :type)")
     int createSmartviewLine(@BindBean SmartviewLine smartviewLine);

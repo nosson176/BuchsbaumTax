@@ -2,11 +2,12 @@ package com.buchsbaumtax.core.model;
 
 
 import com.buchsbaumtax.app.dto.SmartviewLineData;
+import com.buchsbaumtax.app.dto.SmartviewLineField;
 
+import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
 
-public class SmartviewLine {
+public class SmartviewLine implements Serializable {
     private Integer id;
     private Date created;
     private Date updated;
@@ -21,17 +22,17 @@ public class SmartviewLine {
     public SmartviewLine() {
     }
 
-    public SmartviewLine(SmartviewLineData smartviewLineData, Map<String, String> values) {
+    public SmartviewLine(SmartviewLineData smartviewLineData, SmartviewLineField fieldData, String searchValue) {
         this.id = smartviewLineData.getId();
         this.created = smartviewLineData.getCreated();
         this.updated = smartviewLineData.getUpdated();
         this.smartviewId = smartviewLineData.getSmartviewId();
         this.groupNum = smartviewLineData.getGroupNum();
-        this.tableName = values.get("table");
-        this.field = values.get("field");
-        this.searchValue = values.get("searchValue");
+        this.tableName = fieldData.getTableName();
+        this.field = fieldData.getFieldName();
+        this.searchValue = searchValue;
         this.operator = smartviewLineData.getOperator();
-        this.type = values.get("type");
+        this.type = fieldData.getType();
     }
 
     public Integer getId() {
@@ -68,6 +69,10 @@ public class SmartviewLine {
 
     public String getSearchValue() {
         return searchValue;
+    }
+
+    public void setSearchValue(String searchValue) {
+        this.searchValue = searchValue;
     }
 
     public String getOperator() {
