@@ -1,8 +1,11 @@
 package com.buchsbaumtax.app.resource;
 
-import com.buchsbaumtax.app.domain.ClientCRUD;
+import com.buchsbaumtax.app.domain.client.CreateClient;
+import com.buchsbaumtax.app.domain.client.GetClients;
+import com.buchsbaumtax.app.domain.client.UpdateClient;
 import com.buchsbaumtax.app.domain.taxyear.GetClientData;
 import com.buchsbaumtax.app.dto.ClientData;
+import com.buchsbaumtax.core.dao.ClientDAO;
 import com.buchsbaumtax.core.dao.ClientHistoryDAO;
 import com.buchsbaumtax.core.model.Client;
 import com.buchsbaumtax.core.model.User;
@@ -18,33 +21,34 @@ public class ClientResource {
 
     @POST
     public Client createClient(Client client) {
-        return new ClientCRUD().create(client);
+        return new CreateClient().createClient(client);
     }
 
     @GET
     public List<Client> getAllClients(@QueryParam("smartview") Integer smartviewId, @QueryParam("q") String q, @QueryParam("field") String field) {
+        GetClients getClients = new GetClients();
         if (smartviewId != null) {
-            return new ClientCRUD().getFiltered(smartviewId);
+            return getClients.getForSmartview(smartviewId);
         }
         if (q != null) {
             if (field != null) {
-                return new ClientCRUD().getFiltered(q, field);
+                return getClients.getForFieldSearch(q, field);
             }
-            return new ClientCRUD().getFiltered(q);
+            return getClients.getForDefaultSearch(q);
         }
-        return new ClientCRUD().getAll();
+        return getClients.getAll();
     }
 
     @GET
     @Path("/{clientId}")
     public Client getClient(@PathParam("clientId") int clientId) {
-        return new ClientCRUD().get(clientId);
+        return Database.dao(ClientDAO.class).get(clientId);
     }
 
     @PUT
     @Path("/{clientId}")
     public Client updateClient(@PathParam("clientId") int clientId, Client client) {
-        return new ClientCRUD().update(clientId, client);
+        return new UpdateClient().updateClient(clientId, client);
     }
 
     @GET
