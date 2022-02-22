@@ -13,17 +13,18 @@ import java.util.Set;
 
 @Dao
 public interface ClientDAO {
-    final String MATCHING_CLIENTS = "matching_clients(id) AS (SELECT c.* FROM clients c WHERE last_name ILIKE CONCAT('%', :q, '%')), ";
-    final String MATCHING_CONTACTS = "matching_contacts AS (SELECT co.* FROM contacts co WHERE (main_detail, memo)::text ILIKE CONCAT('%', :q, '%')), ";
-    final String MATCHING_PERSONALS = "matching_personals AS (SELECT tp.* FROM tax_personals tp WHERE (first_name, last_name, ssn, informal)::text ILIKE CONCAT('%', :q, '%'))";
-    final String WITH = "WITH " + MATCHING_CLIENTS + MATCHING_CONTACTS + MATCHING_PERSONALS;
-    final String SELECT_CLIENTS = "SELECT c.* FROM matching_clients c UNION ";
-    final String SELECT_CONTACTS = "SELECT c.* FROM matching_contacts co JOIN clients c ON co.client_id = c.id UNION ";
-    final String SELECT_PERSONALS = "SELECT c.* FROM matching_personals p JOIN clients c ON p.client_id = c.id";
-    final String SELECT = " SELECT * FROM(" + SELECT_CLIENTS + SELECT_CONTACTS + SELECT_PERSONALS + ") AS result ORDER BY id;";
+
+    String MATCHING_CLIENTS = "matching_clients(id) AS (SELECT c.* FROM clients c WHERE last_name ILIKE CONCAT('%', :q, '%')), ";
+    String MATCHING_CONTACTS = "matching_contacts AS (SELECT co.* FROM contacts co WHERE (main_detail, memo)::text ILIKE CONCAT('%', :q, '%')), ";
+    String MATCHING_PERSONALS = "matching_personals AS (SELECT tp.* FROM tax_personals tp WHERE (first_name, last_name, ssn, informal)::text ILIKE CONCAT('%', :q, '%'))";
+    String WITH = "WITH " + MATCHING_CLIENTS + MATCHING_CONTACTS + MATCHING_PERSONALS;
+    String SELECT_CLIENTS = "SELECT c.* FROM matching_clients c UNION ";
+    String SELECT_CONTACTS = "SELECT c.* FROM matching_contacts co JOIN clients c ON co.client_id = c.id UNION ";
+    String SELECT_PERSONALS = "SELECT c.* FROM matching_personals p JOIN clients c ON p.client_id = c.id";
+    String SELECT = " SELECT * FROM(" + SELECT_CLIENTS + SELECT_CONTACTS + SELECT_PERSONALS + ") AS result ORDER BY last_name;";
 
     @RegisterFieldMapper(Client.class)
-    @SqlQuery("SELECT * FROM clients ORDER BY id")
+    @SqlQuery("SELECT * FROM clients ORDER BY last_name")
     List<Client> getAll();
 
     @RegisterFieldMapper(Client.class)
@@ -31,12 +32,8 @@ public interface ClientDAO {
     Client get(@Bind("id") int id);
 
     @RegisterFieldMapper(Client.class)
-    @SqlQuery("SELECT * FROM clients WHERE id IN (<ids>)")
+    @SqlQuery("SELECT * FROM clients WHERE id IN (<ids>) ORDER BY last_name")
     List<Client> getBulk(@BindList("ids") List<Integer> ids);
-
-    @RegisterFieldMapper(Client.class)
-    @SqlQuery("SELECT DISTINCT clients.* <from> <where> ORDER BY clients.id")
-    List<Client> getFiltered(@Define("from") String from, @Define("where") String where);
 
     @RegisterFieldMapper(Client.class)
     @AllowUnusedBindings
