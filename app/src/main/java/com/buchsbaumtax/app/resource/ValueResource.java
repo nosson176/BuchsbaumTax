@@ -1,6 +1,7 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.CreateValue;
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.ValueObject;
 import com.buchsbaumtax.core.dao.TaxGroupDAO;
 import com.buchsbaumtax.core.dao.ValueDAO;
@@ -9,9 +10,7 @@ import com.buchsbaumtax.core.model.Value;
 import com.sifradigital.framework.auth.Authenticated;
 import com.sifradigital.framework.db.Database;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +30,13 @@ public class ValueResource {
     @POST
     public Value createValue(Value value) {
         return new CreateValue().createValue(value);
+    }
+
+    @DELETE
+    @Path("/{valueId}")
+    public BaseResponse deleteValue(@PathParam("valueId") int valueId) {
+        Database.dao(ValueDAO.class).delete(valueId);
+        return new BaseResponse(true);
     }
 
     @GET

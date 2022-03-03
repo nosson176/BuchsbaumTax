@@ -21,6 +21,9 @@ public interface ValueDAO {
     @SqlQuery("SELECT * FROM value_lists WHERE id = :id")
     Value get(@Bind("id") int id);
 
+    @SqlUpdate("DELETE FROM value_lists WHERE id = :id")
+    void delete(@Bind("id") int id);
+
     @GetGeneratedKeys
     @SqlUpdate("INSERT INTO value_lists (sort_order, key, value, parent_id, translation_needed, show, include) VALUES (:sortOrder, :key, :value, :parentId, :translationNeeded, :show, :include)")
     int create(@BindBean Value value);
