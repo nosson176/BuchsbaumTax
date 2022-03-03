@@ -14,6 +14,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 public class Login {
+
     public Token login(Credentials credentials) {
         User user = Database.dao(UserDAO.class).getByUsername(credentials.getUsername());
         if (user == null) {
