@@ -7,18 +7,15 @@ import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
-public class CreateValue {
+public class UpdateValue {
 
-    public ValueObject createValue(Value value) {
-        List<String> valueTypes = Database.dao(ValueDAO.class).getAllValueTypes();
-
-        if (!valueTypes.contains(value.getKey())) {
+    public ValueObject updateValue(int valueId, Value value) {
+        if (valueId != value.getId()) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
 
-        int id = Database.dao(ValueDAO.class).create(value);
-        return new ValueObject(Database.dao(ValueDAO.class).get(id));
+        Database.dao(ValueDAO.class).update(value);
+        return new ValueObject(Database.dao(ValueDAO.class).get(value.getId()));
     }
 }

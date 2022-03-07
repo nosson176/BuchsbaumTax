@@ -28,6 +28,9 @@ public interface ValueDAO {
     @SqlUpdate("INSERT INTO value_lists (sort_order, key, value, parent_id, translation_needed, show, include) VALUES (:sortOrder, :key, :value, :parentId, :translationNeeded, :show, :include)")
     int create(@BindBean Value value);
 
+    @SqlUpdate("UPDATE value_lists SET sort_order = :sortOrder, value = :value, parent_id = :parentId, show = :show, include = :include")
+    void update(@BindBean Value value);
+
     @RegisterFieldMapper(Value.class)
     @SqlQuery("SELECT key FROM value_lists GROUP BY key ORDER BY key")
     List<String> getAllValueTypes();

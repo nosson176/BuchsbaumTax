@@ -1,6 +1,7 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.CreateValue;
+import com.buchsbaumtax.app.domain.UpdateValue;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.ValueObject;
 import com.buchsbaumtax.core.dao.TaxGroupDAO;
@@ -28,8 +29,14 @@ public class ValueResource {
     }
 
     @POST
-    public Value createValue(Value value) {
+    public ValueObject createValue(Value value) {
         return new CreateValue().createValue(value);
+    }
+
+    @PUT
+    @Path("/{valueId}")
+    public ValueObject updateValue(@PathParam("valueId") int valueId, Value value) {
+        return new UpdateValue().updateValue(valueId, value);
     }
 
     @DELETE

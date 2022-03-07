@@ -4,12 +4,12 @@ import com.buchsbaumtax.core.model.Value;
 
 public class ValueObject {
 
-    private int id;
-    private int sortOrder;
-    private String value;
-    private Integer parentId;
-    private boolean show;
-    private boolean include;
+    private final int id;
+    private final int sortOrder;
+    private final String value;
+    private final Integer parentId;
+    private final boolean show;
+    private final boolean include;
 
     public ValueObject(Value value) {
         this.id = value.getId();
@@ -18,6 +18,10 @@ public class ValueObject {
         this.parentId = value.getParentId();
         this.show = value.isShow();
         this.include = value.isInclude();
+    }
+
+    public int getId() {
+        return id;
     }
 
     public int getSortOrder() {
