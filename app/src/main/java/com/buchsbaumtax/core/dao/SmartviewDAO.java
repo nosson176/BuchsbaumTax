@@ -60,6 +60,9 @@ public interface SmartviewDAO {
     @SqlUpdate("DELETE FROM smartview_lines WHERE smartview_id = :smartviewId")
     void deleteSmartviewLines(@Bind("smartviewId") int smartviewId);
 
+    @SqlUpdate("DELETE FROM smartviews WHERE id = :id")
+    void delete(@Bind("id") int id);
+
     default Smartview create(Smartview smartview) {
         int id = createSmartview(smartview);
         for (SmartviewLine smartviewLine : smartview.getSmartviewLines()) {

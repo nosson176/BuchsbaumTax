@@ -4,6 +4,7 @@ import com.buchsbaumtax.app.domain.client.CreateClient;
 import com.buchsbaumtax.app.domain.client.GetClients;
 import com.buchsbaumtax.app.domain.client.UpdateClient;
 import com.buchsbaumtax.app.domain.taxyear.GetClientData;
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.ClientData;
 import com.buchsbaumtax.core.dao.ClientDAO;
 import com.buchsbaumtax.core.dao.ClientHistoryDAO;
@@ -43,6 +44,13 @@ public class ClientResource {
     @Path("/{clientId}")
     public Client getClient(@PathParam("clientId") int clientId) {
         return Database.dao(ClientDAO.class).get(clientId);
+    }
+
+    @DELETE
+    @Path("/{clientId}")
+    public BaseResponse deleteClient(@PathParam("clientId") int clientId) {
+        Database.dao(ClientDAO.class).delete(clientId);
+        return new BaseResponse(true);
     }
 
     @PUT
