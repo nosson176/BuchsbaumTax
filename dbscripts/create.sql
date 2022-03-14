@@ -10,7 +10,7 @@ CREATE TABLE clients (
     created TIMESTAMPTZ DEFAULT NOW(),
     updated TIMESTAMPTZ DEFAULT NOW()
 );
-
+CREATE INDEX ON clients (last_name);
 CREATE INDEX clients_fts ON clients USING gin(to_tsvector('simple', status||' '||owes_status||' '||periodical||' '||last_name||' '||display_name||' '||display_phone));
 
 CREATE TABLE contacts (
@@ -208,7 +208,7 @@ CREATE TABLE filings (
     tax_year_id INTEGER,
     sort_order INTEGER,
     amount FLOAT,
-    client_id INTEGER REFERENCES clients
+    client_id INTEGER REFERENCES clients ON DELETE CASCADE
 );
 
 CREATE INDEX ON filings (tax_year_id);
