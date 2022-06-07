@@ -14,7 +14,7 @@ import java.util.List;
 @Dao
 public interface ValueDAO {
     @RegisterFieldMapper(Value.class)
-    @SqlQuery("SELECT * FROM value_lists ORDER BY key, sort_order")
+    @SqlQuery("SELECT * FROM value_lists ORDER BY key, sort_order, value")
     List<Value> getAll();
 
     @RegisterFieldMapper(Value.class)
