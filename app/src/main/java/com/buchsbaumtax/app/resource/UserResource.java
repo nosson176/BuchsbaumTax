@@ -1,14 +1,19 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.config.Role;
+import com.buchsbaumtax.app.domain.user.CreateMessage;
 import com.buchsbaumtax.app.domain.user.TimeSlipCRUD;
+import com.buchsbaumtax.app.domain.user.UpdateUserMessage;
 import com.buchsbaumtax.app.domain.user.UserCRUD;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.UpdatePasswordRequest;
+import com.buchsbaumtax.core.dao.UserMessageDAO;
 import com.buchsbaumtax.core.model.TimeSlip;
 import com.buchsbaumtax.core.model.User;
+import com.buchsbaumtax.core.model.UserMessage;
 import com.buchsbaumtax.core.model.create.UserCreate;
 import com.sifradigital.framework.auth.Authenticated;
+import com.sifradigital.framework.db.Database;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
@@ -78,5 +83,23 @@ public class UserResource {
     @Path("/current/time-slips/{timeSlipId}")
     public BaseResponse deleteTimeSlip(@Authenticated User user, @PathParam("timeSlipId") int timeSlipId) {
         return new TimeSlipCRUD().delete(user, timeSlipId);
+    }
+
+    @POST
+    @Path("/current/messages")
+    public UserMessage createMessage(@Authenticated User user, UserMessage userMessage) {
+        return new CreateMessage().createMessage(user, userMessage);
+    }
+
+    @GET
+    @Path("/current/messages")
+    public List<UserMessage> getUserInbox(@Authenticated User user) {
+        return Database.dao(UserMessageDAO.class).getByRecipient(user.getId());
+    }
+
+    @PUT
+    @Path("/current/messages/{messageId}")
+    public UserMessage updateMessage(@Authenticated User user, @PathParam("messageId") int messageId, UserMessage userMessage) {
+        return new UpdateUserMessage().updateMessage(messageId, userMessage);
     }
 }

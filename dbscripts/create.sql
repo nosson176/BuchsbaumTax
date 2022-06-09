@@ -315,6 +315,15 @@ CREATE TABLE client_flags (
     flag INTEGER
 );
 
+CREATE TABLE user_messages(
+    id SERIAL PRIMARY KEY,
+    sender_id INTEGER REFERENCES users ON DELETE CASCADE,
+    recipient_id INTEGER REFERENCES users ON DELETE CASCADE,
+    message TEXT,
+    status TEXT DEFAULT 'unread',
+    created TIMESTAMPTZ DEFAULT now()
+);
+
 CREATE INDEX ON client_flags(client_id);
 CREATE INDEX client_flags_fts ON client_flags USING gin(to_tsvector('simple', user_id||' '||flag));
 
