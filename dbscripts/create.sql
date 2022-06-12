@@ -37,6 +37,9 @@ CREATE TABLE exchange_rates (
     rate FLOAT
 );
 
+CREATE INDEX ON exchange_rates(currency);
+CREATE INDEX ON exchange_rates(year);
+
 CREATE TABLE fbar_breakdowns (
     id SERIAL PRIMARY KEY,
     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
@@ -135,6 +138,8 @@ CREATE TABLE users (
     created TIMESTAMPTZ DEFAULT now(),
     updated TIMESTAMPTZ DEFAULT now()
 );
+
+CREATE INDEX ON users(username);
 
 CREATE TABLE sessions (
     token TEXT PRIMARY KEY,
@@ -267,6 +272,8 @@ CREATE TABLE smartviews (
     updated TIMESTAMPTZ DEFAULT now()
 );
 
+CREATE INDEX ON smartviews(user_id);
+
 CREATE TABLE smartview_lines (
     id SERIAL PRIMARY KEY,
     created TIMESTAMPTZ DEFAULT now(),
@@ -291,6 +298,8 @@ CREATE TABLE checklist_items (
     sort_number INTEGER
 );
 
+CREATE INDEX ON checklist_items(client_id);
+
 CREATE TABLE time_slips (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users ON DELETE CASCADE,
@@ -300,6 +309,8 @@ CREATE TABLE time_slips (
     created TIMESTAMPTZ DEFAULT now(),
     updated TIMESTAMPTZ DEFAULT now()
 );
+
+CREATE INDEX ON time_slips(user_id);
 
 CREATE TABLE client_history(
     id SERIAL PRIMARY KEY,
@@ -314,6 +325,17 @@ CREATE TABLE client_flags (
     user_id INTEGER REFERENCES users ON DELETE CASCADE,
     flag INTEGER
 );
+
+CREATE TABLE user_messages(
+    id SERIAL PRIMARY KEY,
+    sender_id INTEGER REFERENCES users ON DELETE CASCADE,
+    recipient_id INTEGER REFERENCES users ON DELETE CASCADE,
+    message TEXT,
+    status TEXT DEFAULT 'unread',
+    created TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX ON user_messages(recipient_id);
 
 CREATE INDEX ON client_flags(client_id);
 CREATE INDEX client_flags_fts ON client_flags USING gin(to_tsvector('simple', user_id||' '||flag));
