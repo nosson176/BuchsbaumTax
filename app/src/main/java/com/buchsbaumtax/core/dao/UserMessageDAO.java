@@ -25,6 +25,6 @@ public interface UserMessageDAO {
     @SqlQuery("SELECT * FROM user_messages WHERE recipient_id = :recipientId")
     List<UserMessage> getByRecipient(@Bind("recipientId") int recipientId);
 
-    @SqlUpdate("UPDATE user_messages SET sender_id = :senderId, recipient_id = :recipientId, message = :message, status = :status WHERE id = :id")
+    @SqlUpdate("UPDATE user_messages SET message = :message, status = :status WHERE id = :id")
     void update(@BindBean UserMessage userMessage);
 }
