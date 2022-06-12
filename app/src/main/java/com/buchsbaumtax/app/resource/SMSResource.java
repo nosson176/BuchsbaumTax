@@ -4,7 +4,7 @@ import com.buchsbaumtax.app.domain.SendSMS;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.PhoneNumberDAO;
 import com.buchsbaumtax.core.model.PhoneNumber;
-import com.buchsbaumtax.core.model.SMSLog;
+import com.buchsbaumtax.core.model.SMSMessage;
 import com.buchsbaumtax.core.model.User;
 import com.sifradigital.framework.auth.Authenticated;
 import com.sifradigital.framework.db.Database;
@@ -32,7 +32,7 @@ public class SMSResource {
 
     @POST
     @Path("/send")
-    public BaseResponse sendSMS(@Authenticated User user, SMSLog smsLog) {
-        return new SendSMS().sendSMS(smsLog);
+    public BaseResponse sendSMS(@Authenticated User user, SMSMessage smsMessage) {
+        return new SendSMS().sendSMS(smsMessage);
     }
 }

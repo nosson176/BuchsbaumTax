@@ -1,7 +1,7 @@
 package com.buchsbaumtax.core.dao;
 
 import com.buchsbaumtax.core.model.PhoneNumber;
-import com.buchsbaumtax.core.model.SMSLog;
+import com.buchsbaumtax.core.model.SMSMessage;
 import com.sifradigital.framework.db.Dao;
 import org.jdbi.v3.sqlobject.config.RegisterFieldMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
@@ -27,6 +27,6 @@ public interface PhoneNumberDAO {
     @SqlUpdate("DELETE FROM phone_numbers WHERE id = :id")
     void delete(@Bind("id") int id);
 
-    @SqlUpdate("INSERT INTO sms_log (phone_number_id, message) VALUES (:phoneNumberId, :message)")
-    void createSMSLog(@BindBean SMSLog smsLog);
+    @SqlUpdate("INSERT INTO sms_messages (phone_number_id, message) VALUES (:phoneNumberId, :message)")
+    void createSMSLog(@BindBean SMSMessage smsMessage);
 }

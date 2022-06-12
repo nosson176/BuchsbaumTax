@@ -321,7 +321,7 @@ CREATE TABLE phone_numbers(
     name TEXT
 );
 
-CREATE TABLE sms_log(
+CREATE TABLE sms_messages(
     id SERIAL PRIMARY KEY,
     phone_number_id INTEGER references phone_numbers ON DELETE CASCADE,
     message TEXT,

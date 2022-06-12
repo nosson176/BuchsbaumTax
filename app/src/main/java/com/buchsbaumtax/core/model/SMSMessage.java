@@ -2,7 +2,7 @@ package com.buchsbaumtax.core.model;
 
 import java.util.Date;
 
-public class SMSLog {
+public class SMSMessage {
     private int id;
     private int phoneNumberId;
     private String message;
