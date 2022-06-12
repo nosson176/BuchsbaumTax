@@ -31,7 +31,7 @@ public interface IncomeBreakdownDAO {
     List<IncomeBreakdown> getAll();
 
     @RegisterFieldMapper(IncomeBreakdown.class)
-    @SqlQuery("SELECT * FROM income_breakdowns WHERE client_id = :clientId ORDER BY category DESC, tax_group")
+    @SqlQuery("SELECT * FROM income_breakdowns WHERE client_id = :clientId ORDER BY years DESC")
     List<IncomeBreakdown> getForClient(@Bind("clientId") int clientId);
 
     @SqlBatch("UPDATE income_breakdowns SET years = :years, category = :category, tax_group = :taxGroup, tax_type = :taxType, job = :job, currency = :currency, frequency = :frequency, documents = :documents, description = :description, amount = :amount, exclusion = :exclusion, include = :include, archived = :archived, depend = :depend WHERE id = :id")
