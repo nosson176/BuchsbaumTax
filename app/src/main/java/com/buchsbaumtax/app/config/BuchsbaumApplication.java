@@ -1,5 +1,6 @@
 package com.buchsbaumtax.app.config;
 
+import com.buchsbaumtax.core.EnvironmentProperty;
 import com.buchsbaumtax.core.dao.UserDAO;
 import com.buchsbaumtax.core.model.User;
 import com.sifradigital.framework.CORSFilter;
@@ -10,6 +11,9 @@ import com.sifradigital.framework.auth.SessionAuthenticationFilter;
 import com.sifradigital.framework.db.Database;
 import com.sifradigital.framework.db.DatabaseConfig;
 import com.sifradigital.framework.jobs.JobsConfig;
+import com.sifradigital.framework.mail.MailConfig;
+import com.sifradigital.framework.mail.SMS;
+import com.sifradigital.framework.mail.service.TwilioSMSService;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 
 import javax.ws.rs.ApplicationPath;
@@ -32,5 +36,9 @@ public class BuchsbaumApplication extends SifraApplication {
 
         JobsConfig jobsConfig = new JobsConfig("com.buchsbaumtax.app.job", 4);
         scheduleJobs(jobsConfig);
+
+        TwilioSMSService smsService = new TwilioSMSService(EnvironmentProperty.value(EnvironmentProperty.TWILIO_ACCOUNT_SID), EnvironmentProperty.value(EnvironmentProperty.TWILIO_AUTH_TOKEN));
+        MailConfig smsConfig = new MailConfig(smsService, EnvironmentProperty.value(EnvironmentProperty.TWILIO_FROM_NUMBER));
+        SMS.init(smsConfig);
     }
 }
