@@ -30,7 +30,7 @@ public interface TaxPersonalDAO {
     List<TaxPersonal> getAll();
 
     @RegisterFieldMapper(TaxPersonal.class)
-    @SqlQuery("SELECT * FROM tax_personals p LEFT JOIN value_lists vl ON p.category = vl.value WHERE p.client_id = :clientId ORDER BY vl.sort_order NULLS FIRST")
+    @SqlQuery("SELECT p.* FROM tax_personals p LEFT JOIN value_lists vl ON p.category = vl.value AND vl.key = 'category' WHERE p.client_id = :clientId ORDER BY vl.sort_order NULLS FIRST")
     List<TaxPersonal> getForClient(@Bind("clientId") int clientId);
 
     @SqlBatch("UPDATE tax_personals SET category = :category, include = :include, language = :language, relation = :relation, first_name = :firstName, middle_initial = :middleInitial, last_name = :lastName, date_of_birth = :dateOfBirth, ssn = :ssn, informal = :informal, archived = :archived WHERE id = :id")

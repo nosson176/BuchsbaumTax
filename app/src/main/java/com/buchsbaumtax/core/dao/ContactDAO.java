@@ -30,7 +30,7 @@ public interface ContactDAO {
     List<Contact> getAll();
 
     @RegisterFieldMapper(Contact.class)
-    @SqlQuery("SELECT c.* FROM contacts c LEFT JOIN value_lists vl ON c.contact_type = vl.value WHERE c.client_id = :clientId ORDER BY vl.sort_order NULLS FIRST")
+    @SqlQuery("SELECT c.* FROM contacts c LEFT JOIN value_lists vl ON c.contact_type = vl.value AND vl.key = 'contact_type' WHERE c.client_id = :clientId ORDER BY vl.sort_order NULLS FIRST")
     List<Contact> getForClient(@Bind("clientId") int clientId);
 
     @SqlBatch("UPDATE contacts SET contact_type = :contactType, memo = :memo, main_detail = :mainDetail, secondary_detail = :secondaryDetail, state = :state, zip = :zip, enabled = :enabled, archived = :archived WHERE id = :id")
