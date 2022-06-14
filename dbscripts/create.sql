@@ -326,6 +326,25 @@ CREATE TABLE client_flags (
     flag INTEGER
 );
 
+CREATE TABLE phone_numbers(
+    id SERIAL PRIMARY KEY,
+    phone_number TEXT NOT NULL UNIQUE,
+    name TEXT
+);
+
+CREATE TABLE sms_messages(
+    id SERIAL PRIMARY KEY,
+    phone_number_id INTEGER references phone_numbers ON DELETE CASCADE,
+    message TEXT,
+    created TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE environment_properties(
+    id SERIAL PRIMARY KEY,
+    property_key TEXT NOT NULL UNIQUE,
+    property_value TEXT
+);
+
 CREATE TABLE user_messages(
     id SERIAL PRIMARY KEY,
     sender_id INTEGER REFERENCES users ON DELETE CASCADE,
