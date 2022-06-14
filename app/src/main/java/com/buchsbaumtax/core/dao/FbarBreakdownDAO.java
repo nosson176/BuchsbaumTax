@@ -31,7 +31,7 @@ public interface FbarBreakdownDAO {
     List<FbarBreakdown> getAll();
 
     @RegisterFieldMapper(FbarBreakdown.class)
-    @SqlQuery("SELECT * FROM fbar_breakdowns WHERE client_id = :clientId ORDER BY category DESC, tax_group")
+    @SqlQuery("SELECT * FROM fbar_breakdowns WHERE client_id = :clientId ORDER BY years DESC")
     List<FbarBreakdown> getForClient(@Bind("clientId") int clientId);
 
     @SqlBatch("UPDATE fbar_breakdowns SET years = :years, category = :category, tax_group = :taxGroup, tax_type = :taxType, part = :part, currency = :currency, frequency = :frequency, documents = :documents, description = :description, amount = :amount, depend = :depend, include = :include, archived = :archived WHERE id = :id")

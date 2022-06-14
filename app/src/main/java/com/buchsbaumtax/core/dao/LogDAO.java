@@ -31,7 +31,7 @@ public interface LogDAO {
     List<Log> getAll();
 
     @RegisterFieldMapper(Log.class)
-    @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId ORDER BY log_date DESC")
+    @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId ORDER BY log_date DESC, id DESC")
     List<Log> getForClient(@Bind("clientId") int clientId);
 
     @SqlBatch("UPDATE logs SET years = :years, alarm_user_id = :alarmUserId, alert = :alert, alarm_complete = :alarmComplete, alarm_date = :alarmDate, alarm_time = :alarmTime, log_date = :logDate, priority = :priority, note = :note, seconds_spent = :secondsSpent, archived = :archived, alerted = :alerted WHERE id = :id")
