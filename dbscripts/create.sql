@@ -325,6 +325,8 @@ CREATE TABLE client_flags (
     user_id INTEGER REFERENCES users ON DELETE CASCADE,
     flag INTEGER
 );
+CREATE INDEX ON client_flags(client_id);
+CREATE INDEX client_flags_fts ON client_flags USING gin(to_tsvector('simple', user_id||' '||flag));
 
 CREATE TABLE phone_numbers(
     id SERIAL PRIMARY KEY,
@@ -355,6 +357,3 @@ CREATE TABLE user_messages(
 );
 
 CREATE INDEX ON user_messages(recipient_id);
-
-CREATE INDEX ON client_flags(client_id);
-CREATE INDEX client_flags_fts ON client_flags USING gin(to_tsvector('simple', user_id||' '||flag));
