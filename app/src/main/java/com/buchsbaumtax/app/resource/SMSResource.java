@@ -9,13 +9,17 @@ import com.buchsbaumtax.core.model.User;
 import com.sifradigital.framework.auth.Authenticated;
 import com.sifradigital.framework.db.Database;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
+import java.util.List;
 
 @Path("/sms")
 public class SMSResource {
+    @GET
+    @Path("/phone_numbers")
+    public List<PhoneNumber> getAllPhoneNumbers() {
+        return Database.dao(PhoneNumberDAO.class).getAll();
+    }
+
     @POST
     @Path("/phone_numbers")
     public PhoneNumber createPhoneNumber(@Authenticated User user, PhoneNumber phoneNumber) {

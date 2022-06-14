@@ -10,6 +10,8 @@ import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import java.util.List;
+
 @Dao
 public interface PhoneNumberDAO {
     @GetGeneratedKeys
@@ -29,4 +31,8 @@ public interface PhoneNumberDAO {
 
     @SqlUpdate("INSERT INTO sms_messages (phone_number_id, message) VALUES (:phoneNumberId, :message)")
     void createSMSLog(@BindBean SMSMessage smsMessage);
+
+    @RegisterFieldMapper(PhoneNumber.class)
+    @SqlQuery("SELECT * FROM phone_numbers")
+    List<PhoneNumber> getAll();
 }
