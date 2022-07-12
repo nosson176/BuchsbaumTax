@@ -27,7 +27,7 @@ public class UpdateSmartviews {
         Logger.info("UpdateSmartviews Job completed.");
     }
 
-    private void updateSmartview(Smartview smartview) {
+    public void updateSmartview(Smartview smartview) {
         List<SmartviewLine> smartviewLines = smartview.getSmartviewLines();
         Set<Integer> finalClientIds = new HashSet<>();
 

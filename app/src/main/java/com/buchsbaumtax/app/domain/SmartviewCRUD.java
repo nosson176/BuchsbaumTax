@@ -19,7 +19,8 @@ public class SmartviewCRUD {
         smartview.setUserId(user.getId());
         smartview.setUserName(user.getUsername());
         Smartview created = Database.dao(SmartviewDAO.class).create(smartview);
-        return new SmartviewLineUtils().convertToSmartviewData(created);
+        new UpdateSmartviews().updateSmartview(created);
+        return new SmartviewLineUtils().convertToSmartviewData(Database.dao(SmartviewDAO.class).get(created.getId()));
     }
 
     public List<SmartviewData> getForUser(User user) {
@@ -35,6 +36,7 @@ public class SmartviewCRUD {
 
         Smartview smartview = new SmartviewLineUtils().convertToSmartview(smartviewData);
         Smartview updated = Database.dao(SmartviewDAO.class).update(smartview);
-        return new SmartviewLineUtils().convertToSmartviewData(updated);
+        new UpdateSmartviews().updateSmartview(updated);
+        return new SmartviewLineUtils().convertToSmartviewData(Database.dao(SmartviewDAO.class).get(updated.getId()));
     }
 }
