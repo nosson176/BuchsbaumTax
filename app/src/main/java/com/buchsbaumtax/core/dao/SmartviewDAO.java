@@ -29,7 +29,7 @@ public interface SmartviewDAO {
     @RegisterFieldMapper(value = Smartview.class, prefix = "s")
     @RegisterFieldMapper(SmartviewLine.class)
     @UseRowReducer(SmartviewReducer.class)
-    @SqlQuery("SELECT s.id as s_id, s.user_name s_user_name, s.user_id as s_user_id, s.name as s_name, s.sort_number as s_sort_number, s.archived as s_archived, s.client_ids as s_client_ids, s.created as s_created, s.updated as s_updated, sl.* FROM smartviews s JOIN smartview_lines sl ON s.id = sl.smartview_id WHERE user_id = :userId ORDER BY id")
+    @SqlQuery("SELECT s.id as s_id, s.user_name s_user_name, s.user_id as s_user_id, s.name as s_name, s.sort_number as s_sort_number, s.archived as s_archived, s.client_ids as s_client_ids, s.created as s_created, s.updated as s_updated, sl.* FROM smartviews s JOIN smartview_lines sl ON s.id = sl.smartview_id WHERE user_id = :userId ORDER BY s_id")
     List<Smartview> getByUser(@Bind("userId") int userId);
 
     @SqlUpdate("UPDATE smartviews SET name = :name, sort_number = :sortNumber, archived = :archived, client_ids = :clientIds, user_id = :userId, updated = NOW() WHERE id = :id")
