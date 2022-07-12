@@ -22,7 +22,7 @@ public interface UserMessageDAO {
     UserMessage get(@Bind("id") int id);
 
     @RegisterFieldMapper(UserMessage.class)
-    @SqlQuery("SELECT * FROM user_messages WHERE recipient_id = :recipientId")
+    @SqlQuery("SELECT * FROM user_messages WHERE recipient_id = :recipientId ORDER BY created DESC")
     List<UserMessage> getByRecipient(@Bind("recipientId") int recipientId);
 
     @SqlUpdate("UPDATE user_messages SET message = :message, status = :status WHERE id = :id")
