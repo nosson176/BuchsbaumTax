@@ -7,6 +7,7 @@ import com.buchsbaumtax.app.domain.user.UpdateUserMessage;
 import com.buchsbaumtax.app.domain.user.UserCRUD;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.UpdatePasswordRequest;
+import com.buchsbaumtax.app.dto.UserMessages;
 import com.buchsbaumtax.core.dao.UserMessageDAO;
 import com.buchsbaumtax.core.model.TimeSlip;
 import com.buchsbaumtax.core.model.User;
@@ -87,8 +88,8 @@ public class UserResource {
 
     @POST
     @Path("/current/messages")
-    public UserMessage createMessage(@Authenticated User user, UserMessage userMessage) {
-        return new CreateMessage().createMessage(user, userMessage);
+    public BaseResponse createMessage(@Authenticated User user, UserMessages messages) {
+        return new CreateMessage().postMessages(user, messages);
     }
 
     @GET

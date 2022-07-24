@@ -30,8 +30,16 @@ public class UserMessage {
         return recipientId;
     }
 
+    public void setRecipientId(long recipientId) {
+        this.recipientId = recipientId;
+    }
+
     public String getMessage() {
         return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getStatus() {
