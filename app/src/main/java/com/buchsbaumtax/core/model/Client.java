@@ -14,6 +14,7 @@ public class Client {
     private String displayPhone;
     private Date created;
     private Date updated;
+    private Integer flag;
 
 
     public int getId() {
@@ -66,5 +67,13 @@ public class Client {
 
     public Date getUpdated() {
         return updated;
+    }
+
+    public Integer getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Integer flag) {
+        this.flag = flag;
     }
 }

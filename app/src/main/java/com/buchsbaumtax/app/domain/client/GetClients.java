@@ -1,6 +1,7 @@
 package com.buchsbaumtax.app.domain.client;
 
 import com.buchsbaumtax.core.dao.ClientDAO;
+import com.buchsbaumtax.core.dao.ClientFlagDAO;
 import com.buchsbaumtax.core.dao.SmartviewDAO;
 import com.buchsbaumtax.core.model.Client;
 import com.buchsbaumtax.core.model.Smartview;
@@ -8,24 +9,33 @@ import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GetClients {
+    ClientFlagDAO clientFlagDAO = Database.dao(ClientFlagDAO.class);
+
+    public List<Client> getAllByUser(int userId) {
+        return Database.dao(ClientDAO.class).getAllByUser(userId);
+    }
 
     public List<Client> getAll() {
         return Database.dao(ClientDAO.class).getAll();
     }
 
-    public List<Client> getForSmartview(int smartviewId) {
+    public List<Client> getForSmartview(int userId, int smartviewId) {
         Smartview smartview = Database.dao(SmartviewDAO.class).get(smartviewId);
-        return Database.dao(ClientDAO.class).getBulk(smartview.getClientIds());
+        if (smartview.getClientIds().isEmpty() || smartview.getClientIds() == null) {
+            return new ArrayList<>();
+        }
+        return Database.dao(ClientDAO.class).getBulk(userId, smartview.getClientIds());
     }
 
-    public List<Client> getForDefaultSearch(String q) {
-        return Database.dao(ClientDAO.class).getFiltered(q);
+    public List<Client> getForDefaultSearch(String q, int userId) {
+        return Database.dao(ClientDAO.class).getFiltered(q, userId);
     }
 
-    public List<Client> getForFieldSearch(String q, String field) {
+    public List<Client> getForFieldSearch(String q, String field, int userId) {
         String[] fieldArray = field.split("::");
         if (fieldArray.length < 2) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
@@ -33,12 +43,12 @@ public class GetClients {
         String table = fieldArray[0];
         String fieldName = fieldArray[1];
         StringBuilder query = new StringBuilder();
-        query.append("SELECT DISTINCT c.* FROM clients c ");
+        query.append("SELECT DISTINCT c.*, cf.flag FROM clients c JOIN client_flags cf ON c.id = cf.client_id ");
         if (!table.equals("clients")) {
-            query.append(String.format("JOIN %s t ON c.id = t.client_id WHERE t.%s ILIKE '%%%s%%'", table, fieldName, q));
+            query.append(String.format("JOIN %s t ON c.id = t.client_id WHERE cf.user_id = %s AND t.%s ILIKE '%%%s%%'", table, userId, fieldName, q));
         }
         else {
-            query.append(String.format("WHERE %s ILIKE '%%%s%%'", fieldName, q));
+            query.append(String.format("WHERE cf.user_id = %s AND %s ILIKE '%%%s%%' ", userId, fieldName, q));
         }
         query.append("ORDER BY c.last_name");
         String queryString = query.toString();

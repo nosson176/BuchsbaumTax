@@ -7,6 +7,7 @@ import com.buchsbaumtax.app.domain.taxyear.GetClientData;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.ClientData;
 import com.buchsbaumtax.core.dao.ClientDAO;
+import com.buchsbaumtax.core.dao.ClientFlagDAO;
 import com.buchsbaumtax.core.dao.ClientHistoryDAO;
 import com.buchsbaumtax.core.model.Client;
 import com.buchsbaumtax.core.model.User;
@@ -19,6 +20,7 @@ import java.util.List;
 @Authenticated
 @Path("/clients")
 public class ClientResource {
+    ClientFlagDAO clientFlagDAO = Database.dao(ClientFlagDAO.class);
 
     @POST
     public Client createClient(Client client) {
@@ -26,24 +28,26 @@ public class ClientResource {
     }
 
     @GET
-    public List<Client> getAllClients(@QueryParam("smartview") Integer smartviewId, @QueryParam("q") String q, @QueryParam("field") String field) {
+    public List<Client> getAllClients(@Authenticated User user, @QueryParam("smartview") Integer smartviewId, @QueryParam("q") String q, @QueryParam("field") String field) {
         GetClients getClients = new GetClients();
         if (smartviewId != null) {
-            return getClients.getForSmartview(smartviewId);
+            return getClients.getForSmartview(user.getId(), smartviewId);
         }
         if (q != null) {
             if (field != null) {
-                return getClients.getForFieldSearch(q, field);
+                return getClients.getForFieldSearch(q, field, user.getId());
             }
-            return getClients.getForDefaultSearch(q);
+            return getClients.getForDefaultSearch(q, user.getId());
         }
-        return getClients.getAll();
+        return getClients.getAllByUser(user.getId());
     }
 
     @GET
     @Path("/{clientId}")
-    public Client getClient(@PathParam("clientId") int clientId) {
-        return Database.dao(ClientDAO.class).get(clientId);
+    public Client getClient(@Authenticated User user, @PathParam("clientId") int clientId) {
+        Client client = Database.dao(ClientDAO.class).get(clientId);
+        client.setFlag(Database.dao(ClientFlagDAO.class).getFlagForUserClient(user.getId(), clientId));
+        return client;
     }
 
     @DELETE

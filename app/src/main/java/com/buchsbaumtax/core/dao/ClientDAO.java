@@ -18,27 +18,31 @@ public interface ClientDAO {
     String MATCHING_CONTACTS = "matching_contacts AS (SELECT co.* FROM contacts co WHERE (main_detail, memo)::text ILIKE CONCAT('%', :q, '%')), ";
     String MATCHING_PERSONALS = "matching_personals AS (SELECT tp.* FROM tax_personals tp WHERE (first_name, last_name, ssn, informal)::text ILIKE CONCAT('%', :q, '%'))";
     String WITH = "WITH " + MATCHING_CLIENTS + MATCHING_CONTACTS + MATCHING_PERSONALS;
-    String SELECT_CLIENTS = "SELECT c.* FROM matching_clients c UNION ";
-    String SELECT_CONTACTS = "SELECT c.* FROM matching_contacts co JOIN clients c ON co.client_id = c.id UNION ";
-    String SELECT_PERSONALS = "SELECT c.* FROM matching_personals p JOIN clients c ON p.client_id = c.id";
+    String SELECT_CLIENTS = "SELECT c.*, cf.flag FROM matching_clients c JOIN client_flags cf ON c.id = cf.client_id WHERE cf.user_id = :userId UNION ";
+    String SELECT_CONTACTS = "SELECT c.*, cf.flag FROM matching_contacts co JOIN clients c ON co.client_id = c.id JOIN client_flags cf ON c.id = cf.client_id WHERE cf.user_id = :userId UNION ";
+    String SELECT_PERSONALS = "SELECT c.*, cf.flag FROM matching_personals p JOIN clients c ON p.client_id = c.id JOIN client_flags cf ON c.id = cf.client_id WHERE cf.user_id = :userId";
     String SELECT = " SELECT * FROM(" + SELECT_CLIENTS + SELECT_CONTACTS + SELECT_PERSONALS + ") AS result ORDER BY last_name;";
 
     @RegisterFieldMapper(Client.class)
-    @SqlQuery("SELECT * FROM clients ORDER BY last_name")
+    @SqlQuery("SELECT * FROM clients JOIN client_flags cf on clients.id = cf.client_id ORDER BY last_name")
     List<Client> getAll();
+
+    @RegisterFieldMapper(Client.class)
+    @SqlQuery("SELECT c.*, cf.flag FROM clients c JOIN client_flags cf on c.id = cf.client_id WHERE cf.user_id = :userId ORDER BY last_name")
+    List<Client> getAllByUser(@Bind("userId") int userId);
 
     @RegisterFieldMapper(Client.class)
     @SqlQuery("SELECT * FROM clients WHERE id = :id")
     Client get(@Bind("id") int id);
 
     @RegisterFieldMapper(Client.class)
-    @SqlQuery("SELECT * FROM clients WHERE id IN (<ids>) ORDER BY last_name")
-    List<Client> getBulk(@BindList("ids") List<Integer> ids);
+    @SqlQuery("SELECT c.*, cf.flag FROM clients c JOIN client_flags cf ON c.id = cf.client_id WHERE cf.user_id = :userId AND c.id IN (<ids>) ORDER BY last_name")
+    List<Client> getBulk(@Bind("userId") int userId, @BindList("ids") List<Integer> ids);
 
     @RegisterFieldMapper(Client.class)
     @AllowUnusedBindings
     @SqlQuery(WITH + SELECT)
-    List<Client> getFiltered(@Bind("q") String q);
+    List<Client> getFiltered(@Bind("q") String q, @Bind("userId") int userId);
 
     @RegisterFieldMapper(Client.class)
     @SqlQuery("<query>")

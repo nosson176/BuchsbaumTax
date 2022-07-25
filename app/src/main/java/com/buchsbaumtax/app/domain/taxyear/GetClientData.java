@@ -4,6 +4,7 @@ import com.buchsbaumtax.app.domain.ConvertToUSD;
 import com.buchsbaumtax.app.dto.ClientData;
 import com.buchsbaumtax.app.dto.TaxYearData;
 import com.buchsbaumtax.core.dao.ClientDAO;
+import com.buchsbaumtax.core.dao.ClientFlagDAO;
 import com.buchsbaumtax.core.dao.ClientHistoryDAO;
 import com.buchsbaumtax.core.dao.TaxYearDAO;
 import com.buchsbaumtax.core.model.*;
@@ -35,6 +36,8 @@ public class GetClientData {
             Double amountUSD = ConvertToUSD.convertToUSD(breakdown.getAmount(), breakdown.getCurrency(), breakdown.getYears());
             breakdown.setAmountUSD(amountUSD);
         }
+        Integer clientFlag = Database.dao(ClientFlagDAO.class).getFlagForUserClient(user.getId(), clientId);
+        clientData.setFlag(clientFlag);
         return clientData;
     }
 }

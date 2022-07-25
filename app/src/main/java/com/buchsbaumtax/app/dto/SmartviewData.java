@@ -9,7 +9,7 @@ import java.util.List;
 public class SmartviewData {
     private Integer id;
     private String userName;
-    private long userId;
+    private Integer userId;
     private String name;
     private long sortNumber;
     private boolean archived;
@@ -43,7 +43,7 @@ public class SmartviewData {
         return userName;
     }
 
-    public long getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
@@ -79,7 +79,7 @@ public class SmartviewData {
         this.userName = userName;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 }

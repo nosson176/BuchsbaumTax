@@ -26,6 +26,7 @@ public class ClientData {
     private List<TaxPersonal> taxPersonals;
     private List<Fee> fees;
     private List<Checklist> checklists;
+    private int flag;
 
     public ClientData(Client client, List<TaxYearData> taxYearData) {
         this.id = client.getId();
@@ -113,5 +114,13 @@ public class ClientData {
 
     public List<Checklist> getChecklists() {
         return checklists;
+    }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
     }
 }
