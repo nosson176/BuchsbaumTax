@@ -1,13 +1,11 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.config.Role;
-import com.buchsbaumtax.app.domain.user.CreateMessage;
-import com.buchsbaumtax.app.domain.user.TimeSlipCRUD;
-import com.buchsbaumtax.app.domain.user.UpdateUserMessage;
-import com.buchsbaumtax.app.domain.user.UserCRUD;
+import com.buchsbaumtax.app.domain.user.*;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.UpdatePasswordRequest;
 import com.buchsbaumtax.core.dao.UserMessageDAO;
+import com.buchsbaumtax.core.model.ClientFlag;
 import com.buchsbaumtax.core.model.TimeSlip;
 import com.buchsbaumtax.core.model.User;
 import com.buchsbaumtax.core.model.UserMessage;
@@ -101,5 +99,11 @@ public class UserResource {
     @Path("/current/messages/{messageId}")
     public UserMessage updateMessage(@Authenticated User user, @PathParam("messageId") int messageId, UserMessage userMessage) {
         return new UpdateUserMessage().updateMessage(messageId, userMessage);
+    }
+
+    @PUT
+    @Path("/current/client-flags/{clientFlagId}")
+    public BaseResponse updateClientFlag(@Authenticated User user, @PathParam("clientFlagId") int clientFlagId, ClientFlag clientFlag) {
+        return new UpdateClientFlag().updateClientFlag(user, clientFlagId, clientFlag);
     }
 }
