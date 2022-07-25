@@ -44,6 +44,18 @@ public class Migration {
     private Map<String, String> categoriesMap = new HashMap<>();
     private Map<String, String> taxGroupMap = new HashMap<>();
     private Map<String, String> taxTypeMap = new HashMap<>();
+    private static Map<String, Integer> clientFlagsMap = new HashMap<String, Integer>() {{
+        put("BLACK", 1);
+        put("BLUE", 2);
+        put("GREEN", 3);
+        put("NONE", 4);
+        put("ORANGE", 5);
+        put("PINK", 6);
+        put("PURPLE", 7);
+        put("RED", 8);
+        put("TURQUOISE", 9);
+        put("YELLOW", 10);
+    }};
 
     private Migration(String rootPath) {
         this.rootPath = rootPath;
@@ -589,9 +601,9 @@ public class Migration {
         for (String[] row : clientFlags) {
             Map<String, Object> map = new HashMap<>();
 
-            map.put("clientId", clientIds.get(row[0]));
+            map.put("clientId", clientIds.get(row[3]));
 
-            User user = userDAO.getByUsername(row[1]);
+            User user = userDAO.getByUsername(row[4]);
 
             if (user != null) {
                 map.put("userId", user.getId());
@@ -599,7 +611,7 @@ public class Migration {
             else {
                 map.put("userId", null);
             }
-            map.put("flag", castToInt(row[2]));
+            map.put("flag", clientFlagsMap.get(row[1]));
 
             clientFlagDAO.create(map);
         }
