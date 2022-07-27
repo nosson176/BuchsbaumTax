@@ -3,8 +3,8 @@ package com.buchsbaumtax.app.dto;
 import java.util.List;
 
 public class UserMessages {
-    List<Integer> recipients;
-    String message;
+    private List<Integer> recipients;
+    private String message;
 
     public String getMessage() {
         return message;
