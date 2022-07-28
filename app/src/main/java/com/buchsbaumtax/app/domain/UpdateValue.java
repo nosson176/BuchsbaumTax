@@ -17,8 +17,7 @@ public class UpdateValue {
         }
         Value old = Database.dao(ValueDAO.class).get(valueId);
         if (old.getSortOrder() != value.getSortOrder()) {
-
-            List<Value> values = Database.dao(ValueDAO.class).getByKey(value.getKey());
+            List<Value> values = Database.dao(ValueDAO.class).getByKey(old.getKey());
 
             // force current order
             for (int i = 0; i < values.size(); i++) {
