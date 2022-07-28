@@ -4,25 +4,33 @@ import com.buchsbaumtax.core.dao.ClientDAO;
 import com.buchsbaumtax.core.dao.SmartviewDAO;
 import com.buchsbaumtax.core.model.Client;
 import com.buchsbaumtax.core.model.Smartview;
+import com.buchsbaumtax.core.util.NaturalOrderComparator;
 import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import java.util.Comparator;
 import java.util.List;
 
 public class GetClients {
 
     public List<Client> getAll() {
-        return Database.dao(ClientDAO.class).getAll();
+        List<Client> clients = Database.dao(ClientDAO.class).getAll();
+        sort(clients);
+        return clients;
     }
 
     public List<Client> getForSmartview(int smartviewId) {
         Smartview smartview = Database.dao(SmartviewDAO.class).get(smartviewId);
-        return Database.dao(ClientDAO.class).getBulk(smartview.getClientIds());
+        List<Client> clients = Database.dao(ClientDAO.class).getBulk(smartview.getClientIds());
+        sort(clients);
+        return clients;
     }
 
     public List<Client> getForDefaultSearch(String q) {
-        return Database.dao(ClientDAO.class).getFiltered(q);
+        List<Client> clients = Database.dao(ClientDAO.class).getFiltered(q);
+        sort(clients);
+        return clients;
     }
 
     public List<Client> getForFieldSearch(String q, String field) {
@@ -42,6 +50,12 @@ public class GetClients {
         }
         query.append("ORDER BY c.last_name");
         String queryString = query.toString();
-        return Database.dao(ClientDAO.class).getFilteredWithFields(queryString);
+        List<Client> clients =  Database.dao(ClientDAO.class).getFilteredWithFields(queryString);
+        sort(clients);
+        return clients;
+    }
+
+    private void sort(List<Client> clients) {
+        clients.sort(Comparator.comparing(Client::getLastName, new NaturalOrderComparator()));
     }
 }
