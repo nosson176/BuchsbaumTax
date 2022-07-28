@@ -149,7 +149,7 @@ public class SmartviewLineUtils {
                 String searchValue = smartviewLineData.getSearchValue();
 
                 if (field.getType().equals(TYPE_BOOLEAN)) {
-                    searchValue = String.valueOf(Boolean.valueOf(searchValue));
+                    searchValue = searchValue.equals("1") ? "true" : "false";
                 }
                 else if (searchValue.equalsIgnoreCase("today")) {
                     searchValue = "now()";
