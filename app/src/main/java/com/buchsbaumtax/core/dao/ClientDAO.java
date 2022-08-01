@@ -1,5 +1,6 @@
 package com.buchsbaumtax.core.dao;
 
+import com.buchsbaumtax.app.dto.ClientInfo;
 import com.buchsbaumtax.core.model.Client;
 import com.sifradigital.framework.db.Dao;
 import org.jdbi.v3.sqlobject.config.RegisterFieldMapper;
@@ -27,26 +28,26 @@ public interface ClientDAO {
     @SqlQuery("SELECT * FROM clients JOIN client_flags cf on clients.id = cf.client_id ORDER BY last_name")
     List<Client> getAll();
 
-    @RegisterFieldMapper(Client.class)
+    @RegisterFieldMapper(ClientInfo.class)
     @SqlQuery("SELECT c.*, cf.flag FROM clients c JOIN client_flags cf on c.id = cf.client_id WHERE cf.user_id = :userId ORDER BY last_name")
-    List<Client> getAllByUser(@Bind("userId") int userId);
+    List<ClientInfo> getAllByUser(@Bind("userId") int userId);
 
     @RegisterFieldMapper(Client.class)
     @SqlQuery("SELECT * FROM clients WHERE id = :id")
     Client get(@Bind("id") int id);
 
-    @RegisterFieldMapper(Client.class)
+    @RegisterFieldMapper(ClientInfo.class)
     @SqlQuery("SELECT c.*, cf.flag FROM clients c JOIN client_flags cf ON c.id = cf.client_id WHERE cf.user_id = :userId AND c.id IN (<ids>) ORDER BY last_name")
-    List<Client> getBulk(@Bind("userId") int userId, @BindList("ids") List<Integer> ids);
+    List<ClientInfo> getBulk(@Bind("userId") int userId, @BindList("ids") List<Integer> ids);
 
-    @RegisterFieldMapper(Client.class)
+    @RegisterFieldMapper(ClientInfo.class)
     @AllowUnusedBindings
     @SqlQuery(WITH + SELECT)
-    List<Client> getFiltered(@Bind("q") String q, @Bind("userId") int userId);
+    List<ClientInfo> getFiltered(@Bind("q") String q, @Bind("userId") int userId);
 
-    @RegisterFieldMapper(Client.class)
+    @RegisterFieldMapper(ClientInfo.class)
     @SqlQuery("<query>")
-    List<Client> getFilteredWithFields(@Define("query") String query);
+    List<ClientInfo> getFilteredWithFields(@Define("query") String query);
 
     @RegisterFieldMapper(Client.class)
     @SqlQuery("<query>")

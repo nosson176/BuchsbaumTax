@@ -1,5 +1,6 @@
 package com.buchsbaumtax.app.domain.client;
 
+import com.buchsbaumtax.app.dto.ClientInfo;
 import com.buchsbaumtax.core.dao.ClientDAO;
 import com.buchsbaumtax.core.dao.ClientFlagDAO;
 import com.buchsbaumtax.core.dao.SmartviewDAO;
@@ -15,7 +16,7 @@ import java.util.List;
 public class GetClients {
     ClientFlagDAO clientFlagDAO = Database.dao(ClientFlagDAO.class);
 
-    public List<Client> getAllByUser(int userId) {
+    public List<ClientInfo> getAllByUser(int userId) {
         return Database.dao(ClientDAO.class).getAllByUser(userId);
     }
 
@@ -23,7 +24,7 @@ public class GetClients {
         return Database.dao(ClientDAO.class).getAll();
     }
 
-    public List<Client> getForSmartview(int userId, int smartviewId) {
+    public List<ClientInfo> getForSmartview(int userId, int smartviewId) {
         Smartview smartview = Database.dao(SmartviewDAO.class).get(smartviewId);
         if (smartview.getClientIds().isEmpty() || smartview.getClientIds() == null) {
             return new ArrayList<>();
@@ -31,11 +32,11 @@ public class GetClients {
         return Database.dao(ClientDAO.class).getBulk(userId, smartview.getClientIds());
     }
 
-    public List<Client> getForDefaultSearch(String q, int userId) {
+    public List<ClientInfo> getForDefaultSearch(String q, int userId) {
         return Database.dao(ClientDAO.class).getFiltered(q, userId);
     }
 
-    public List<Client> getForFieldSearch(String q, String field, int userId) {
+    public List<ClientInfo> getForFieldSearch(String q, String field, int userId) {
         String[] fieldArray = field.split("::");
         if (fieldArray.length < 2) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);

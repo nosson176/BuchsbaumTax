@@ -6,6 +6,7 @@ import com.buchsbaumtax.app.domain.client.UpdateClient;
 import com.buchsbaumtax.app.domain.taxyear.GetClientData;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.ClientData;
+import com.buchsbaumtax.app.dto.ClientInfo;
 import com.buchsbaumtax.core.dao.ClientDAO;
 import com.buchsbaumtax.core.dao.ClientFlagDAO;
 import com.buchsbaumtax.core.dao.ClientHistoryDAO;
@@ -28,7 +29,7 @@ public class ClientResource {
     }
 
     @GET
-    public List<Client> getAllClients(@Authenticated User user, @QueryParam("smartview") Integer smartviewId, @QueryParam("q") String q, @QueryParam("field") String field) {
+    public List<ClientInfo> getAllClients(@Authenticated User user, @QueryParam("smartview") Integer smartviewId, @QueryParam("q") String q, @QueryParam("field") String field) {
         GetClients getClients = new GetClients();
         if (smartviewId != null) {
             return getClients.getForSmartview(user.getId(), smartviewId);
@@ -44,10 +45,8 @@ public class ClientResource {
 
     @GET
     @Path("/{clientId}")
-    public Client getClient(@Authenticated User user, @PathParam("clientId") int clientId) {
-        Client client = Database.dao(ClientDAO.class).get(clientId);
-        client.setFlag(Database.dao(ClientFlagDAO.class).getFlagForUserClient(user.getId(), clientId));
-        return client;
+    public ClientInfo getClient(@Authenticated User user, @PathParam("clientId") int clientId) {
+        return new ClientInfo(Database.dao(ClientDAO.class).get(clientId), user.getId());
     }
 
     @DELETE
@@ -71,7 +70,7 @@ public class ClientResource {
 
     @GET
     @Path("/history")
-    public List<Client> getClientHistory(@Authenticated User user) {
+    public List<ClientInfo> getClientHistory(@Authenticated User user) {
         return Database.dao(ClientHistoryDAO.class).getRecentByUser(user.getId(), 20);
     }
 }
