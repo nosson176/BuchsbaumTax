@@ -1,6 +1,8 @@
 package com.buchsbaumtax.core.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Client {
 
@@ -14,6 +16,7 @@ public class Client {
     private String displayPhone;
     private Date created;
     private Date updated;
+    private List<ClientFlag> flags = new ArrayList<>();
 
 
     public int getId() {
@@ -66,5 +69,13 @@ public class Client {
 
     public Date getUpdated() {
         return updated;
+    }
+
+    public List<ClientFlag> getFlags() {
+        return flags;
+    }
+
+    public void setFlags(List<ClientFlag> flags) {
+        this.flags = flags;
     }
 }

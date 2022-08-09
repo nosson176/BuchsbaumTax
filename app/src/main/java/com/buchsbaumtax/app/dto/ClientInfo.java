@@ -1,8 +1,7 @@
 package com.buchsbaumtax.app.dto;
 
-import com.buchsbaumtax.core.dao.ClientFlagDAO;
 import com.buchsbaumtax.core.model.Client;
-import com.sifradigital.framework.db.Database;
+import com.buchsbaumtax.core.model.ClientFlag;
 
 import java.util.Date;
 
@@ -18,7 +17,7 @@ public class ClientInfo {
     private String displayPhone;
     private Date created;
     private Date updated;
-    private Integer flag;
+    private ClientFlag flag;
 
     public ClientInfo() {
     }
@@ -34,7 +33,7 @@ public class ClientInfo {
         this.displayPhone = client.getDisplayPhone();
         this.created = client.getCreated();
         this.updated = client.getUpdated();
-        this.flag = Database.dao(ClientFlagDAO.class).getFlagForUserClient(userId, client.getId());
+        this.flag = client.getFlags().stream().filter(f -> f.getUserId() != null && f.getUserId() == userId).findFirst().orElse(null);
     }
 
 
@@ -86,11 +85,11 @@ public class ClientInfo {
         this.created = created;
     }
 
-    public Integer getFlag() {
+    public ClientFlag getFlag() {
         return flag;
     }
 
-    public void setFlag(Integer flag) {
+    public void setFlag(ClientFlag flag) {
         this.flag = flag;
     }
 }
