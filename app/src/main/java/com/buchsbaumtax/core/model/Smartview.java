@@ -67,10 +67,6 @@ public class Smartview {
         this.sortNumber = sortNumber;
     }
 
-    public boolean getArchived() {
-        return archived;
-    }
-
     public Date getCreated() {
         return created;
     }

@@ -17,16 +17,12 @@ public class Checklist {
         return id;
     }
 
-    public boolean getArchived() {
+    public boolean isArchived() {
         return archived;
     }
 
     public int getClientId() {
         return clientId;
-    }
-
-    public boolean getFinished() {
-        return finished;
     }
 
     public String getMemo() {
@@ -37,7 +33,11 @@ public class Checklist {
         return taxYearId;
     }
 
-    public boolean getTranslated() {
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public boolean isTranslated() {
         return translated;
     }
 

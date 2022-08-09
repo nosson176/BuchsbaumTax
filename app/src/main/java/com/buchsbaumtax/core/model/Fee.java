@@ -51,27 +51,27 @@ public class Fee {
         return paidAmount;
     }
 
-    public boolean getInclude() {
-        return include;
-    }
-
     public double getRate() {
         return rate;
     }
 
-    public java.util.Date getDateFee() {
+    public Date getDateFee() {
         return dateFee;
-    }
-
-    public boolean getSum() {
-        return sum;
-    }
-
-    public boolean getArchived() {
-        return archived;
     }
 
     public String getNotes() {
         return notes;
+    }
+
+    public boolean isInclude() {
+        return include;
+    }
+
+    public boolean isSum() {
+        return sum;
+    }
+
+    public boolean isArchived() {
+        return archived;
     }
 }
