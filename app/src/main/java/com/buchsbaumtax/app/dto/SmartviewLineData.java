@@ -8,7 +8,7 @@ public class SmartviewLineData {
     private int id;
     private Date created;
     private Date updated;
-    private long smartviewId;
+    private int smartviewId;
     private int groupNum;
     private String fieldName;
     private String searchValue;
@@ -41,7 +41,7 @@ public class SmartviewLineData {
         return updated;
     }
 
-    public long getSmartviewId() {
+    public int getSmartviewId() {
         return smartviewId;
     }
 

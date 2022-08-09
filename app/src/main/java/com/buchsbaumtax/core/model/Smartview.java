@@ -10,9 +10,9 @@ import java.util.List;
 public class Smartview {
     private Integer id;
     private String userName;
-    private long userId;
+    private int userId;
     private String name;
-    private long sortNumber;
+    private int sortNumber;
     private boolean archived;
     private List<Integer> clientIds;
     private Date created;
@@ -47,11 +47,11 @@ public class Smartview {
         this.userName = userName;
     }
 
-    public long getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
@@ -59,8 +59,12 @@ public class Smartview {
         return name;
     }
 
-    public long getSortNumber() {
+    public int getSortNumber() {
         return sortNumber;
+    }
+
+    public void setSortNumber(int sortNumber) {
+        this.sortNumber = sortNumber;
     }
 
     public boolean getArchived() {

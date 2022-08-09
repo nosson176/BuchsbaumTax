@@ -6,31 +6,31 @@ public class UserMessage {
     public static final String STATUS_UNREAD = "unread";
     public static final String STATUS_READ = "read";
 
-    private long id;
-    private long senderId;
-    private long recipientId;
+    private int id;
+    private int senderId;
+    private int recipientId;
     private String message;
     private String status;
     private Date created;
 
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public long getSenderId() {
+    public int getSenderId() {
         return senderId;
     }
 
-    public void setSenderId(long senderId) {
+    public void setSenderId(int senderId) {
         this.senderId = senderId;
     }
 
-    public long getRecipientId() {
+    public int getRecipientId() {
         return recipientId;
     }
 
-    public void setRecipientId(long recipientId) {
+    public void setRecipientId(int recipientId) {
         this.recipientId = recipientId;
     }
 

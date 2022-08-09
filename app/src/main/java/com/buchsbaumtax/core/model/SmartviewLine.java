@@ -11,7 +11,7 @@ public class SmartviewLine implements Serializable {
     private Integer id;
     private Date created;
     private Date updated;
-    private long smartviewId;
+    private int smartviewId;
     private int groupNum;
     private String tableName;
     private String field;
@@ -47,11 +47,11 @@ public class SmartviewLine implements Serializable {
         return updated;
     }
 
-    public long getSmartviewId() {
+    public int getSmartviewId() {
         return smartviewId;
     }
 
-    public void setSmartviewId(long smartviewId) {
+    public void setSmartviewId(int smartviewId) {
         this.smartviewId = smartviewId;
     }
 
