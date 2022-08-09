@@ -4,6 +4,7 @@ import com.buchsbaumtax.core.EnvironmentProperty;
 import com.buchsbaumtax.core.dao.UserDAO;
 import com.buchsbaumtax.core.model.User;
 import com.sifradigital.framework.CORSFilter;
+import com.sifradigital.framework.LoggingFilter;
 import com.sifradigital.framework.SifraApplication;
 import com.sifradigital.framework.auth.AuthDynamicFeature;
 import com.sifradigital.framework.auth.AuthenticatedProvider;
@@ -25,6 +26,7 @@ public class BuchsbaumApplication extends SifraApplication {
         packages(true, "com.buchsbaumtax.app.resource");
 
         register(new CORSFilter());
+        register(new LoggingFilter(LoggingFilter.LOG_ALL_REQUESTS));
 
         DatabaseConfig.Connection connection = new DatabaseConfig.Connection("jdbc/BTDB", "jdbc:postgresql://localhost:5432/buchsbaum", "postgres", "sifra123");
         DatabaseConfig databaseConfig = new DatabaseConfig(connection, "com.buchsbaumtax.core.dao", false, false);
