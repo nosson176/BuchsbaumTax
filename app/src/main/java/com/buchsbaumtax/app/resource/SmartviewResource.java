@@ -14,6 +14,7 @@ import java.util.List;
 @Authenticated
 @Path("/smartviews")
 public class SmartviewResource {
+
     @POST
     public SmartviewData createSmartview(@Authenticated User user, SmartviewData smartview) {
         return new SmartviewCRUD().create(user, smartview);

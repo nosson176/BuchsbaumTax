@@ -35,6 +35,9 @@ public interface SmartviewDAO {
     @SqlUpdate("UPDATE smartviews SET name = :name, sort_number = :sortNumber, archived = :archived, client_ids = :clientIds, user_id = :userId, updated = NOW() WHERE id = :id")
     void updateSmartview(@BindBean Smartview smartview);
 
+    @SqlBatch("UPDATE smartviews SET name = :name, sort_number = :sortNumber, archived = :archived, client_ids = :clientIds, user_id = :userId, updated = NOW() WHERE id = :id")
+    void updateSmartviews(@BindBean List<Smartview> smartviews);
+
     @GetGeneratedKeys
     @SqlUpdate("INSERT INTO smartviews (user_name, user_id, name, sort_number, archived) VALUES (:userName, :userId, :name, :sortNumber, :archived)")
     int createSmartview(@BindBean Smartview smartview);
