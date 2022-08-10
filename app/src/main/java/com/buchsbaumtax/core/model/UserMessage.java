@@ -12,6 +12,7 @@ public class UserMessage {
     private String message;
     private String status;
     private Date created;
+    private Integer parentId;
 
 
     public int getId() {
@@ -52,5 +53,13 @@ public class UserMessage {
 
     public Date getCreated() {
         return created;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 }

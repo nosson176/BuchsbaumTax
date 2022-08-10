@@ -354,6 +354,7 @@ CREATE TABLE user_messages(
     recipient_id INTEGER REFERENCES users ON DELETE CASCADE,
     message TEXT,
     status TEXT DEFAULT 'unread',
+    parent_id INTEGER REFERENCES user_messages ON DELETE CASCADE,
     created TIMESTAMPTZ DEFAULT now()
 );
 

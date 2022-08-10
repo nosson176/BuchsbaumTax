@@ -7,6 +7,7 @@ import com.buchsbaumtax.app.domain.user.UpdateUserMessage;
 import com.buchsbaumtax.app.domain.user.UserCRUD;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.UpdatePasswordRequest;
+import com.buchsbaumtax.app.dto.UserMessageObject;
 import com.buchsbaumtax.app.dto.UserMessages;
 import com.buchsbaumtax.core.dao.UserMessageDAO;
 import com.buchsbaumtax.core.model.TimeSlip;
@@ -19,6 +20,7 @@ import com.sifradigital.framework.db.Database;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Authenticated
 @Path("/users")
@@ -94,8 +96,12 @@ public class UserResource {
 
     @GET
     @Path("/current/messages")
-    public List<UserMessage> getUserInbox(@Authenticated User user) {
-        return Database.dao(UserMessageDAO.class).getByRecipient(user.getId());
+    public List<UserMessageObject> getUserInbox(@Authenticated User user) {
+        return Database.dao(UserMessageDAO.class).getByRecipient(user.getId())
+                .stream()
+                .filter(m -> m.getParentId() == null)
+                .map(UserMessageObject::new)
+                .collect(Collectors.toList());
     }
 
     @PUT
