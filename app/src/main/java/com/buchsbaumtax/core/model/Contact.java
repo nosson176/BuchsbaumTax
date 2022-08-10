@@ -11,6 +11,7 @@ public class Contact {
     private String contactType;
     private boolean enabled;
     private int clientId;
+    private int sortOrder;
 
     public int getId() {
         return id;
@@ -50,5 +51,13 @@ public class Contact {
 
     public int getClientId() {
         return clientId;
+    }
+
+    public int getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(int sortOrder) {
+        this.sortOrder = sortOrder;
     }
 }

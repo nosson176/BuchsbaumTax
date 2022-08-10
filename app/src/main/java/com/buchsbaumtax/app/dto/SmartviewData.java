@@ -11,7 +11,7 @@ public class SmartviewData {
     private String userName;
     private Integer userId;
     private String name;
-    private long sortNumber;
+    private int sortNumber;
     private boolean archived;
     private List<Integer> clientIds;
     private Date created;
@@ -51,7 +51,7 @@ public class SmartviewData {
         return name;
     }
 
-    public long getSortNumber() {
+    public int getSortNumber() {
         return sortNumber;
     }
 

@@ -5,43 +5,43 @@ public class Checklist {
 
     private int id;
     private boolean archived;
-    private long clientId;
+    private int clientId;
     private boolean finished;
     private String memo;
-    private Long taxYearId;
+    private Integer taxYearId;
     private boolean translated;
-    private Long sortNumber;
+    private Integer sortNumber;
 
 
     public int getId() {
         return id;
     }
 
-    public boolean getArchived() {
+    public boolean isArchived() {
         return archived;
     }
 
-    public long getClientId() {
+    public int getClientId() {
         return clientId;
-    }
-
-    public boolean getFinished() {
-        return finished;
     }
 
     public String getMemo() {
         return memo;
     }
 
-    public Long getTaxYearId() {
+    public Integer getTaxYearId() {
         return taxYearId;
     }
 
-    public boolean getTranslated() {
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public boolean isTranslated() {
         return translated;
     }
 
-    public Long getSortNumber() {
+    public Integer getSortNumber() {
         return sortNumber;
     }
 }

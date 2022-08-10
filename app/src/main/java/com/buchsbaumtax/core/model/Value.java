@@ -1,6 +1,7 @@
 package com.buchsbaumtax.core.model;
 
 public class Value {
+
     private int id;
     private int sortOrder;
     private String key;
@@ -40,5 +41,9 @@ public class Value {
 
     public boolean isInclude() {
         return include;
+    }
+
+    public void setSortOrder(int sortOrder) {
+        this.sortOrder = sortOrder;
     }
 }

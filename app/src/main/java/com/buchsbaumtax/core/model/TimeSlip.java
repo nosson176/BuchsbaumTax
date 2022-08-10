@@ -5,8 +5,8 @@ import java.util.Date;
 
 public class TimeSlip {
 
-    private long id;
-    private long userId;
+    private int id;
+    private int userId;
     private Date timeIn;
     private Date timeOut;
     private String memo;
@@ -14,11 +14,11 @@ public class TimeSlip {
     private Date updated;
 
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public long getUserId() {
+    public int getUserId() {
         return userId;
     }
 

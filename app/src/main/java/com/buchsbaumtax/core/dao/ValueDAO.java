@@ -6,6 +6,7 @@ import org.jdbi.v3.sqlobject.config.RegisterFieldMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
+import org.jdbi.v3.sqlobject.statement.SqlBatch;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
@@ -21,6 +22,10 @@ public interface ValueDAO {
     @SqlQuery("SELECT * FROM value_lists WHERE id = :id")
     Value get(@Bind("id") int id);
 
+    @RegisterFieldMapper(Value.class)
+    @SqlQuery("SELECT * FROM value_lists WHERE key = :key ORDER BY sort_order, value")
+    List<Value> getByKey(@Bind("key") String key);
+
     @SqlUpdate("DELETE FROM value_lists WHERE id = :id")
     void delete(@Bind("id") int id);
 
@@ -30,6 +35,9 @@ public interface ValueDAO {
 
     @SqlUpdate("UPDATE value_lists SET sort_order = :sortOrder, value = :value, parent_id = :parentId, show = :show, include = :include WHERE id = :id")
     void update(@BindBean Value value);
+
+    @SqlBatch("UPDATE value_lists SET sort_order = :sortOrder, value = :value, parent_id = :parentId, show = :show, include = :include WHERE id = :id")
+    void update(@BindBean List<Value> value);
 
     @RegisterFieldMapper(Value.class)
     @SqlQuery("SELECT key FROM value_lists GROUP BY key ORDER BY key")

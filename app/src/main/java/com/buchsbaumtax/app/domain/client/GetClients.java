@@ -5,11 +5,13 @@ import com.buchsbaumtax.core.dao.ClientDAO;
 import com.buchsbaumtax.core.dao.SmartviewDAO;
 import com.buchsbaumtax.core.model.Client;
 import com.buchsbaumtax.core.model.Smartview;
+import com.buchsbaumtax.core.util.NaturalOrderComparator;
 import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +24,9 @@ public class GetClients {
     }
 
     public List<Client> getAll() {
-        return clientDAO.getAll();
+        List<Client> clients = clientDAO.getAll();
+        sort(clients);
+        return clients;
     }
 
     public List<ClientInfo> getForSmartview(int userId, int smartviewId) {
@@ -30,11 +34,15 @@ public class GetClients {
         if (smartview.getClientIds().isEmpty() || smartview.getClientIds() == null) {
             return new ArrayList<>();
         }
-        return clientDAO.getBulk(smartview.getClientIds()).stream().map(c -> new ClientInfo(c, userId)).collect(Collectors.toList());
+        List<Client> clients = clientDAO.getBulk(smartview.getClientIds());
+        sort(clients);
+        return clients.stream().map(c -> new ClientInfo(c, userId)).collect(Collectors.toList());
     }
 
     public List<ClientInfo> getForDefaultSearch(String q, int userId) {
-        return clientDAO.getFiltered(q).stream().map(c -> new ClientInfo(c, userId)).collect(Collectors.toList());
+        List<Client> clients = clientDAO.getFiltered(q);
+        sort(clients);
+        return clients.stream().map(c -> new ClientInfo(c, userId)).collect(Collectors.toList());
     }
 
     public List<ClientInfo> getForFieldSearch(String q, String field, int userId) {
@@ -54,6 +62,12 @@ public class GetClients {
         }
         query.append("ORDER BY c.last_name");
         String queryString = query.toString();
-        return clientDAO.getFilteredWithFields(queryString).stream().map(c -> new ClientInfo(c, userId)).collect(Collectors.toList());
+        List<Client> clients = Database.dao(ClientDAO.class).getFilteredWithFields(queryString);
+        sort(clients);
+        return clients.stream().map(c -> new ClientInfo(c, userId)).collect(Collectors.toList());
+    }
+
+    private void sort(List<Client> clients) {
+        clients.sort(Comparator.comparing(Client::getLastName, new NaturalOrderComparator()));
     }
 }

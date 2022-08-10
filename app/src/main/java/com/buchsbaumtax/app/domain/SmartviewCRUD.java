@@ -37,6 +37,35 @@ public class SmartviewCRUD {
         Smartview smartview = new SmartviewLineUtils().convertToSmartview(smartviewData);
         Smartview updated = Database.dao(SmartviewDAO.class).update(smartview);
         new UpdateSmartviews().updateSmartview(updated);
+
+        if (smartviewData.getSortNumber() != oldSmartview.getSortNumber()) {
+            List<Smartview> smartviews = Database.dao(SmartviewDAO.class).getByUser(user.getId());
+            smartviews = smartviews.stream().filter(s -> smartviewData.isArchived() == s.isArchived()).collect(Collectors.toList());
+            reorder(smartviews, oldSmartview.getSortNumber(), smartviewData.getSortNumber());
+        }
         return new SmartviewLineUtils().convertToSmartviewData(Database.dao(SmartviewDAO.class).get(updated.getId()));
+    }
+
+    private void reorder(List<Smartview> smartviews, int oldSort, int newSort) {
+        // force current order
+        for (int i = 0; i < smartviews.size(); i++) {
+            smartviews.get(i).setSortNumber(i + 1);
+        }
+
+        // reorder
+        boolean movedUp = oldSort > newSort;
+        for (Smartview s : smartviews) {
+            if (movedUp) {
+                if (s.getSortNumber() >= newSort && s.getSortNumber() < oldSort) {
+                    s.setSortNumber(s.getSortNumber() + 1);
+                }
+            }
+            else {
+                if (s.getSortNumber() > oldSort && s.getSortNumber() <= newSort) {
+                    s.setSortNumber(s.getSortNumber() - 1);
+                }
+            }
+        }
+        Database.dao(SmartviewDAO.class).updateSmartviews(smartviews);
     }
 }

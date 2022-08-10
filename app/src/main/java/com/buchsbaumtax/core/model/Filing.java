@@ -50,10 +50,6 @@ public class Filing {
         return currency;
     }
 
-    public boolean getCompleted() {
-        return completed;
-    }
-
     public int getTaxYearId() {
         return taxYearId;
     }
@@ -76,14 +72,6 @@ public class Filing {
 
     public double getRefund() {
         return refund;
-    }
-
-    public boolean getIncludeFee() {
-        return includeFee;
-    }
-
-    public boolean getIncludeInRefund() {
-        return includeInRefund;
     }
 
     public double getPaidFee() {
@@ -118,6 +106,17 @@ public class Filing {
         return statusDate;
     }
 
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public boolean isIncludeFee() {
+        return includeFee;
+    }
+
+    public boolean isIncludeInRefund() {
+        return includeInRefund;
+    }
 
     public String getFileType() {
         return fileType;

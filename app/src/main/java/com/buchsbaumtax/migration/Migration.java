@@ -3,6 +3,8 @@ package com.buchsbaumtax.migration;
 import com.buchsbaumtax.app.domain.DisplayFields;
 import com.buchsbaumtax.app.domain.SmartviewLineUtils;
 import com.buchsbaumtax.app.dto.SmartviewLineField;
+import com.buchsbaumtax.core.dao.PhoneNumberDAO;
+import com.buchsbaumtax.core.dao.ValueDAO;
 import com.buchsbaumtax.core.model.*;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
@@ -812,6 +814,24 @@ public class Migration {
         }
     }
 
+    private void setValueOrders() {
+        ValueDAO valueDAO = handle.attach(ValueDAO.class);
+        List<String> types = valueDAO.getAllValueTypes();
+        for (String type : types) {
+            List<Value> values = valueDAO.getByKey(type);
+            for (int i = 0; i < values.size(); i++) {
+                values.get(i).setSortOrder(i + 1);
+            }
+            valueDAO.update(values);
+        }
+    }
+
+    private void addPhoneNumbers() {
+        PhoneNumberDAO phoneNumberDAO = handle.attach(PhoneNumberDAO.class);
+        phoneNumberDAO.create(new PhoneNumber("+972544331975", "NOSSON"));
+        phoneNumberDAO.create(new PhoneNumber("+972547922856", "NOSSON"));
+    }
+
     private boolean castToBoolean(String str) {
         return str != null && (str.equals("1") || str.equalsIgnoreCase("true") || str.equalsIgnoreCase("yes"));
     }
@@ -1342,7 +1362,8 @@ public class Migration {
         migration.csvToTimeSlips(timeSlips);
         System.out.println("Time slips completed.");
 
-
         migration.setClientCreated();
+        migration.setValueOrders();
+        migration.addPhoneNumbers();
     }
 }

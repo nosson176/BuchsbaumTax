@@ -5,6 +5,15 @@ public class PhoneNumber {
     private String phoneNumber;
     private String name;
 
+    public PhoneNumber() {
+
+    }
+
+    public PhoneNumber(String phoneNumber, String name) {
+        this.phoneNumber = phoneNumber;
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }

@@ -12,7 +12,7 @@ public class Smartview {
     private String userName;
     private Integer userId;
     private String name;
-    private long sortNumber;
+    private int sortNumber;
     private boolean archived;
     private List<Integer> clientIds;
     private Date created;
@@ -59,12 +59,12 @@ public class Smartview {
         return name;
     }
 
-    public long getSortNumber() {
+    public int getSortNumber() {
         return sortNumber;
     }
 
-    public boolean getArchived() {
-        return archived;
+    public void setSortNumber(int sortNumber) {
+        this.sortNumber = sortNumber;
     }
 
     public Date getCreated() {
