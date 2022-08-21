@@ -56,6 +56,12 @@ public class UserResource {
     }
 
     @GET
+    @Path("/current")
+    public User getCurrentUser(@Authenticated User user) {
+        return user;
+    }
+
+    @GET
     @Path("/current/time-slips")
     public List<TimeSlip> getUserTimeSlips(@Authenticated User user) {
         return new TimeSlipCRUD().getUserTimeSlips(user);
