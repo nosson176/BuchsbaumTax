@@ -8,9 +8,9 @@ import com.sifradigital.framework.validation.Validator;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ContactCRUD {
+
     public Contact create(Contact contact) {
         validate(contact);
         int contactId = Database.dao(ContactDAO.class).create(contact);
@@ -25,6 +25,10 @@ public class ContactCRUD {
         if (contact.getId() != contactId || oldContact == null) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
+        if (oldContact.getSortOrder() != contact.getSortOrder()) {
+            List<Contact> contacts = Database.dao(ContactDAO.class).getForClient(contact.getClientId());
+            reorder(contacts, oldContact, contact.getSortOrder());
+        }
         Database.dao(ContactDAO.class).update(contact);
         Contact updatedContact = Database.dao(ContactDAO.class).get(contactId);
         new DisplayFields().setDisplayPhone(updatedContact.getClientId());
@@ -33,12 +37,37 @@ public class ContactCRUD {
 
     private void validate(Contact contact) {
         new Validator()
-                .required(contact.getClientId(), "client is required")
+                .required(contact.getClientId(), "Client ID is required")
                 .validateAndGuard();
     }
 
-    public List<Contact> update(List<Contact> contacts) {
+    private void reorder(List<Contact> contacts, Contact oldContact, int newSort) {
+        if (newSort == 0) {
+            contacts.forEach(c -> c.setSortOrder(0));
+            Database.dao(ContactDAO.class).update(contacts);
+            return;
+        }
+
+        for (int i = 0; i < contacts.size(); i++) {
+            contacts.get(i).setSortOrder(i + 1);
+        }
+
+        int oldSort = oldContact.getSortOrder() == 0 ? contacts.stream().filter(c -> c.getId() == oldContact.getId()).findAny().get().getSortOrder() : oldContact.getSortOrder();
+
+        boolean movedUp = oldSort > newSort;
+
+        for (Contact contact : contacts) {
+            if (movedUp) {
+                if (contact.getSortOrder() >= newSort && contact.getSortOrder() < oldSort) {
+                    contact.setSortOrder(contact.getSortOrder() + 1);
+                }
+            }
+            else {
+                if (contact.getSortOrder() > oldSort && contact.getSortOrder() <= newSort) {
+                    contact.setSortOrder(contact.getSortOrder() - 1);
+                }
+            }
+        }
         Database.dao(ContactDAO.class).update(contacts);
-        return contacts.stream().map(c -> Database.dao(ContactDAO.class).get(c.getId())).collect(Collectors.toList());
     }
 }
