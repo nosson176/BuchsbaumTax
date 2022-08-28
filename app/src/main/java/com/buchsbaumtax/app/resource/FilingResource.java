@@ -21,11 +21,6 @@ public class FilingResource {
         return new FilingCRUD().create(filing);
     }
 
-    @PUT
-    public List<Filing> updateFilings(List<Filing> filings) {
-        return new FilingCRUD().update(filings);
-    }
-
     @GET
     @Path("/{filingId}")
     public Filing getFiling(@PathParam("filingId") int filingId) {
