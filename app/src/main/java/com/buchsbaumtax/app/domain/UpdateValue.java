@@ -7,6 +7,7 @@ import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import java.util.Comparator;
 import java.util.List;
 
 public class UpdateValue {
@@ -18,10 +19,24 @@ public class UpdateValue {
         Value old = Database.dao(ValueDAO.class).get(valueId);
         if (old.getSortOrder() != value.getSortOrder()) {
             List<Value> values = Database.dao(ValueDAO.class).getByKey(old.getKey());
+
+            if (value.getSortOrder() == 0) { // Reset and return early
+                resetOrder(values);
+                return new ValueObject(Database.dao(ValueDAO.class).get(value.getId()));
+            }
+
             reorder(values, old.getSortOrder(), value.getSortOrder());
         }
         Database.dao(ValueDAO.class).update(value);
         return new ValueObject(Database.dao(ValueDAO.class).get(value.getId()));
+    }
+
+    private void resetOrder(List<Value> values) {
+        values.sort(Comparator.comparing(Value::getValue));
+        for (int i = 0; i < values.size(); i++) {
+            values.get(i).setSortOrder(i + 1);
+        }
+        Database.dao(ValueDAO.class).update(values);
     }
 
     private void reorder(List<Value> values, int oldSort, int newSort) {
