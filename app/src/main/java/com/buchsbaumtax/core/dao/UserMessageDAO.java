@@ -14,7 +14,7 @@ import java.util.List;
 @Dao
 public interface UserMessageDAO {
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO user_messages (sender_id, recipient_id, message) VALUES (:senderId, :recipientId, :message)")
+    @SqlUpdate("INSERT INTO user_messages (sender_id, recipient_id, message, parent_id) VALUES (:senderId, :recipientId, :message, :parentId)")
     int create(@BindBean UserMessage userMessage);
 
     @RegisterFieldMapper(UserMessage.class)
@@ -24,6 +24,10 @@ public interface UserMessageDAO {
     @RegisterFieldMapper(UserMessage.class)
     @SqlQuery("SELECT * FROM user_messages WHERE recipient_id = :recipientId ORDER BY created DESC")
     List<UserMessage> getByRecipient(@Bind("recipientId") int recipientId);
+
+    @RegisterFieldMapper(UserMessage.class)
+    @SqlQuery("SELECT * FROM user_messages WHERE parent_id = :parentId ORDER BY created DESC")
+    List<UserMessage> getByParent(@Bind("parentId") int parentId);
 
     @SqlUpdate("UPDATE user_messages SET message = :message, status = :status WHERE id = :id")
     void update(@BindBean UserMessage userMessage);
