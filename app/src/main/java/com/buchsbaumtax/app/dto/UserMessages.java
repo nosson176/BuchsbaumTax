@@ -5,6 +5,7 @@ import java.util.List;
 public class UserMessages {
     private List<Integer> recipients;
     private String message;
+    private Integer parentId;
 
     public String getMessage() {
         return message;
@@ -20,5 +21,13 @@ public class UserMessages {
 
     public void setRecipients(List<Integer> recipients) {
         this.recipients = recipients;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 }
