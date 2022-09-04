@@ -109,4 +109,11 @@ public class UserResource {
     public UserMessage updateMessage(@Authenticated User user, @PathParam("messageId") int messageId, UserMessage userMessage) {
         return new UpdateUserMessage().updateMessage(messageId, userMessage);
     }
+
+    @DELETE
+    @Path("/current/messages/{messageId}")
+    public BaseResponse deleteMessage(@Authenticated User user, @PathParam("messageId") int messageId) {
+        Database.dao(UserMessageDAO.class).delete(messageId);
+        return new BaseResponse(true);
+    }
 }

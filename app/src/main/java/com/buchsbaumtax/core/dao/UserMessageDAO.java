@@ -27,4 +27,7 @@ public interface UserMessageDAO {
 
     @SqlUpdate("UPDATE user_messages SET message = :message, status = :status WHERE id = :id")
     void update(@BindBean UserMessage userMessage);
+
+    @SqlUpdate("DELETE FROM user_messages WHERE id = :id")
+    void delete(@Bind("id") int id);
 }
