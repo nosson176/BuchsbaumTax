@@ -138,6 +138,10 @@ public class Filing {
         return sortOrder;
     }
 
+    public void setSortOrder(int sortOrder) {
+        this.sortOrder = sortOrder;
+    }
+
     public double getAmount() {
         return amount;
     }

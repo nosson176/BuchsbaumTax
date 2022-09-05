@@ -10,9 +10,9 @@ import com.sifradigital.framework.db.Database;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class FilingCRUD {
+
     public List<Filing> getAll() {
         return Database.dao(FilingDAO.class).getAll();
     }
@@ -48,12 +48,35 @@ public class FilingCRUD {
         if (filing.getId() != filingId || oldFiling == null) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
+        if (oldFiling.getSortOrder() != filing.getSortOrder()) {
+            List<Filing> filings = Database.dao(FilingDAO.class).getByTaxYear(filing.getTaxYearId());
+            reorder(filings, oldFiling.getSortOrder(), filing.getSortOrder());
+        }
         Database.dao(FilingDAO.class).update(filing);
         return Database.dao(FilingDAO.class).get(filingId);
     }
 
-    public List<Filing> update(List<Filing> filings) {
+    private void reorder(List<Filing> filings, int oldSort, int newSort) {
+
+        // force current order
+        for (int i = 0; i < filings.size(); i++) {
+            filings.get(i).setSortOrder(i + 1);
+        }
+
+        // reorder
+        boolean movedUp = oldSort > newSort;
+        for (Filing filing : filings) {
+            if (movedUp) {
+                if (filing.getSortOrder() >= newSort && filing.getSortOrder() < oldSort) {
+                    filing.setSortOrder(filing.getSortOrder() + 1);
+                }
+            }
+            else {
+                if (filing.getSortOrder() > oldSort && filing.getSortOrder() <= newSort) {
+                    filing.setSortOrder(filing.getSortOrder() - 1);
+                }
+            }
+        }
         Database.dao(FilingDAO.class).update(filings);
-        return filings.stream().map(f -> Database.dao(FilingDAO.class).get(f.getId())).collect(Collectors.toList());
     }
 }

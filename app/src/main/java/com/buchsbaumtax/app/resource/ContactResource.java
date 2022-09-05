@@ -12,6 +12,7 @@ import java.util.List;
 @Authenticated
 @Path("/contacts")
 public class ContactResource {
+
     @POST
     public Contact createContact(Contact contact) {
         return new ContactCRUD().create(contact);
@@ -20,11 +21,6 @@ public class ContactResource {
     @GET
     public List<Contact> getAllContacts() {
         return Database.dao(ContactDAO.class).getAll();
-    }
-
-    @PUT
-    public List<Contact> updateContacts(List<Contact> contacts) {
-        return new ContactCRUD().update(contacts);
     }
 
     @PUT
