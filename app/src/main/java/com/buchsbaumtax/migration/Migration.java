@@ -590,10 +590,12 @@ public class Migration {
         }
     }
 
-    private void csvToFees(List<String[]> fees) {
+    private void csvToFees(List<String[]> fees, List<String[]> feesNew) {
         FeeDAO feeDAO = handle.attach(FeeDAO.class);
 
-        for (String[] row : fees) {
+        for (int i = 0; i < fees.size(); i++) {
+            String[] row = fees.get(i);
+            String currencyCode = getCurrencyCode(feesNew.get(i)[25]);
             Map<String, Object> map = new HashMap<>();
 
             map.put("clientId", clientIds.get(row[0]));
@@ -608,6 +610,7 @@ public class Migration {
             map.put("dateFee", parseDate(row[9]));
             map.put("sum", castToBoolean(row[10]));
             map.put("archived", castToBoolean(row[11]));
+            map.put("currency", currencyCode);
 
             feeDAO.create(map);
         }
@@ -1051,7 +1054,7 @@ public class Migration {
     }
 
     private interface FeeDAO {
-        @SqlUpdate("INSERT INTO fees (client_id, year, status, status_detail, fee_type, manual_amount, paid_amount, include, rate, date_fee, sum, archived) VALUES (:clientId, :year, :status, :statusDetail, :feeType, :manualAmount, :paidAmount, :include, :rate, :dateFee, :sum, :archived)")
+        @SqlUpdate("INSERT INTO fees (client_id, year, status, status_detail, fee_type, manual_amount, paid_amount, include, rate, date_fee, sum, archived, currency) VALUES (:clientId, :year, :status, :statusDetail, :feeType, :manualAmount, :paidAmount, :include, :rate, :dateFee, :sum, :archived, :currency)")
         void create(@BindMap Map<String, ?> fee);
     }
 
@@ -1347,7 +1350,8 @@ public class Migration {
 
         System.out.println("Uploading fees...");
         List<String[]> fees = migration.parseCSV(root + "fees.csv");
-        migration.csvToFees(fees);
+        List<String[]> feesNew = migration.parseCSV(root + "fees_new.csv");
+        migration.csvToFees(fees, feesNew);
         System.out.println("Fees completed.");
 
         System.out.println("Uploading client flags...");

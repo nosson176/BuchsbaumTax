@@ -234,7 +234,8 @@ CREATE TABLE fees (
     date_fee DATE,
     sum BOOLEAN NOT NULL DEFAULT FALSE,
     archived BOOLEAN NOT NULL DEFAULT FALSE,
-    notes TEXT
+    notes TEXT,
+    currency TEXT
 );
 
 CREATE INDEX ON fees (client_id);
