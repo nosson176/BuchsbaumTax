@@ -38,4 +38,8 @@ public interface FilingDAO {
 
     @SqlBatch("UPDATE filings SET tax_form = :taxForm, status = :status, status_detail = :statusDetail, status_date = :statusDate, memo = :memo, include_in_refund = :includeInRefund, owes = :owes, paid = :paid, include_fee = :includeFee, owes_fee = :owesFee, paid_fee = :paidFee, file_type = :fileType, refund = :refund, rebate = :rebate, completed = :completed, delivery_contact = :deliveryContact, second_delivery_contact = :secondDeliveryContact, date_filed = :dateFiled, currency = :currency, filing_type = :filingType, state = :state, tax_year_id = :taxYearId, sort_order = :sortOrder, amount = :amount WHERE id = :id")
     void update(@BindBean List<Filing> filings);
+
+    @RegisterFieldMapper(Filing.class)
+    @SqlQuery("SELECT * FROM filings WHERE client_id = :clientId")
+    List<Filing> getByClient(@Bind("clientId") int clientId);
 }
