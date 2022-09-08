@@ -11,13 +11,16 @@ import com.buchsbaumtax.core.model.User;
 import com.buchsbaumtax.core.model.UserMessage;
 import com.sifradigital.framework.auth.Authenticated;
 import com.sifradigital.framework.db.Database;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/sms")
 public class SMSResource {
+    public static final Logger LOG = LoggerFactory.getLogger(SMSResource.class);
+
     @GET
     @Path("/phone_numbers")
     public List<PhoneNumber> getAllPhoneNumbers() {
@@ -50,13 +53,15 @@ public class SMSResource {
         String[] stringParts = body.split(":");
 
         if (stringParts.length < 2) {
-            throw new WebApplicationException("Message incorrectly formatted", Response.Status.BAD_REQUEST);
+            LOG.error("Error creating message object: Message incorrectly formatted");
+            return new BaseResponse(true);
         }
 
         User recipient = Database.dao(UserDAO.class).getByUsername(stringParts[0].trim());
 
         if (recipient == null) {
-            throw new WebApplicationException("User not found", Response.Status.BAD_REQUEST);
+            LOG.error("Error creating message object: Recipient not found");
+            return new BaseResponse(true);
         }
 
         User sender = Database.dao(UserDAO.class).getByUsername("NOSSON");
