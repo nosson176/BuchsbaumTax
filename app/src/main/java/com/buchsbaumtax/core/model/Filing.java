@@ -54,6 +54,10 @@ public class Filing {
         return taxYearId;
     }
 
+    public void setTaxYearId(int taxYearId) {
+        this.taxYearId = taxYearId;
+    }
+
     public Date getDateFiled() {
         return dateFiled;
     }

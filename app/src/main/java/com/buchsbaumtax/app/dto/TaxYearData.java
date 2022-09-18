@@ -15,6 +15,9 @@ public class TaxYearData implements Comparable<TaxYearData> {
     private boolean irsHistory;
     private List<Filing> filings;
 
+    public TaxYearData() {
+    }
+
     public TaxYearData(TaxYear taxYear) {
         this.id = taxYear.getId();
         this.clientId = taxYear.getClientId();

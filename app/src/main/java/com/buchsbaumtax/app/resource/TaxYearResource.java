@@ -2,6 +2,7 @@ package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.taxyear.CreateTaxYear;
 import com.buchsbaumtax.app.domain.taxyear.UpdateTaxYear;
+import com.buchsbaumtax.app.dto.TaxYearData;
 import com.buchsbaumtax.core.dao.TaxYearDAO;
 import com.buchsbaumtax.core.model.TaxYear;
 import com.sifradigital.framework.auth.Authenticated;
@@ -13,8 +14,9 @@ import java.util.List;
 @Authenticated
 @Path("/tax-years")
 public class TaxYearResource {
+
     @POST
-    public TaxYear createTaxYears(TaxYear taxYear) {
+    public TaxYearData createTaxYears(TaxYearData taxYear) {
         return new CreateTaxYear().createTaxYear(taxYear);
     }
 
@@ -33,5 +35,4 @@ public class TaxYearResource {
     public TaxYear updateTaxYear(@PathParam("taxYearId") int taxYearId, TaxYear taxYear) {
         return new UpdateTaxYear().updateTaxYear(taxYearId, taxYear);
     }
-
 }
