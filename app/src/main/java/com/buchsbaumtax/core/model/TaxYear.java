@@ -6,6 +6,7 @@ public class TaxYear {
     private int clientId;
     private String year;
     private boolean archived;
+    private boolean show;
     private boolean irsHistory;
 
     public TaxYear() {
@@ -32,6 +33,10 @@ public class TaxYear {
 
     public boolean isArchived() {
         return archived;
+    }
+
+    public boolean isShow() {
+        return show;
     }
 
     public boolean isIrsHistory() {
