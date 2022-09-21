@@ -54,6 +54,10 @@ public class Filing {
         return taxYearId;
     }
 
+    public void setTaxYearId(int taxYearId) {
+        this.taxYearId = taxYearId;
+    }
+
     public Date getDateFiled() {
         return dateFiled;
     }
@@ -136,6 +140,10 @@ public class Filing {
 
     public int getSortOrder() {
         return sortOrder;
+    }
+
+    public void setSortOrder(int sortOrder) {
+        this.sortOrder = sortOrder;
     }
 
     public double getAmount() {

@@ -38,7 +38,7 @@ public class UpdateSmartviews {
             List<SmartviewLine> groupLines = linesGroupedByGroupNum.get(key);
 
             // Group each group's line by the tables they reference
-            Map<String, List<SmartviewLine>> lineQueriesGroupedByTable = groupLines.stream().collect(Collectors.groupingBy(SmartviewLine::getTableName));
+            Map<String, List<SmartviewLine>> lineQueriesGroupedByTable = groupLines.stream().collect(Collectors.groupingBy(this::getTableName));
 
             Set<Integer> queryResults = null;
             for (String table : lineQueriesGroupedByTable.keySet()) {
@@ -61,12 +61,22 @@ public class UpdateSmartviews {
         Database.dao(SmartviewDAO.class).updateSmartview(smartview);
     }
 
+    private String getTableName(SmartviewLine smartviewLine) {
+        if (smartviewLine.getTableName().equals("filings")) {
+            return "tax_years";
+        }
+        return smartviewLine.getTableName();
+    }
+
     private Set<Integer> getClientIds(List<SmartviewLine> smartviewLines) {
         String table = smartviewLines.get(0).getTableName();
         StringBuilder query = new StringBuilder();
         query.append("SELECT DISTINCT(c.id) FROM clients c ");
 
-        if (!table.equals("clients")) {
+        if (table.equals("filings") || table.equals("tax_years")) {
+            query.append("JOIN filings f ON c.id = f.client_id JOIN tax_years ty ON c.id = ty.client_id ");
+        }
+        else if (!table.equals("clients")) {
             query.append(String.format("JOIN %s t ON c.id = t.client_id ", table));
         }
 
@@ -85,11 +95,19 @@ public class UpdateSmartviews {
             }
 
 
-            if (table.equals("clients")) {
-                query.append(String.format("c.%s %s ", field, operator));
-            }
-            else {
-                query.append(String.format("t.%s %s ", field, operator));
+            switch (smartviewLine.getTableName()) {
+                case "clients":
+                    query.append(String.format("c.%s %s ", field, operator));
+                    break;
+                case "filings":
+                    query.append(String.format("f.%s %s", field, operator));
+                    break;
+                case "tax_years":
+                    query.append(String.format("ty.%s %s", field, operator));
+                    break;
+                default:
+                    query.append(String.format("t.%s %s ", field, operator));
+                    break;
             }
 
             if (smartviewLine.getType() != null && smartviewLine.getType().equals("String")) {

@@ -402,6 +402,8 @@ public class Migration {
 
         for (String[] row : filings) {
 
+            int sortOrder  = 1;
+
             ArrayList<String> federalFiling = new ArrayList<>(Arrays.asList(row).subList(6, 23));
             federalFiling.subList(7, 11).clear();
             federalFiling.remove(8);
@@ -422,6 +424,7 @@ public class Migration {
             else {
                 map.put("clientId", null);
             }
+            map.put("sortOrder", sortOrder);
 
             filingDAO.create(map);
 
@@ -439,6 +442,8 @@ public class Migration {
                     stateMap.put("clientId", null);
                 }
 
+                sortOrder++;
+                stateMap.put("sortOrder", sortOrder);
                 filingDAO.createState(stateMap);
             }
 
@@ -456,6 +461,8 @@ public class Migration {
                     state2Map.put("clientId", null);
                 }
 
+                sortOrder++;
+                state2Map.put("sortOrder", sortOrder);
                 filingDAO.createState(state2Map);
             }
 
@@ -475,6 +482,8 @@ public class Migration {
                     fbarMap.put("clientId", null);
                 }
 
+                sortOrder++;
+                fbarMap.put("sortOrder", sortOrder);
                 filingDAO.createState(fbarMap);
             }
 
@@ -495,6 +504,8 @@ public class Migration {
                     extMap.put("clientId", null);
                 }
 
+                sortOrder++;
+                extMap.put("sortOrder", sortOrder);
                 filingDAO.createExt(extMap);
             }
         }
@@ -826,12 +837,6 @@ public class Migration {
         }
     }
 
-    private void addPhoneNumbers() {
-        PhoneNumberDAO phoneNumberDAO = handle.attach(PhoneNumberDAO.class);
-        phoneNumberDAO.create(new PhoneNumber("+972544331975", "NOSSON"));
-        phoneNumberDAO.create(new PhoneNumber("+972547922856", "NOSSON"));
-    }
-
     private boolean castToBoolean(String str) {
         return str != null && (str.equals("1") || str.equalsIgnoreCase("true") || str.equalsIgnoreCase("yes"));
     }
@@ -1015,13 +1020,13 @@ public class Migration {
     }
 
     private interface FilingDAO {
-        @SqlUpdate("INSERT INTO filings (tax_form, status, status_detail, status_date, memo, include_in_refund, owes, paid, include_fee, owes_fee, paid_fee, file_type, refund, rebate, completed, delivery_contact, second_delivery_contact, date_filed, tax_year_id, filing_type, client_id) VALUES (:taxForm, :status, :statusDetail, :statusDate, :memo, :includeInRefund, :owes, :paid, :includeFee, :owesFee, :paidFee, :fileType, :refund, :rebate, :completed, :deliveryContact, :secondDeliveryContact, :dateFiled, :taxYearId, :filingType, :clientId)")
+        @SqlUpdate("INSERT INTO filings (tax_form, status, status_detail, status_date, memo, include_in_refund, owes, paid, include_fee, owes_fee, paid_fee, file_type, refund, rebate, completed, delivery_contact, second_delivery_contact, date_filed, tax_year_id, filing_type, client_id, sort_order) VALUES (:taxForm, :status, :statusDetail, :statusDate, :memo, :includeInRefund, :owes, :paid, :includeFee, :owesFee, :paidFee, :fileType, :refund, :rebate, :completed, :deliveryContact, :secondDeliveryContact, :dateFiled, :taxYearId, :filingType, :clientId, :sortOrder)")
         void create(@BindMap Map<String, ?> filing);
 
-        @SqlUpdate("INSERT INTO filings (state, status, status_detail, status_date, memo, include_in_refund, owes, paid, refund, completed, delivery_contact, second_delivery_contact, date_filed, tax_year_id, filing_type, file_type, client_id) VALUES (:state, :status, :statusDetail, :statusDate, :memo, :includeInRefund, :owes, :paid, :refund, :completed, :deliveryContact, :secondDeliveryContact, :dateFiled, :taxYearId, :filingType, :fileType, :clientId)")
+        @SqlUpdate("INSERT INTO filings (state, status, status_detail, status_date, memo, include_in_refund, owes, paid, refund, completed, delivery_contact, second_delivery_contact, date_filed, tax_year_id, filing_type, file_type, client_id, sort_order) VALUES (:state, :status, :statusDetail, :statusDate, :memo, :includeInRefund, :owes, :paid, :refund, :completed, :deliveryContact, :secondDeliveryContact, :dateFiled, :taxYearId, :filingType, :fileType, :clientId, :sortOrder)")
         void createState(@BindMap Map<String, ?> stateFiling);
 
-        @SqlUpdate("INSERT INTO filings (status, status_date, amount, completed, tax_form, date_filed, tax_year_id, filing_type, client_id) VALUES (:status, :statusDate, :amount, :completed, :taxForm, :dateFiled, :taxYearId, :filingType, :clientId)")
+        @SqlUpdate("INSERT INTO filings (status, status_date, amount, completed, tax_form, date_filed, tax_year_id, filing_type, client_id, sort_order) VALUES (:status, :statusDate, :amount, :completed, :taxForm, :dateFiled, :taxYearId, :filingType, :clientId, :sortOrder)")
         void createExt(@BindMap Map<String, ?> extFiling);
     }
 
@@ -1071,7 +1076,8 @@ public class Migration {
     }
 
     public static void main(String[] args) {
-        String root = "C:\\Users\\shalo\\Downloads\\buchsbaum-main\\buchsbaum-main\\lib\\fm_uploads\\";
+//        String root = "C:\\Users\\shalo\\Downloads\\buchsbaum-main\\buchsbaum-main\\lib\\fm_uploads\\";
+        String root = "/Users/shuie/dev/buchsbaum-main/lib/fm_uploads/";
         Migration migration = new Migration(root);
 
 
@@ -1364,6 +1370,5 @@ public class Migration {
 
         migration.setClientCreated();
         migration.setValueOrders();
-        migration.addPhoneNumbers();
     }
 }

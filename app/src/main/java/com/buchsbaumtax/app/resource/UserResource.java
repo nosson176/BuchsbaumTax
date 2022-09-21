@@ -4,6 +4,7 @@ import com.buchsbaumtax.app.config.Role;
 import com.buchsbaumtax.app.domain.user.*;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.UpdatePasswordRequest;
+import com.buchsbaumtax.app.dto.UserMessageObject;
 import com.buchsbaumtax.app.dto.UserMessages;
 import com.buchsbaumtax.core.dao.UserMessageDAO;
 import com.buchsbaumtax.core.model.ClientFlag;
@@ -17,6 +18,7 @@ import com.sifradigital.framework.db.Database;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Authenticated
 @Path("/users")
@@ -51,6 +53,12 @@ public class UserResource {
     @Path("/{userId}/password")
     public BaseResponse updatePassword(@PathParam("userId") int userId, UpdatePasswordRequest updatePasswordRequest) {
         return new UserCRUD().updatePassword(userId, updatePasswordRequest);
+    }
+
+    @GET
+    @Path("/current")
+    public User getCurrentUser(@Authenticated User user) {
+        return user;
     }
 
     @GET
@@ -92,8 +100,12 @@ public class UserResource {
 
     @GET
     @Path("/current/messages")
-    public List<UserMessage> getUserInbox(@Authenticated User user) {
-        return Database.dao(UserMessageDAO.class).getByRecipient(user.getId());
+    public List<UserMessageObject> getUserInbox(@Authenticated User user) {
+        return Database.dao(UserMessageDAO.class).getByUser(user.getId())
+                .stream()
+                .filter(m -> m.getParentId() == null)
+                .map(UserMessageObject::new)
+                .collect(Collectors.toList());
     }
 
     @PUT
@@ -106,5 +118,12 @@ public class UserResource {
     @Path("/current/client-flags/{clientFlagId}")
     public BaseResponse updateClientFlag(@Authenticated User user, @PathParam("clientFlagId") int clientFlagId, ClientFlag clientFlag) {
         return new UpdateClientFlag().updateClientFlag(user, clientFlagId, clientFlag);
+    }
+
+    @DELETE
+    @Path("/current/messages/{messageId}")
+    public BaseResponse deleteMessage(@Authenticated User user, @PathParam("messageId") int messageId) {
+        Database.dao(UserMessageDAO.class).delete(messageId);
+        return new BaseResponse(true);
     }
 }

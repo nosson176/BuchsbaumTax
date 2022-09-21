@@ -118,7 +118,8 @@ CREATE TABLE tax_years (
     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
     year TEXT REFERENCES year_details ON DELETE CASCADE,
     archived BOOLEAN NOT NULL DEFAULT FALSE,
-    irs_history BOOLEAN NOT NULL DEFAULT FALSE
+    irs_history BOOLEAN NOT NULL DEFAULT FALSE,
+    show BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE INDEX ON tax_years (client_id);
@@ -354,6 +355,7 @@ CREATE TABLE user_messages(
     recipient_id INTEGER REFERENCES users ON DELETE CASCADE,
     message TEXT,
     status TEXT DEFAULT 'unread',
+    parent_id INTEGER REFERENCES user_messages ON DELETE CASCADE,
     created TIMESTAMPTZ DEFAULT now()
 );
 
