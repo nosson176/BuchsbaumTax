@@ -22,8 +22,8 @@ public interface UserMessageDAO {
     UserMessage get(@Bind("id") int id);
 
     @RegisterFieldMapper(UserMessage.class)
-    @SqlQuery("SELECT * FROM user_messages WHERE recipient_id = :recipientId ORDER BY created DESC")
-    List<UserMessage> getByRecipient(@Bind("recipientId") int recipientId);
+    @SqlQuery("SELECT * FROM user_messages WHERE recipient_id = :id OR sender_id = :id ORDER BY created DESC")
+    List<UserMessage> getByUser(@Bind("id") int id);
 
     @RegisterFieldMapper(UserMessage.class)
     @SqlQuery("SELECT * FROM user_messages WHERE parent_id = :parentId ORDER BY created DESC")

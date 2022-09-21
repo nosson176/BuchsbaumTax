@@ -103,7 +103,7 @@ public class UserResource {
     @GET
     @Path("/current/messages")
     public List<UserMessageObject> getUserInbox(@Authenticated User user) {
-        return Database.dao(UserMessageDAO.class).getByRecipient(user.getId())
+        return Database.dao(UserMessageDAO.class).getByUser(user.getId())
                 .stream()
                 .filter(m -> m.getParentId() == null)
                 .map(UserMessageObject::new)
