@@ -3,7 +3,6 @@ package com.buchsbaumtax.migration;
 import com.buchsbaumtax.app.domain.DisplayFields;
 import com.buchsbaumtax.app.domain.SmartviewLineUtils;
 import com.buchsbaumtax.app.dto.SmartviewLineField;
-import com.buchsbaumtax.core.dao.PhoneNumberDAO;
 import com.buchsbaumtax.core.dao.ValueDAO;
 import com.buchsbaumtax.core.model.*;
 import com.opencsv.CSVReader;
