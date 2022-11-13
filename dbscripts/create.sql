@@ -24,7 +24,7 @@ CREATE TABLE contacts (
     zip TEXT,
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
     archived BOOLEAN NOT NULL DEFAULT FALSE,
-    sort_order INTEGER
+    sort_order INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE INDEX ON contacts (client_id);
