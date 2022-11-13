@@ -1,4 +1,4 @@
-package com.buchsbaumtax.app.domain.taxyear;
+package com.buchsbaumtax.app.domain;
 
 import com.buchsbaumtax.app.domain.ConvertToUSD;
 import com.buchsbaumtax.app.dto.ClientData;

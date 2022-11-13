@@ -1,4 +1,4 @@
-package com.buchsbaumtax.app.domain;
+package com.buchsbaumtax.app.domain.user;
 
 import com.buchsbaumtax.app.dto.Credentials;
 import com.buchsbaumtax.app.dto.Token;
