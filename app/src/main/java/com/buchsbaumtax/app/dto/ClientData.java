@@ -7,7 +7,6 @@ import com.sifradigital.framework.db.Database;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ClientData {
 
@@ -164,35 +163,35 @@ public class ClientData {
         return checklists;
     }
 
-    public Double getOwesDollars() {
+    public double getOwesDollars() {
         return owesDollars;
     }
 
-    public Double getPaidDollars() {
+    public double getPaidDollars() {
         return paidDollars;
     }
 
-    public Double getOwesShekels() {
+    public double getOwesShekels() {
         return owesShekels;
     }
 
-    public Double getPaidShekels() {
+    public double getPaidShekels() {
         return paidShekels;
     }
 
-    public Double getFeesOwesDollars() {
+    public double getFeesOwesDollars() {
         return feesOwesDollars;
     }
 
-    public Double getFeesPaidDollars() {
+    public double getFeesPaidDollars() {
         return feesPaidDollars;
     }
 
-    public Double getFeesOwesShekels() {
+    public double getFeesOwesShekels() {
         return feesOwesShekels;
     }
 
-    public Double getFeesPaidShekels() {
+    public double getFeesPaidShekels() {
         return feesPaidShekels;
     }
 }
