@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class DisplayFields {
+    
     public void setDisplayName(int clientId) {
         Client client = Database.dao(ClientDAO.class).get(clientId);
         List<TaxPersonal> taxPersonals = Database.dao(TaxPersonalDAO.class).getForClient(clientId);

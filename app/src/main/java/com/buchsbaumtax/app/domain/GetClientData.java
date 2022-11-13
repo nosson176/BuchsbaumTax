@@ -1,6 +1,5 @@
 package com.buchsbaumtax.app.domain;
 
-import com.buchsbaumtax.app.domain.ConvertToUSD;
 import com.buchsbaumtax.app.dto.ClientData;
 import com.buchsbaumtax.app.dto.TaxYearData;
 import com.buchsbaumtax.core.dao.ClientDAO;
