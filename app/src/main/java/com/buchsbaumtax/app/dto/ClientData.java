@@ -6,8 +6,11 @@ import com.sifradigital.framework.db.Database;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class ClientData {
+    public static final String DOLLARS = "USD";
+    public static final String SHEKELS = "NIS";
 
     private int id;
     private String lastName;
@@ -26,6 +29,15 @@ public class ClientData {
     private List<TaxPersonal> taxPersonals;
     private List<Fee> fees;
     private List<Checklist> checklists;
+    private Double owesDollars;
+    private Double paidDollars;
+    private Double owesShekels;
+    private Double paidShekels;
+    private Double feesOwesDollars;
+    private Double feesPaidDollars;
+    private Double feesOwesShekels;
+    private Double feesPaidShekels;
+
 
     public ClientData(Client client, List<TaxYearData> taxYearData) {
         this.id = client.getId();
@@ -45,6 +57,42 @@ public class ClientData {
         this.taxPersonals = Database.dao(TaxPersonalDAO.class).getForClient(client.getId());
         this.fees = Database.dao(FeeDAO.class).getForClient(client.getId());
         this.checklists = Database.dao(ChecklistDAO.class).getForClient(client.getId());
+
+        Stream<Filing> clientFilings = Database.dao(FilingDAO.class).getByClient(client.getId()).stream().filter(Filing::isIncludeInRefund);
+        this.owesDollars = Database.dao(FilingDAO.class).getByClient(client.getId()).stream()
+                .filter(Filing::isIncludeInRefund)
+                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(DOLLARS))
+                .mapToDouble(f -> f.getOwes() + f.getOwesFee()).sum();
+        this.paidDollars = Database.dao(FilingDAO.class).getByClient(client.getId()).stream()
+                .filter(Filing::isIncludeInRefund)
+                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(DOLLARS))
+                .mapToDouble(f -> f.getPaid() + f.getPaidFee()).sum();
+        this.owesShekels = Database.dao(FilingDAO.class).getByClient(client.getId()).stream()
+                .filter(Filing::isIncludeInRefund)
+                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(SHEKELS))
+                .mapToDouble(f -> f.getOwes() + f.getOwesFee()).sum();
+        this.paidShekels = Database.dao(FilingDAO.class).getByClient(client.getId()).stream()
+                .filter(Filing::isIncludeInRefund)
+                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(SHEKELS))
+                .mapToDouble(f -> f.getPaid() + f.getPaidFee()).sum();
+
+        Stream<Fee> clientFees = Database.dao(FeeDAO.class).getForClient(client.getId()).stream().filter(Fee::isInclude);
+        this.feesOwesDollars = Database.dao(FeeDAO.class).getForClient(client.getId()).stream()
+                .filter(Fee::isInclude)
+                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(DOLLARS))
+                .mapToDouble(Fee::getManualAmount).sum();
+        this.feesPaidDollars = Database.dao(FeeDAO.class).getForClient(client.getId()).stream()
+                .filter(Fee::isInclude)
+                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(DOLLARS))
+                .mapToDouble(Fee::getPaidAmount).sum();
+        this.feesOwesShekels = Database.dao(FeeDAO.class).getForClient(client.getId()).stream()
+                .filter(Fee::isInclude)
+                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(SHEKELS))
+                .mapToDouble(Fee::getManualAmount).sum();
+        this.feesPaidShekels = Database.dao(FeeDAO.class).getForClient(client.getId()).stream()
+                .filter(Fee::isInclude)
+                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(SHEKELS))
+                .mapToDouble(Fee::getPaidAmount).sum();
     }
 
     public int getId() {
@@ -113,5 +161,37 @@ public class ClientData {
 
     public List<Checklist> getChecklists() {
         return checklists;
+    }
+
+    public Double getOwesDollars() {
+        return owesDollars;
+    }
+
+    public Double getPaidDollars() {
+        return paidDollars;
+    }
+
+    public Double getOwesShekels() {
+        return owesShekels;
+    }
+
+    public Double getPaidShekels() {
+        return paidShekels;
+    }
+
+    public Double getFeesOwesDollars() {
+        return feesOwesDollars;
+    }
+
+    public Double getFeesPaidDollars() {
+        return feesPaidDollars;
+    }
+
+    public Double getFeesOwesShekels() {
+        return feesOwesShekels;
+    }
+
+    public Double getFeesPaidShekels() {
+        return feesPaidShekels;
     }
 }

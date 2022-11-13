@@ -383,18 +383,21 @@ public class Migration {
         }
     }
 
-    private void csvTOFilings(List<String[]> filings) {
+    private void csvTOFilings(List<String[]> filings, List<String[]> filingsWithCurrency) {
         FilingDAO filingDAO = handle.attach(FilingDAO.class);
         TaxYearDAO taxYearDAO = handle.attach(TaxYearDAO.class);
 
-        for (String[] row : filings) {
+        for (int i = 0; i < filings.size(); i++) {
+            String[] row = filings.get(i);
+            String currencyCode = getCurrencyCode(filingsWithCurrency.get(i)[36]);
 
-            int sortOrder  = 1;
+            int sortOrder = 1;
 
             ArrayList<String> federalFiling = new ArrayList<>(Arrays.asList(row).subList(6, 23));
             federalFiling.subList(7, 11).clear();
             federalFiling.remove(8);
             Map<String, Object> map = setFilingData(federalFiling);
+            map.put("currency", currencyCode);
             map.put("taxForm", row[5]);
             map.put("includeFee", castToBoolean(row[13]));
             map.put("owesFee", castToDouble(row[14]));
@@ -422,6 +425,7 @@ public class Migration {
                 stateMap.put("filingType", Filing.FILING_TYPE_STATE);
                 stateMap.put("fileType", null);
                 stateMap.put("taxYearId", taxYearIds.get(row[0]));
+                stateMap.put("currency", currencyCode);
                 if (clientId != 0) {
                     stateMap.put("clientId", taxYearDAO.get(taxYearId).getClientId());
                 }
@@ -441,6 +445,7 @@ public class Migration {
                 state2Map.put("filingType", Filing.FILING_TYPE_STATE);
                 state2Map.put("fileType", null);
                 state2Map.put("taxYearId", taxYearIds.get(row[0]));
+                state2Map.put("currency", currencyCode);
                 if (clientId != 0) {
                     state2Map.put("clientId", taxYearDAO.get(taxYearId).getClientId());
                 }
@@ -462,6 +467,7 @@ public class Migration {
                 fbarMap.put("fileType", row[56]);
                 fbarMap.put("filingType", "fbar");
                 fbarMap.put("taxYearId", taxYearIds.get(row[0]));
+                fbarMap.put("currency", currencyCode);
                 if (clientId != 0) {
                     fbarMap.put("clientId", taxYearDAO.get(taxYearId).getClientId());
                 }
@@ -484,6 +490,7 @@ public class Migration {
                 extMap.put("dateFiled", parseDate(row[63]));
                 extMap.put("filingType", "ext");
                 extMap.put("taxYearId", taxYearIds.get(row[0]));
+                extMap.put("currency", currencyCode);
                 if (clientId != 0) {
                     extMap.put("clientId", taxYearDAO.get(taxYearId).getClientId());
                 }
@@ -496,6 +503,18 @@ public class Migration {
                 filingDAO.createExt(extMap);
             }
         }
+    }
+
+    private String getCurrencyCode(String value) {
+        Map<String, String> currencyMap = new HashMap<>();
+        currencyMap.put("₪", "NIS");
+        currencyMap.put("$", "USD");
+
+        if (value != null) {
+            String symbol = value.substring(0, 1);
+            return currencyMap.get(symbol);
+        }
+        return null;
     }
 
     private void csvToValueList(Map<String, List<String[]>> valueLists) {
@@ -571,10 +590,12 @@ public class Migration {
         }
     }
 
-    private void csvToFees(List<String[]> fees) {
+    private void csvToFees(List<String[]> fees, List<String[]> feesNew) {
         FeeDAO feeDAO = handle.attach(FeeDAO.class);
 
-        for (String[] row : fees) {
+        for (int i = 0; i < fees.size(); i++) {
+            String[] row = fees.get(i);
+            String currencyCode = getCurrencyCode(feesNew.get(i)[25]);
             Map<String, Object> map = new HashMap<>();
 
             map.put("clientId", clientIds.get(row[0]));
@@ -589,6 +610,7 @@ public class Migration {
             map.put("dateFee", parseDate(row[9]));
             map.put("sum", castToBoolean(row[10]));
             map.put("archived", castToBoolean(row[11]));
+            map.put("currency", currencyCode);
 
             feeDAO.create(map);
         }
@@ -1007,13 +1029,13 @@ public class Migration {
     }
 
     private interface FilingDAO {
-        @SqlUpdate("INSERT INTO filings (tax_form, status, status_detail, status_date, memo, include_in_refund, owes, paid, include_fee, owes_fee, paid_fee, file_type, refund, rebate, completed, delivery_contact, second_delivery_contact, date_filed, tax_year_id, filing_type, client_id, sort_order) VALUES (:taxForm, :status, :statusDetail, :statusDate, :memo, :includeInRefund, :owes, :paid, :includeFee, :owesFee, :paidFee, :fileType, :refund, :rebate, :completed, :deliveryContact, :secondDeliveryContact, :dateFiled, :taxYearId, :filingType, :clientId, :sortOrder)")
+        @SqlUpdate("INSERT INTO filings (tax_form, status, status_detail, status_date, memo, include_in_refund, owes, paid, include_fee, owes_fee, paid_fee, file_type, refund, rebate, completed, delivery_contact, second_delivery_contact, date_filed, currency, tax_year_id, filing_type, client_id, sort_order) VALUES (:taxForm, :status, :statusDetail, :statusDate, :memo, :includeInRefund, :owes, :paid, :includeFee, :owesFee, :paidFee, :fileType, :refund, :rebate, :completed, :deliveryContact, :secondDeliveryContact, :dateFiled, :currency, :taxYearId, :filingType, :clientId, :sortOrder)")
         void create(@BindMap Map<String, ?> filing);
 
-        @SqlUpdate("INSERT INTO filings (state, status, status_detail, status_date, memo, include_in_refund, owes, paid, refund, completed, delivery_contact, second_delivery_contact, date_filed, tax_year_id, filing_type, file_type, client_id, sort_order) VALUES (:state, :status, :statusDetail, :statusDate, :memo, :includeInRefund, :owes, :paid, :refund, :completed, :deliveryContact, :secondDeliveryContact, :dateFiled, :taxYearId, :filingType, :fileType, :clientId, :sortOrder)")
+        @SqlUpdate("INSERT INTO filings (state, status, status_detail, status_date, memo, include_in_refund, owes, paid, refund, completed, delivery_contact, second_delivery_contact, date_filed, currency, tax_year_id, filing_type, file_type, client_id, sort_order) VALUES (:state, :status, :statusDetail, :statusDate, :memo, :includeInRefund, :owes, :paid, :refund, :completed, :deliveryContact, :secondDeliveryContact, :dateFiled, :currency, :taxYearId, :filingType, :fileType, :clientId, :sortOrder)")
         void createState(@BindMap Map<String, ?> stateFiling);
 
-        @SqlUpdate("INSERT INTO filings (status, status_date, amount, completed, tax_form, date_filed, tax_year_id, filing_type, client_id, sort_order) VALUES (:status, :statusDate, :amount, :completed, :taxForm, :dateFiled, :taxYearId, :filingType, :clientId, :sortOrder)")
+        @SqlUpdate("INSERT INTO filings (status, status_date, amount, completed, tax_form, date_filed, currency, tax_year_id, filing_type, client_id, sort_order) VALUES (:status, :statusDate, :amount, :completed, :taxForm, :dateFiled, :currency, :taxYearId, :filingType, :clientId, :sortOrder)")
         void createExt(@BindMap Map<String, ?> extFiling);
     }
 
@@ -1032,7 +1054,7 @@ public class Migration {
     }
 
     private interface FeeDAO {
-        @SqlUpdate("INSERT INTO fees (client_id, year, status, status_detail, fee_type, manual_amount, paid_amount, include, rate, date_fee, sum, archived) VALUES (:clientId, :year, :status, :statusDetail, :feeType, :manualAmount, :paidAmount, :include, :rate, :dateFee, :sum, :archived)")
+        @SqlUpdate("INSERT INTO fees (client_id, year, status, status_detail, fee_type, manual_amount, paid_amount, include, rate, date_fee, sum, archived, currency) VALUES (:clientId, :year, :status, :statusDetail, :feeType, :manualAmount, :paidAmount, :include, :rate, :dateFee, :sum, :archived, :currency)")
         void create(@BindMap Map<String, ?> fee);
     }
 
@@ -1120,7 +1142,8 @@ public class Migration {
 
         System.out.println("Uploading filings...");
         List<String[]> filings = migration.parseCSV(root + "tax_years.csv");
-        migration.csvTOFilings(filings);
+        List<String[]> filingsWithCurrency = migration.parseCSV(root + "taxyear.csv");
+        migration.csvTOFilings(filings, filingsWithCurrency);
         System.out.println("Filings completed.");
 
         migration.setDisplayFields();
@@ -1327,7 +1350,8 @@ public class Migration {
 
         System.out.println("Uploading fees...");
         List<String[]> fees = migration.parseCSV(root + "fees.csv");
-        migration.csvToFees(fees);
+        List<String[]> feesNew = migration.parseCSV(root + "fees_new.csv");
+        migration.csvToFees(fees, feesNew);
         System.out.println("Fees completed.");
 
         System.out.println("Uploading client flags...");

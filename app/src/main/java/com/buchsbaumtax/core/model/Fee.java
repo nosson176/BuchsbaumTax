@@ -17,6 +17,7 @@ public class Fee {
     private boolean sum;
     private boolean archived;
     private String notes;
+    private String currency;
 
 
     public int getId() {
@@ -73,5 +74,9 @@ public class Fee {
 
     public boolean isArchived() {
         return archived;
+    }
+
+    public String getCurrency() {
+        return currency;
     }
 }
