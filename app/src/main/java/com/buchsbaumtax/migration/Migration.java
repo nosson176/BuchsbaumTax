@@ -1081,7 +1081,8 @@ public class Migration {
     }
 
     public static void main(String[] args) {
-        String root = "C:\\Users\\shalo\\Downloads\\buchsbaum-main\\buchsbaum-main\\lib\\fm_uploads\\";
+//        String root = "C:\\Users\\shalo\\Downloads\\buchsbaum-main\\buchsbaum-main\\lib\\fm_uploads\\";
+        String root = "/Users/shuie/dev/buchsbaum-main/lib/fm_uploads/";
         Migration migration = new Migration(root);
 
 
