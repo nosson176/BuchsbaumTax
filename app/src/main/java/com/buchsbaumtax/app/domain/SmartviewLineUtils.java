@@ -6,7 +6,9 @@ import com.buchsbaumtax.app.dto.SmartviewLineField;
 import com.buchsbaumtax.core.dao.SmartviewDAO;
 import com.buchsbaumtax.core.model.Smartview;
 import com.buchsbaumtax.core.model.SmartviewLine;
+import com.google.common.reflect.TypeToken;
 import com.sifradigital.framework.db.Database;
+import com.sifradigital.framework.util.ResourceUtils;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.apache.commons.lang3.SerializationUtils;
@@ -17,90 +19,16 @@ import java.util.stream.Collectors;
 
 public class SmartviewLineUtils {
     private final String TABLE_FILINGS = "filings";
-    private final String TABLE_CLIENTS = "clients";
-    private final String TABLE_CONTACTS = "contacts";
-    private final String TABLE_FEES = "fees";
-    private final String TABLE_LOGS = "logs";
-    private final String TABLE_INCOME_BREAKDOWNS = "income_breakdowns";
-    private final String TABLE_TAX_PERSONALS = "tax_personals";
-    private final String TABLE_TAX_YEARS = "tax_years";
-    private final String TABLE_CLIENT_FLAGS = "client_flags";
-
     private final String FIELD_FILING_TYPE = "filing_type";
-    private final String FIELD_STATUS = "status";
-    private final String FIELD_STATUS_DETAIL = "status_detail";
-
-    private final String STATE = "state";
-    private final String FEDERAL = "federal";
-    private final String EXT = "ext";
-    private final String FBAR = "fbar";
-
-    private final String TYPE_INT = "int";
-    private final String TYPE_DOUBLE = "double";
-    private final String TYPE_STRING = "String";
-    private final String TYPE_DATE = "Date";
     private final String TYPE_BOOLEAN = "boolean";
-    BidiMap<String, SmartviewLineField> classFieldMap = new DualHashBidiMap<>();
-    List<String> combinedFilings = new ArrayList<>();
+    BidiMap<String, SmartviewLineField> classFieldMap;
+    List<String> combinedFilings;
 
     public SmartviewLineUtils() {
-        setClassFieldMap();
-    }
-
-    public void setClassFieldMap() {
-        classFieldMap.put("CLIENT::id", new SmartviewLineField(TABLE_CLIENTS, "id", TYPE_INT));
-        classFieldMap.put("CLIENT::owes_status", new SmartviewLineField(TABLE_CLIENTS, "owes_status", TYPE_STRING));
-        classFieldMap.put("CLIENT::periodical", new SmartviewLineField(TABLE_CLIENTS, "periodical", TYPE_STRING));
-        classFieldMap.put("CLIENT::status", new SmartviewLineField(TABLE_CLIENTS, FIELD_STATUS, TYPE_STRING));
-
-        classFieldMap.put("CONTACT::city", new SmartviewLineField(TABLE_CONTACTS, "secondary_detail", TYPE_STRING));
-        classFieldMap.put("CONTACT::state", new SmartviewLineField(TABLE_CONTACTS, STATE, TYPE_STRING));
-        classFieldMap.put("CONTACT::type", new SmartviewLineField(TABLE_CONTACTS, "contact_type", TYPE_STRING));
-
-        classFieldMap.put("FEE::fee_type", new SmartviewLineField(TABLE_FEES, "fee_type", TYPE_STRING));
-        classFieldMap.put("FEE::status", new SmartviewLineField(TABLE_FEES, FIELD_STATUS, TYPE_STRING));
-        classFieldMap.put("FEE::status_detail", new SmartviewLineField(TABLE_FEES, FIELD_STATUS_DETAIL, TYPE_STRING));
-        classFieldMap.put("FEE::tax_year", new SmartviewLineField(TABLE_FEES, "year", TYPE_STRING));
-
-        classFieldMap.put("INCOME_BREAKDOWN::currency", new SmartviewLineField(TABLE_INCOME_BREAKDOWNS, "currency", TYPE_STRING));
-
-        classFieldMap.put("LOG::alarm_complete", new SmartviewLineField(TABLE_LOGS, "alarm_complete", TYPE_BOOLEAN));
-        classFieldMap.put("LOG::alarm_date", new SmartviewLineField(TABLE_LOGS, "alarm_date", TYPE_DATE));
-        classFieldMap.put("LOG::employee_alarm", new SmartviewLineField(TABLE_LOGS, "alarm_user_name", TYPE_STRING));
-        classFieldMap.put("LOG::date_of_log", new SmartviewLineField(TABLE_LOGS, "log_date", TYPE_DATE));
-
-        classFieldMap.put("TAX_PERSONAL::category", new SmartviewLineField(TABLE_TAX_PERSONALS, "category", TYPE_STRING));
-        classFieldMap.put("TAX_PERSONAL::ssn", new SmartviewLineField(TABLE_TAX_PERSONALS, "ssn", TYPE_STRING));
-
-        classFieldMap.put("TAX_YEAR::comment", new SmartviewLineField(TABLE_FILINGS, "memo", TYPE_STRING));
-        classFieldMap.put("TAX_YEAR::date_filed", new SmartviewLineField(TABLE_FILINGS, "date_filed", TYPE_DATE, TABLE_FILINGS, FIELD_FILING_TYPE, FEDERAL));
-        classFieldMap.put("TAX_YEAR::extension_form", new SmartviewLineField(TABLE_FILINGS, "tax_form", TYPE_STRING, TABLE_FILINGS, FIELD_FILING_TYPE, EXT));
-        classFieldMap.put("TAX_YEAR::extension_status", new SmartviewLineField(TABLE_FILINGS, FIELD_STATUS, TYPE_STRING, TABLE_FILINGS, FIELD_FILING_TYPE, EXT));
-        classFieldMap.put("TAX_YEAR::FBAR_status", new SmartviewLineField(TABLE_FILINGS, FIELD_STATUS, TYPE_STRING, TABLE_FILINGS, FIELD_FILING_TYPE, FBAR));
-        classFieldMap.put("TAX_YEAR::FBAR_status_detail", new SmartviewLineField(TABLE_FILINGS, FIELD_STATUS_DETAIL, TYPE_STRING, TABLE_FILINGS, FIELD_FILING_TYPE, FBAR));
-        classFieldMap.put("TAX_YEAR::file_type", new SmartviewLineField(TABLE_FILINGS, "file_type", TYPE_STRING));
-        classFieldMap.put("TAX_YEAR::IRS_HISTORY", new SmartviewLineField(TABLE_TAX_YEARS, "irs_history", TYPE_BOOLEAN));
-        classFieldMap.put("TAX_YEAR::owes_federal", new SmartviewLineField(TABLE_FILINGS, "owes", TYPE_DOUBLE, TABLE_FILINGS, FIELD_FILING_TYPE, FEDERAL));
-        classFieldMap.put("TAX_YEAR::paid_federal", new SmartviewLineField(TABLE_FILINGS, "paid", TYPE_DOUBLE, TABLE_FILINGS, FIELD_FILING_TYPE, FEDERAL));
-        classFieldMap.put("TAX_YEAR::state_status_detail", new SmartviewLineField(TABLE_FILINGS, FIELD_STATUS_DETAIL, TYPE_STRING, TABLE_FILINGS, FIELD_FILING_TYPE, STATE));
-        classFieldMap.put("TAX_YEAR::tax_form", new SmartviewLineField(TABLE_FILINGS, "tax_form", TYPE_STRING));
-        classFieldMap.put("TAX_YEAR::tax_year_status_detail", new SmartviewLineField(TABLE_FILINGS, FIELD_STATUS_DETAIL, TYPE_STRING));
-        classFieldMap.put("TAX_YEAR::tax_year_status_federal", new SmartviewLineField(TABLE_FILINGS, FIELD_STATUS, TYPE_STRING, TABLE_FILINGS, FIELD_FILING_TYPE, FEDERAL));
-        classFieldMap.put("TAX_YEAR::tax_year_status_state", new SmartviewLineField(TABLE_FILINGS, FIELD_STATUS, TYPE_STRING, TABLE_FILINGS, FIELD_FILING_TYPE, STATE));
-        classFieldMap.put("TAX_YEAR::year_name", new SmartviewLineField(TABLE_TAX_YEARS, "year", TYPE_STRING));
-        classFieldMap.put("TAX_YEAR::delivery", new SmartviewLineField(TABLE_FILINGS, "delivery_contact", TYPE_STRING));
-        classFieldMap.put("TAX_YEAR::tax_state", new SmartviewLineField(TABLE_FILINGS, STATE, TYPE_STRING));
-
-        classFieldMap.put("CLIENT_FLAGS::flag_name", new SmartviewLineField(TABLE_CLIENT_FLAGS, "flag", TYPE_INT));
-        classFieldMap.put("CLIENT_FLAGS::user_name", new SmartviewLineField(TABLE_CLIENT_FLAGS, "user_id", TYPE_INT));
-
-
-        combinedFilings.add("date_filed");
-        combinedFilings.add("tax_form");
-        combinedFilings.add(FIELD_STATUS);
-        combinedFilings.add(FIELD_STATUS_DETAIL);
-        combinedFilings.add("owes");
-        combinedFilings.add("paid");
+        classFieldMap = ResourceUtils.loadFromResource("class_field_map.json", new TypeToken<DualHashBidiMap<String, SmartviewLineField>>() {
+        }.getType());
+        combinedFilings = ResourceUtils.loadFromResource("combined_filings.json", new TypeToken<ArrayList<String>>() {
+        }.getType());
     }
 
     public BidiMap<String, SmartviewLineField> getClassFieldMap() {
