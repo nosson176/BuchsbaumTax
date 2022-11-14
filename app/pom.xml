@@ -14,7 +14,7 @@
     <packaging>war</packaging>
 
     <properties>
-        <sifra.framework.version>0.5.6</sifra.framework.version>
+        <sifra.framework.version>0.6.12</sifra.framework.version>
     </properties>
 
     <dependencies>
