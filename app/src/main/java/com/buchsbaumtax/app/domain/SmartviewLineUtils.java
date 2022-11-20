@@ -18,11 +18,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SmartviewLineUtils {
-    private final String TABLE_FILINGS = "filings";
-    private final String FIELD_FILING_TYPE = "filing_type";
-    private final String TYPE_BOOLEAN = "boolean";
-    BidiMap<String, SmartviewLineField> classFieldMap;
-    List<String> combinedFilings;
+
+    private static final String TABLE_FILINGS = "filings";
+    private static final String FIELD_FILING_TYPE = "filing_type";
+    private static final String TYPE_BOOLEAN = "boolean";
+
+    private final BidiMap<String, SmartviewLineField> classFieldMap;
+    private final List<String> combinedFilings;
 
     public SmartviewLineUtils() {
         classFieldMap = ResourceUtils.loadFromResource("class_field_map.json", new TypeToken<DualHashBidiMap<String, SmartviewLineField>>() {
