@@ -7,8 +7,9 @@ import com.buchsbaumtax.core.model.User;
 import com.buchsbaumtax.core.model.UserMessage;
 import com.sifradigital.framework.db.Database;
 
-public class CreateMessage {
-    public BaseResponse postMessages(User user, UserMessages messages) {
+public class SendMessage {
+
+    public BaseResponse sendMessages(User user, UserMessages messages) {
         messages.getRecipients().forEach(r -> createMessage(user, r, messages.getMessage(), messages.getParentId()));
         return new BaseResponse(true);
     }

@@ -1,10 +1,7 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.config.Role;
-import com.buchsbaumtax.app.domain.user.CreateMessage;
-import com.buchsbaumtax.app.domain.user.TimeSlipCRUD;
-import com.buchsbaumtax.app.domain.user.UpdateUserMessage;
-import com.buchsbaumtax.app.domain.user.UserCRUD;
+import com.buchsbaumtax.app.domain.user.*;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.UpdatePasswordRequest;
 import com.buchsbaumtax.app.dto.UserMessageObject;
@@ -25,6 +22,7 @@ import java.util.stream.Collectors;
 @Authenticated
 @Path("/users")
 public class UserResource {
+
     @GET
     public List<User> getAllUsers() {
         return new UserCRUD().getAll();
@@ -97,17 +95,13 @@ public class UserResource {
     @POST
     @Path("/current/messages")
     public BaseResponse createMessage(@Authenticated User user, UserMessages messages) {
-        return new CreateMessage().postMessages(user, messages);
+        return new SendMessage().sendMessages(user, messages);
     }
 
     @GET
     @Path("/current/messages")
     public List<UserMessageObject> getUserInbox(@Authenticated User user) {
-        return Database.dao(UserMessageDAO.class).getByUser(user.getId())
-                .stream()
-                .filter(m -> m.getParentId() == null)
-                .map(UserMessageObject::new)
-                .collect(Collectors.toList());
+        return new GetUserInbox().getUserInbox(user);
     }
 
     @PUT
