@@ -135,8 +135,9 @@ CREATE TABLE users (
     seconds_in_day INTEGER,
     allow_texting BOOLEAN NOT NULL DEFAULT FALSE,
     selectable BOOLEAN NOT NULL DEFAULT FALSE,
-    user_type TEXT,
+    user_type TEXT NOT NULL,
     password TEXT,
+    phone_number TEXT,
     created TIMESTAMPTZ DEFAULT now(),
     updated TIMESTAMPTZ DEFAULT now()
 );
