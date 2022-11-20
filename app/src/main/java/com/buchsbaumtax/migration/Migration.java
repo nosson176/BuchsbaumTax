@@ -315,10 +315,10 @@ public class Migration {
             map.put("allowTexting", castToBoolean(row[6]));
             map.put("selectable", castToBoolean(row[7]));
             if (row[8].equals("User")) {
-                map.put("userType", "user");
+                map.put("userType", "User");
             }
             else if (row[8].equals("Full Access")) {
-                map.put("userType", "admin");
+                map.put("userType", "Admin");
             }
             else {
                 map.put("userType", row[8]);
