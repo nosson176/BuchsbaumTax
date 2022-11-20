@@ -19,9 +19,11 @@ import java.util.List;
 
 @Path("/sms")
 public class SMSResource {
-    public static final Logger LOG = LoggerFactory.getLogger(SMSResource.class);
+
+    private static final Logger Log = LoggerFactory.getLogger(SMSResource.class);
 
     @GET
+    @Authenticated
     @Path("/phone_numbers")
     public List<PhoneNumber> getAllPhoneNumbers() {
         return Database.dao(PhoneNumberDAO.class).getAll();
@@ -53,14 +55,14 @@ public class SMSResource {
         String[] stringParts = body.split(":");
 
         if (stringParts.length < 2) {
-            LOG.error("Error creating message object: Message incorrectly formatted");
+            Log.error("Error creating message object: Message incorrectly formatted");
             return new BaseResponse(true);
         }
 
         User recipient = Database.dao(UserDAO.class).getByUsername(stringParts[0].trim());
 
         if (recipient == null) {
-            LOG.error("Error creating message object: Recipient not found");
+            Log.error("Error creating message object: Recipient not found");
             return new BaseResponse(true);
         }
 

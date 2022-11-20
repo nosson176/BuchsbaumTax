@@ -12,6 +12,7 @@ import java.util.List;
 @Authenticated
 @Path("/personals")
 public class TaxPersonalResource {
+
     @POST
     public TaxPersonal createTaxPersonal(TaxPersonal taxPersonal) {
         return new TaxPersonalCRUD().create(taxPersonal);
