@@ -637,20 +637,17 @@ public class Migration {
         UserDAO userDAO = handle.attach(UserDAO.class);
 
         for (String[] row : clientFlags) {
-            Map<String, Object> map = new HashMap<>();
 
-            map.put("clientId", clientIds.get(row[3]));
-
+            Integer clientId = clientIds.get(row[3]);
             User user = userDAO.getByUsername(row[4]);
 
-            if (user != null) {
-                map.put("userId", user.getId());
-            }
-            else {
-                map.put("userId", null);
-            }
-            map.put("flag", clientFlagsMap.get(row[1]));
+            if (clientId == null || user == null)
+                continue;
 
+            Map<String, Object> map = new HashMap<>();
+            map.put("clientId", clientId);
+            map.put("userId", user.getId());
+            map.put("flag", clientFlagsMap.get(row[1]));
             clientFlagDAO.create(map);
         }
     }
