@@ -20,9 +20,19 @@
     "type": "String"
   },
 
-  "CONTACT::city": {
+  "CONTACT::address_or_number": {
+    "tableName": "contacts",
+    "fieldName": "main_detail",
+    "type": "String"
+  },
+  "CONTACT::city_or_account": {
     "tableName": "contacts",
     "fieldName": "secondary_detail",
+    "type": "String"
+  },
+  "CONTACT::memo": {
+    "tableName": "contacts",
+    "fieldName": "memo",
     "type": "String"
   },
   "CONTACT::state": {
@@ -35,13 +45,53 @@
     "fieldName": "contact_type",
     "type": "String"
   },
-
-  "INCOME_BREAKDOWN::currency": {
-    "tableName": "income_breakdowns",
-    "fieldName": "currency",
+  "CONTACT::zip": {
+    "tableName": "contacts",
+    "fieldName": "zip",
     "type": "String"
   },
 
+  "INCOME_BREAKDOWN::category": {
+    "tableName": "income_breakdowns",
+    "fieldName": "category",
+    "type": "String"
+  },
+  "INCOME_BREAKDOWN::description": {
+    "tableName": "income_breakdowns",
+    "fieldName": "description",
+    "type": "String"
+  },
+  "INCOME_BREAKDOWN::job": {
+    "tableName": "income_breakdowns",
+    "fieldName": "job",
+    "type": "String"
+  },
+  "INCOME_BREAKDOWN::tax_group": {
+    "tableName": "income_breakdowns",
+    "fieldName": "tax_group",
+    "type": "String"
+  },
+  "INCOME_BREAKDOWN::tax_type": {
+    "tableName": "income_breakdowns",
+    "fieldName": "tax_type",
+    "type": "String"
+  },
+  "INCOME_BREAKDOWN::year_name": {
+    "tableName": "income_breakdowns",
+    "fieldName": "years",
+    "type": "String"
+  },
+
+  "LOG::alarm_date": {
+    "tableName": "logs",
+    "fieldName": "alarm_date",
+    "type": "Date"
+  },
+  "LOG::alarm_complete": {
+    "tableName": "logs",
+    "fieldName": "alarm_complete",
+    "type": "boolean"
+  },
   "LOG::date_of_log": {
     "tableName": "logs",
     "fieldName": "log_date",
@@ -52,15 +102,25 @@
     "fieldName": "alarm_user_name",
     "type": "String"
   },
-  "LOG::alarm_complete": {
+  "LOG::timetrack": {
     "tableName": "logs",
-    "fieldName": "alarm_complete",
-    "type": "boolean"
+    "fieldName": "seconds_spent",
+    "type": "int"
   },
-  "LOG::alarm_date": {
+  "LOG::note": {
     "tableName": "logs",
-    "fieldName": "alarm_date",
-    "type": "Date"
+    "fieldName": "note",
+    "type": "String"
+  },
+  "LOG::priority": {
+    "tableName": "logs",
+    "fieldName": "priority",
+    "type": "int"
+  },
+  "LOG::year_name": {
+    "tableName": "logs",
+    "fieldName": "years",
+    "type": "String"
   },
 
   "TAX_PERSONAL::category": {
@@ -68,7 +128,36 @@
     "fieldName": "category",
     "type": "String"
   },
-
+  "TAX_PERSONAL::date_of_birth": {
+    "tableName": "tax_personals",
+    "fieldName": "date_of_birth",
+    "type": "Date"
+  },
+  "TAX_PERSONAL::first_name": {
+    "tableName": "tax_personals",
+    "fieldName": "first_name",
+    "type": "String"
+  },
+  "TAX_PERSONAL::informal": {
+    "tableName": "tax_personals",
+    "fieldName": "informal",
+    "type": "String"
+  },
+  "TAX_PERSONAL::language_spoken": {
+    "tableName": "tax_personals",
+    "fieldName": "language",
+    "type": "String"
+  },
+  "TAX_PERSONAL::last_name": {
+    "tableName": "tax_personals",
+    "fieldName": "last_name",
+    "type": "String"
+  },
+  "TAX_PERSONAL::relation": {
+    "tableName": "tax_personals",
+    "fieldName": "relation",
+    "type": "String"
+  },
   "TAX_PERSONAL::ssn": {
     "tableName": "tax_personals",
     "fieldName": "ssn",
