@@ -1,6 +1,5 @@
 package com.buchsbaumtax.app.domain.client;
 
-import com.buchsbaumtax.app.dto.ClientInfo;
 import com.buchsbaumtax.core.dao.ClientDAO;
 import com.buchsbaumtax.core.dao.SmartviewDAO;
 import com.buchsbaumtax.core.model.Client;
@@ -13,15 +12,10 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GetClients {
     ClientDAO clientDAO = Database.dao(ClientDAO.class);
     SmartviewDAO smartviewDAO = Database.dao(SmartviewDAO.class);
-
-    public List<ClientInfo> getAllByUser(int userId) {
-        return clientDAO.getAll().stream().map(c -> new ClientInfo(c, userId)).collect(Collectors.toList());
-    }
 
     public List<Client> getAll() {
         List<Client> clients = clientDAO.getAll();
@@ -29,23 +23,23 @@ public class GetClients {
         return clients;
     }
 
-    public List<ClientInfo> getForSmartview(int userId, int smartviewId) {
+    public List<Client> getForSmartview(int smartviewId) {
         Smartview smartview = smartviewDAO.get(smartviewId);
         if (smartview.getClientIds().isEmpty() || smartview.getClientIds() == null) {
             return new ArrayList<>();
         }
         List<Client> clients = clientDAO.getBulk(smartview.getClientIds());
         sort(clients);
-        return clients.stream().map(c -> new ClientInfo(c, userId)).collect(Collectors.toList());
+        return clients;
     }
 
-    public List<ClientInfo> getForDefaultSearch(String q, int userId) {
+    public List<Client> getForDefaultSearch(String q, int userId) {
         List<Client> clients = clientDAO.getFiltered(q);
         sort(clients);
-        return clients.stream().map(c -> new ClientInfo(c, userId)).collect(Collectors.toList());
+        return clients;
     }
 
-    public List<ClientInfo> getForFieldSearch(String q, String field, int userId) {
+    public List<Client> getForFieldSearch(String q, String field, int userId) {
         String[] fieldArray = field.split("::");
         if (fieldArray.length < 2) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
@@ -64,7 +58,7 @@ public class GetClients {
         String queryString = query.toString();
         List<Client> clients = Database.dao(ClientDAO.class).getFilteredWithFields(queryString);
         sort(clients);
-        return clients.stream().map(c -> new ClientInfo(c, userId)).collect(Collectors.toList());
+        return clients;
     }
 
     private void sort(List<Client> clients) {
