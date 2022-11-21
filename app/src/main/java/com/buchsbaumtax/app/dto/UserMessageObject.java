@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 public class UserMessageObject {
+
     private int id;
     private int senderId;
     private int recipientId;
@@ -25,7 +26,6 @@ public class UserMessageObject {
         this.created = userMessage.getCreated();
         this.responses = Database.dao(UserMessageDAO.class).getByParent(userMessage.getId());
     }
-
 
     public int getId() {
         return id;

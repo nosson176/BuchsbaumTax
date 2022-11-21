@@ -3,6 +3,7 @@ package com.buchsbaumtax.core.model;
 import java.util.Date;
 
 public class UserMessage {
+
     public static final String STATUS_UNREAD = "unread";
     public static final String STATUS_READ = "read";
 
@@ -13,7 +14,7 @@ public class UserMessage {
     private String status;
     private Date created;
     private Integer parentId;
-
+    private Integer threadId;
 
     public int getId() {
         return id;
@@ -61,5 +62,13 @@ public class UserMessage {
 
     public void setParentId(Integer parentId) {
         this.parentId = parentId;
+    }
+
+    public Integer getThreadId() {
+        return threadId;
+    }
+
+    public void setThreadId(Integer threadId) {
+        this.threadId = threadId;
     }
 }

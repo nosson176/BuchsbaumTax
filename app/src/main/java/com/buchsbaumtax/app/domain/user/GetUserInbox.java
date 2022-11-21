@@ -17,5 +17,4 @@ public class GetUserInbox {
                 .map(UserMessageObject::new)
                 .collect(Collectors.toList());
     }
-
 }

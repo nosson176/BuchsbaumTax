@@ -17,7 +17,6 @@ import com.sifradigital.framework.db.Database;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Authenticated
 @Path("/users")
