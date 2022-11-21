@@ -50,7 +50,7 @@ public class GetClients {
             query.append(String.format("JOIN %s t ON c.id = t.client_id WHERE t.%s ILIKE '%%%s%%'", table, fieldName, q));
         }
         else {
-            query.append(String.format("WHERE %s ILIKE '%%%s%%' ", fieldName, q));
+            query.append(String.format("WHERE %s ILIKE '%%%s%%'", fieldName, q));
         }
         query.append("ORDER BY c.last_name");
         String queryString = query.toString();

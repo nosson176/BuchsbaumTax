@@ -30,7 +30,7 @@ public class ClientData {
     private final List<TaxPersonal> taxPersonals;
     private final List<Fee> fees;
     private final List<Checklist> checklists;
-    private int flag;
+    private Integer flag;
     private final double owesDollars;
     private final double paidDollars;
     private final double owesShekels;
@@ -163,11 +163,11 @@ public class ClientData {
         return checklists;
     }
 
-    public int getFlag() {
+    public Integer getFlag() {
         return flag;
     }
 
-    public void setFlag(int flag) {
+    public void setFlag(Integer flag) {
         this.flag = flag;
     }
 
