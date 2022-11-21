@@ -13,10 +13,10 @@ import java.util.List;
 @Dao
 public interface ClientFlagDAO {
     @RegisterFieldMapper(ClientFlag.class)
-    @SqlQuery("SELECT * FROM client_flags order by id")
+    @SqlQuery("SELECT * FROM client_flags")
     List<ClientFlag> getAll();
 
-    @SqlUpdate("INSERT INTO client_flags (client_id, user_id, flag) VALUES (:clientId, :userId, :flag) ON CONFLICT (client_id, user_id) DO UPDATE SET flag = :flag WHERE client_id = :clientId AND user_id = :userId")
+    @SqlUpdate("INSERT INTO client_flags (client_id, user_id, flag) VALUES (:clientId, :userId, :flag) ON CONFLICT (client_id, user_id) DO UPDATE SET flag = :flag")
     void upsert(@BindBean ClientFlag clientFlag);
 
     @SqlQuery("SELECT flag FROM client_flags WHERE user_id = :userId AND client_id = :clientId")
