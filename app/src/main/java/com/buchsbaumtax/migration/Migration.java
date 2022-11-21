@@ -3,7 +3,6 @@ package com.buchsbaumtax.migration;
 import com.buchsbaumtax.app.domain.DisplayFields;
 import com.buchsbaumtax.app.domain.SmartviewLineUtils;
 import com.buchsbaumtax.app.dto.SmartviewLineField;
-import com.buchsbaumtax.core.dao.PhoneNumberDAO;
 import com.buchsbaumtax.core.dao.ValueDAO;
 import com.buchsbaumtax.core.model.*;
 import com.opencsv.CSVReader;
@@ -328,10 +327,10 @@ public class Migration {
             map.put("allowTexting", castToBoolean(row[6]));
             map.put("selectable", castToBoolean(row[7]));
             if (row[8].equals("User")) {
-                map.put("userType", "user");
+                map.put("userType", "User");
             }
             else if (row[8].equals("Full Access")) {
-                map.put("userType", "admin");
+                map.put("userType", "Admin");
             }
             else {
                 map.put("userType", row[8]);
@@ -402,7 +401,7 @@ public class Migration {
 
         for (String[] row : filings) {
 
-            int sortOrder  = 1;
+            int sortOrder = 1;
 
             ArrayList<String> federalFiling = new ArrayList<>(Arrays.asList(row).subList(6, 23));
             federalFiling.subList(7, 11).clear();
@@ -410,8 +409,13 @@ public class Migration {
             Map<String, Object> map = setFilingData(federalFiling);
             map.put("taxForm", row[5]);
             map.put("includeFee", castToBoolean(row[13]));
-            map.put("owesFee", castToDouble(row[14]));
+
+            Double owesFee = castToDouble(row[14]);
+            map.put("owesFee", owesFee);
             map.put("paidFee", castToDouble(row[15]));
+
+            String currency = owesFee != null && owesFee > 599 ? "NIS" : "USD";
+            map.put("currency", currency); // TODO
             map.put("fileType", row[16]);
             map.put("rebate", castToDouble(row[18]));
             map.put("filingType", Filing.FILING_TYPE_FEDERAL);
@@ -435,6 +439,7 @@ public class Migration {
                 stateMap.put("filingType", Filing.FILING_TYPE_STATE);
                 stateMap.put("fileType", null);
                 stateMap.put("taxYearId", taxYearIds.get(row[0]));
+                stateMap.put("currency", "USD"); // TODO
                 if (clientId != 0) {
                     stateMap.put("clientId", taxYearDAO.get(taxYearId).getClientId());
                 }
@@ -454,6 +459,7 @@ public class Migration {
                 state2Map.put("filingType", Filing.FILING_TYPE_STATE);
                 state2Map.put("fileType", null);
                 state2Map.put("taxYearId", taxYearIds.get(row[0]));
+                state2Map.put("currency", "USD"); // TODO
                 if (clientId != 0) {
                     state2Map.put("clientId", taxYearDAO.get(taxYearId).getClientId());
                 }
@@ -475,6 +481,7 @@ public class Migration {
                 fbarMap.put("fileType", row[56]);
                 fbarMap.put("filingType", "fbar");
                 fbarMap.put("taxYearId", taxYearIds.get(row[0]));
+                fbarMap.put("currency", "USD"); // TODO
                 if (clientId != 0) {
                     fbarMap.put("clientId", taxYearDAO.get(taxYearId).getClientId());
                 }
@@ -497,6 +504,7 @@ public class Migration {
                 extMap.put("dateFiled", parseDate(row[63]));
                 extMap.put("filingType", "ext");
                 extMap.put("taxYearId", taxYearIds.get(row[0]));
+                extMap.put("currency", "USD"); // TODO
                 if (clientId != 0) {
                     extMap.put("clientId", taxYearDAO.get(taxYearId).getClientId());
                 }
@@ -509,6 +517,18 @@ public class Migration {
                 filingDAO.createExt(extMap);
             }
         }
+    }
+
+    private String getCurrencyCode(String value) {
+        Map<String, String> currencyMap = new HashMap<>();
+        currencyMap.put("₪", "NIS");
+        currencyMap.put("$", "USD");
+
+        if (value != null) {
+            String symbol = value.substring(0, 1);
+            return currencyMap.get(symbol);
+        }
+        return null;
     }
 
     private void csvToValueList(Map<String, List<String[]>> valueLists) {
@@ -595,8 +615,13 @@ public class Migration {
             map.put("status", row[2]);
             map.put("statusDetail", row[3]);
             map.put("feeType", row[4]);
-            map.put("manualAmount", castToDouble(row[5]));
+
+            Double owesFee = castToDouble(row[5]);
+            map.put("manualAmount", owesFee);
             map.put("paidAmount", castToDouble(row[6]));
+            String currency = (owesFee != null && owesFee < 600) ? "USD" : "NIS";
+            map.put("currency", currency); // TODO
+
             map.put("include", castToBoolean(row[7]));
             map.put("rate", castToDouble(row[8]));
             map.put("dateFee", parseDate(row[9]));
@@ -690,6 +715,9 @@ public class Migration {
                 map.put("tableName", field.getTableName());
                 map.put("field", field.getFieldName());
                 type = field.getType();
+            }
+            else {
+                System.out.println(row[2]);
             }
 
             map.put("type", type);
@@ -1020,13 +1048,13 @@ public class Migration {
     }
 
     private interface FilingDAO {
-        @SqlUpdate("INSERT INTO filings (tax_form, status, status_detail, status_date, memo, include_in_refund, owes, paid, include_fee, owes_fee, paid_fee, file_type, refund, rebate, completed, delivery_contact, second_delivery_contact, date_filed, tax_year_id, filing_type, client_id, sort_order) VALUES (:taxForm, :status, :statusDetail, :statusDate, :memo, :includeInRefund, :owes, :paid, :includeFee, :owesFee, :paidFee, :fileType, :refund, :rebate, :completed, :deliveryContact, :secondDeliveryContact, :dateFiled, :taxYearId, :filingType, :clientId, :sortOrder)")
+        @SqlUpdate("INSERT INTO filings (tax_form, status, status_detail, status_date, memo, include_in_refund, owes, paid, include_fee, owes_fee, paid_fee, file_type, refund, rebate, completed, delivery_contact, second_delivery_contact, date_filed, currency, tax_year_id, filing_type, client_id, sort_order) VALUES (:taxForm, :status, :statusDetail, :statusDate, :memo, :includeInRefund, :owes, :paid, :includeFee, :owesFee, :paidFee, :fileType, :refund, :rebate, :completed, :deliveryContact, :secondDeliveryContact, :dateFiled, :currency, :taxYearId, :filingType, :clientId, :sortOrder)")
         void create(@BindMap Map<String, ?> filing);
 
-        @SqlUpdate("INSERT INTO filings (state, status, status_detail, status_date, memo, include_in_refund, owes, paid, refund, completed, delivery_contact, second_delivery_contact, date_filed, tax_year_id, filing_type, file_type, client_id, sort_order) VALUES (:state, :status, :statusDetail, :statusDate, :memo, :includeInRefund, :owes, :paid, :refund, :completed, :deliveryContact, :secondDeliveryContact, :dateFiled, :taxYearId, :filingType, :fileType, :clientId, :sortOrder)")
+        @SqlUpdate("INSERT INTO filings (state, status, status_detail, status_date, memo, include_in_refund, owes, paid, refund, completed, delivery_contact, second_delivery_contact, date_filed, currency, tax_year_id, filing_type, file_type, client_id, sort_order) VALUES (:state, :status, :statusDetail, :statusDate, :memo, :includeInRefund, :owes, :paid, :refund, :completed, :deliveryContact, :secondDeliveryContact, :dateFiled, :currency, :taxYearId, :filingType, :fileType, :clientId, :sortOrder)")
         void createState(@BindMap Map<String, ?> stateFiling);
 
-        @SqlUpdate("INSERT INTO filings (status, status_date, amount, completed, tax_form, date_filed, tax_year_id, filing_type, client_id, sort_order) VALUES (:status, :statusDate, :amount, :completed, :taxForm, :dateFiled, :taxYearId, :filingType, :clientId, :sortOrder)")
+        @SqlUpdate("INSERT INTO filings (status, status_date, amount, completed, tax_form, date_filed, currency, tax_year_id, filing_type, client_id, sort_order) VALUES (:status, :statusDate, :amount, :completed, :taxForm, :dateFiled, :currency, :taxYearId, :filingType, :clientId, :sortOrder)")
         void createExt(@BindMap Map<String, ?> extFiling);
     }
 
@@ -1045,7 +1073,7 @@ public class Migration {
     }
 
     private interface FeeDAO {
-        @SqlUpdate("INSERT INTO fees (client_id, year, status, status_detail, fee_type, manual_amount, paid_amount, include, rate, date_fee, sum, archived) VALUES (:clientId, :year, :status, :statusDetail, :feeType, :manualAmount, :paidAmount, :include, :rate, :dateFee, :sum, :archived)")
+        @SqlUpdate("INSERT INTO fees (client_id, year, status, status_detail, fee_type, manual_amount, paid_amount, include, rate, date_fee, sum, archived, currency) VALUES (:clientId, :year, :status, :statusDetail, :feeType, :manualAmount, :paidAmount, :include, :rate, :dateFee, :sum, :archived, :currency)")
         void create(@BindMap Map<String, ?> fee);
     }
 
@@ -1076,7 +1104,6 @@ public class Migration {
     }
 
     public static void main(String[] args) {
-//        String root = "C:\\Users\\shalo\\Downloads\\buchsbaum-main\\buchsbaum-main\\lib\\fm_uploads\\";
         String root = "/Users/shuie/dev/buchsbaum-main/lib/fm_uploads/";
         Migration migration = new Migration(root);
 

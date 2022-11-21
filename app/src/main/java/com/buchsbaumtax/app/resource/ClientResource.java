@@ -3,7 +3,7 @@ package com.buchsbaumtax.app.resource;
 import com.buchsbaumtax.app.domain.client.CreateClient;
 import com.buchsbaumtax.app.domain.client.GetClients;
 import com.buchsbaumtax.app.domain.client.UpdateClient;
-import com.buchsbaumtax.app.domain.taxyear.GetClientData;
+import com.buchsbaumtax.app.domain.GetClientData;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.ClientData;
 import com.buchsbaumtax.app.dto.ClientInfo;

@@ -1,11 +1,13 @@
 package com.buchsbaumtax.core.model.create;
 
 public class UserCreate {
+
     private String firstName;
     private String lastName;
     private String username;
     private String userType;
     private String password;
+    private String phoneNumber;
     private boolean sendLoginNotifications;
     private boolean notifyOfLogins;
     private Integer secondsInDay;
@@ -34,6 +36,10 @@ public class UserCreate {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
     public boolean isSendLoginNotifications() {

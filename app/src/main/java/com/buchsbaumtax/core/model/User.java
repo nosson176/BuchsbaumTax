@@ -9,6 +9,7 @@ public class User implements Principal {
     private String firstName;
     private String lastName;
     private String username;
+    private String phoneNumber;
     private boolean sendLoginNotifications;
     private boolean notifyOfLogins;
     private Integer secondsInDay;
@@ -32,6 +33,10 @@ public class User implements Principal {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
     public boolean isSendLoginNotifications() {
@@ -68,6 +73,6 @@ public class User implements Principal {
 
     @Override
     public String getName() {
-        return firstName + " " + lastName;
+        return username;
     }
 }

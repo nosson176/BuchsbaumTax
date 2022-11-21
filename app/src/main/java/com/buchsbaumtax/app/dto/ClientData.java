@@ -6,27 +6,39 @@ import com.sifradigital.framework.db.Database;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ClientData {
 
-    private int id;
-    private String lastName;
-    private String status;
-    private String owesStatus;
-    private boolean archived;
-    private String periodical;
-    private String displayName;
-    private String displayPhone;
-    private Date created;
-    private List<TaxYearData> taxYearData;
-    private List<FbarBreakdown> fbarBreakdowns;
-    private List<IncomeBreakdown> incomeBreakdowns;
-    private List<Log> logs;
-    private List<Contact> contacts;
-    private List<TaxPersonal> taxPersonals;
-    private List<Fee> fees;
-    private List<Checklist> checklists;
+    public static final String DOLLARS = "USD";
+    public static final String SHEKELS = "NIS";
+
+    private final int id;
+    private final String lastName;
+    private final String status;
+    private final String owesStatus;
+    private final boolean archived;
+    private final String periodical;
+    private final String displayName;
+    private final String displayPhone;
+    private final Date created;
+    private final List<TaxYearData> taxYearData;
+    private final List<FbarBreakdown> fbarBreakdowns;
+    private final List<IncomeBreakdown> incomeBreakdowns;
+    private final List<Log> logs;
+    private final List<Contact> contacts;
+    private final List<TaxPersonal> taxPersonals;
+    private final List<Fee> fees;
+    private final List<Checklist> checklists;
     private int flag;
+    private final double owesDollars;
+    private final double paidDollars;
+    private final double owesShekels;
+    private final double paidShekels;
+    private final double feesOwesDollars;
+    private final double feesPaidDollars;
+    private final double feesOwesShekels;
+    private final double feesPaidShekels;
 
     public ClientData(Client client, List<TaxYearData> taxYearData) {
         this.id = client.getId();
@@ -46,6 +58,41 @@ public class ClientData {
         this.taxPersonals = Database.dao(TaxPersonalDAO.class).getForClient(client.getId());
         this.fees = Database.dao(FeeDAO.class).getForClient(client.getId());
         this.checklists = Database.dao(ChecklistDAO.class).getForClient(client.getId());
+
+        List<Filing> filings = taxYearData.stream().flatMap(t -> t.getFilings().stream()).collect(Collectors.toList());
+        this.owesDollars = filings.stream()
+                .filter(Filing::isIncludeInRefund)
+                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(DOLLARS))
+                .mapToDouble(f -> f.getOwes() + f.getOwesFee()).sum();
+        this.paidDollars = filings.stream()
+                .filter(Filing::isIncludeInRefund)
+                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(DOLLARS))
+                .mapToDouble(f -> f.getPaid() + f.getPaidFee()).sum();
+        this.owesShekels = filings.stream()
+                .filter(Filing::isIncludeInRefund)
+                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(SHEKELS))
+                .mapToDouble(f -> f.getOwes() + f.getOwesFee()).sum();
+        this.paidShekels = filings.stream()
+                .filter(Filing::isIncludeInRefund)
+                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(SHEKELS))
+                .mapToDouble(f -> f.getPaid() + f.getPaidFee()).sum();
+
+        this.feesOwesDollars =fees.stream()
+                .filter(Fee::isInclude)
+                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(DOLLARS))
+                .mapToDouble(Fee::getManualAmount).sum();
+        this.feesPaidDollars = fees.stream()
+                .filter(Fee::isInclude)
+                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(DOLLARS))
+                .mapToDouble(Fee::getPaidAmount).sum();
+        this.feesOwesShekels = fees.stream()
+                .filter(Fee::isInclude)
+                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(SHEKELS))
+                .mapToDouble(Fee::getManualAmount).sum();
+        this.feesPaidShekels = fees.stream()
+                .filter(Fee::isInclude)
+                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(SHEKELS))
+                .mapToDouble(Fee::getPaidAmount).sum();
     }
 
     public int getId() {
@@ -122,5 +169,37 @@ public class ClientData {
 
     public void setFlag(int flag) {
         this.flag = flag;
+    }
+
+    public double getOwesDollars() {
+        return owesDollars;
+    }
+
+    public double getPaidDollars() {
+        return paidDollars;
+    }
+
+    public double getOwesShekels() {
+        return owesShekels;
+    }
+
+    public double getPaidShekels() {
+        return paidShekels;
+    }
+
+    public double getFeesOwesDollars() {
+        return feesOwesDollars;
+    }
+
+    public double getFeesPaidDollars() {
+        return feesPaidDollars;
+    }
+
+    public double getFeesOwesShekels() {
+        return feesOwesShekels;
+    }
+
+    public double getFeesPaidShekels() {
+        return feesPaidShekels;
     }
 }

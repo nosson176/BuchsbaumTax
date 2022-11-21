@@ -1,6 +1,6 @@
 package com.buchsbaumtax.app.resource;
 
-import com.buchsbaumtax.app.domain.Login;
+import com.buchsbaumtax.app.domain.user.Login;
 import com.buchsbaumtax.app.dto.Credentials;
 import com.buchsbaumtax.app.dto.Token;
 

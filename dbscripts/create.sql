@@ -24,7 +24,7 @@ CREATE TABLE contacts (
     zip TEXT,
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
     archived BOOLEAN NOT NULL DEFAULT FALSE,
-    sort_order INTEGER
+    sort_order INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE INDEX ON contacts (client_id);
@@ -135,8 +135,9 @@ CREATE TABLE users (
     seconds_in_day INTEGER,
     allow_texting BOOLEAN NOT NULL DEFAULT FALSE,
     selectable BOOLEAN NOT NULL DEFAULT FALSE,
-    user_type TEXT,
+    user_type TEXT NOT NULL,
     password TEXT,
+    phone_number TEXT,
     created TIMESTAMPTZ DEFAULT now(),
     updated TIMESTAMPTZ DEFAULT now()
 );
@@ -209,7 +210,7 @@ CREATE TABLE filings (
     delivery_contact TEXT,
     second_delivery_contact TEXT,
     date_filed DATE,
-    currency TEXT,
+    currency TEXT DEFAULT 'USD',
     filing_type TEXT,
     state TEXT,
     tax_year_id INTEGER,
@@ -235,7 +236,8 @@ CREATE TABLE fees (
     date_fee DATE,
     sum BOOLEAN NOT NULL DEFAULT FALSE,
     archived BOOLEAN NOT NULL DEFAULT FALSE,
-    notes TEXT
+    notes TEXT,
+    currency TEXT DEFAULT 'USD'
 );
 
 CREATE INDEX ON fees (client_id);
@@ -356,6 +358,7 @@ CREATE TABLE user_messages(
     message TEXT,
     status TEXT DEFAULT 'unread',
     parent_id INTEGER REFERENCES user_messages ON DELETE CASCADE,
+    thread_id INTEGER REFERENCES user_messages ON DELETE CASCADE,
     created TIMESTAMPTZ DEFAULT now()
 );
 

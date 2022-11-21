@@ -3,9 +3,11 @@ package com.buchsbaumtax.app.dto;
 import java.util.List;
 
 public class UserMessages {
+
     private List<Integer> recipients;
     private String message;
     private Integer parentId;
+    private Integer threadId;
 
     public String getMessage() {
         return message;
@@ -29,5 +31,13 @@ public class UserMessages {
 
     public void setParentId(Integer parentId) {
         this.parentId = parentId;
+    }
+
+    public Integer getThreadId() {
+        return threadId;
+    }
+
+    public void setThreadId(Integer threadId) {
+        this.threadId = threadId;
     }
 }

@@ -13,10 +13,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class UpdateSmartviews {
-    private static final Logger Logger = LoggerFactory.getLogger(UpdateSmartviewsJob.class);
+
+    private static final Logger Log = LoggerFactory.getLogger(UpdateSmartviewsJob.class);
 
     public void updateClients() {
-        Logger.info("Starting Update Smartviews Job...");
+        Log.info("Starting Update Smartviews Job...");
 
         List<Smartview> smartviews = Database.dao(SmartviewDAO.class).getAll();
 
@@ -24,7 +25,7 @@ public class UpdateSmartviews {
             updateSmartview(smartview);
         }
 
-        Logger.info("UpdateSmartviews Job completed.");
+        Log.info("UpdateSmartviews Job completed.");
     }
 
     public void updateSmartview(Smartview smartview) {
