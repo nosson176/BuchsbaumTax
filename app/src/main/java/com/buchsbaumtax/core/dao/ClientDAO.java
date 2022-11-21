@@ -5,10 +5,7 @@ import com.buchsbaumtax.core.model.Client;
 import com.buchsbaumtax.core.model.ClientFlag;
 import com.sifradigital.framework.db.Dao;
 import org.jdbi.v3.sqlobject.config.RegisterFieldMapper;
-import org.jdbi.v3.sqlobject.customizer.Bind;
-import org.jdbi.v3.sqlobject.customizer.BindBean;
-import org.jdbi.v3.sqlobject.customizer.BindList;
-import org.jdbi.v3.sqlobject.customizer.Define;
+import org.jdbi.v3.sqlobject.customizer.*;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
@@ -56,6 +53,7 @@ public interface ClientDAO {
     @RegisterFieldMapper(Client.class)
     @RegisterFieldMapper(ClientFlag.class)
     @UseRowReducer(ClientReducer.class)
+    @AllowUnusedBindings
     @SqlQuery("<query>")
     List<Client> getFilteredWithFields(@Define("query") String query);
 
