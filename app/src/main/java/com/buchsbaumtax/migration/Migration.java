@@ -741,7 +741,7 @@ public class Migration {
             }
             map.put("searchValue", searchValue);
 
-            if (map.get("tableName") != null && map.get("field") != null) {
+            if (map.get("tableName") != null && map.get("field") != null && searchValue != null) {
                 smartViewLineDAO.create(map);
             }
         }
