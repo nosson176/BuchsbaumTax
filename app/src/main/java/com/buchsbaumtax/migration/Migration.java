@@ -45,6 +45,18 @@ public class Migration {
     private Map<String, String> categoriesMap = new HashMap<>();
     private Map<String, String> taxGroupMap = new HashMap<>();
     private Map<String, String> taxTypeMap = new HashMap<>();
+    private static Map<String, Integer> clientFlagsMap = new HashMap<String, Integer>() {{
+        put("BLACK", 1);
+        put("BLUE", 2);
+        put("GREEN", 3);
+        put("NONE", 4);
+        put("ORANGE", 5);
+        put("PINK", 6);
+        put("PURPLE", 7);
+        put("RED", 8);
+        put("TURQUOISE", 9);
+        put("YELLOW", 10);
+    }};
 
     private Migration(String rootPath) {
         this.rootPath = rootPath;
@@ -625,20 +637,17 @@ public class Migration {
         UserDAO userDAO = handle.attach(UserDAO.class);
 
         for (String[] row : clientFlags) {
+
+            Integer clientId = clientIds.get(row[3]);
+            User user = userDAO.getByUsername(row[4]);
+
+            if (clientId == null || user == null)
+                continue;
+
             Map<String, Object> map = new HashMap<>();
-
-            map.put("clientId", clientIds.get(row[0]));
-
-            User user = userDAO.getByUsername(row[1]);
-
-            if (user != null) {
-                map.put("userId", user.getId());
-            }
-            else {
-                map.put("userId", null);
-            }
-            map.put("flag", castToInt(row[2]));
-
+            map.put("clientId", clientId);
+            map.put("userId", user.getId());
+            map.put("flag", clientFlagsMap.get(row[1]));
             clientFlagDAO.create(map);
         }
     }
@@ -993,7 +1002,7 @@ public class Migration {
     }
 
     private interface YearDetailDAO {
-        @SqlUpdate("INSERT INTO year_details (year, deduction_married_filing_jointly, deduction_head_of_household, deduction_single_and_married_filing_separately, deduction_married_filing_jointly_amount, deduction_married_filing_separately_amount, deduction_single_and_head_of_household_amount, ceiling_single_and_head_of_household, exemption, credit_8812_annual_deduction, ceiling_self_employment, exclusion_2555, foreign_annual, foreign_monthly, foreign_secondary_annual, foreign_secondary_monthly, dollar_annual, dollar_monthly, dollar_secondary_annual, dollar_secondary_monthly, additional_8812_child_credit, ceiling_married_filing_jointly, ceiling_married_filing_separately) VALUES (:year, :deductionMarriedFilingJointly, :deductionHeadOfHousehold, :deductionSingleAndMarriedFilingSeparately, :deductionMarriedFilingJointlyAmount,:deductionMarriedFilingSeparatelyAmount, :deductionSingleAndHeadOfHouseholdAmount, :ceilingSingleAndHeadOfHousehold, :exemption, :credit8812AnnualDeduction, :ceilingSelfEmployment, :exclusion2555, :foreignAnnual, :foreignMonthly, :foreignSecondaryAnnual, :foreignSecondaryMonthly, :dollarAnnual, :dollarMonthly, :dollarSecondaryAnnual, :dollarSecondaryMonthly, :additional8812ChildCredit, :ceilingMarriedFilingJointly, :ceilingMarriedFilingSeparately)")
+        @SqlUpdate("INSERT INTO year_details (year, deduction_married_filing_jointly, deduction_head_of_household, deduction_single_and_married_filing_separately, deduction_married_filing_jointly_amount, deduction_married_filing_separately_amount, deduction_single_and_head_of_household_amount, ceiling_single_and_head_of_household, exemption, credit_8812_annual_deduction, ceiling_self_employment, exclusion_2555, foreign_annual, foreign_monthly, foreign_secondary_annual, foreign_secondary_monthly, dollar_annual, dollar_monthly, dollar_secondary_annual, dollar_secondary_monthly, additional_8812_child_credit, ceiling_married_filing_jointly, ceiling_married_filing_separately) VALUES (:year, :deductionMarriedFilingJointly, :deductionHeadOfHousehold, :deductionSingleAndMarriedFilingSeparately, :deductionMarriedFilingJointlyAmount,:deductionMarriedFilingSeparatelyAmount, :deductionSingleAndHeadOfHouseholdAmount, :ceilingSingleAndHeadOfHousehold, :exemption, :credit8812AnnualDeduction, :ceilingSelfEmployment, :exclusion2555, :foreignAnnual, :foreignMonthly, :foreignSecondaryAnnual, :foreignSecondaryMonthly, :dollarAnnual, :dollarMonthly, :dollarSecondaryAnnual, :dollarSecondaryMonthly, :additional8812ChildCredit, :ceilingMarriedFilingJointly, :ceilingMarriedFilingSeparately) ON CONFLICT DO NOTHING ")
         void create(@BindMap Map<String, ?> yearDetail);
     }
 

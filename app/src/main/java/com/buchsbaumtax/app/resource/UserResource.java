@@ -7,6 +7,7 @@ import com.buchsbaumtax.app.dto.UpdatePasswordRequest;
 import com.buchsbaumtax.app.dto.UserMessageObject;
 import com.buchsbaumtax.app.dto.UserMessages;
 import com.buchsbaumtax.core.dao.UserMessageDAO;
+import com.buchsbaumtax.core.model.ClientFlag;
 import com.buchsbaumtax.core.model.TimeSlip;
 import com.buchsbaumtax.core.model.User;
 import com.buchsbaumtax.core.model.UserMessage;
@@ -107,6 +108,12 @@ public class UserResource {
     @Path("/current/messages/{messageId}")
     public UserMessage updateMessage(@Authenticated User user, @PathParam("messageId") int messageId, UserMessage userMessage) {
         return new UpdateUserMessage().updateMessage(messageId, userMessage);
+    }
+
+    @PUT
+    @Path("/current/client-flags")
+    public BaseResponse updateClientFlag(@Authenticated User user, ClientFlag clientFlag) {
+        return new UpdateClientFlag().updateClientFlag(user, clientFlag);
     }
 
     @DELETE

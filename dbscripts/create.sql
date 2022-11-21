@@ -324,10 +324,10 @@ CREATE TABLE client_history(
 );
 
 CREATE TABLE client_flags (
-    id SERIAL PRIMARY KEY,
     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
     user_id INTEGER REFERENCES users ON DELETE CASCADE,
-    flag INTEGER
+    flag INTEGER,
+    PRIMARY KEY (client_id, user_id)
 );
 CREATE INDEX ON client_flags(client_id);
 CREATE INDEX client_flags_fts ON client_flags USING gin(to_tsvector('simple', user_id||' '||flag));

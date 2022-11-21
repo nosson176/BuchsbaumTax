@@ -12,6 +12,7 @@ import java.util.List;
 
 @Dao
 public interface ClientHistoryDAO {
+
     @GetGeneratedKeys
     @SqlUpdate("INSERT INTO client_history (user_id, client_id) VALUES (:userId, :clientId)")
     int create(@Bind("userId") int userId, @Bind("clientId") int clientId);
