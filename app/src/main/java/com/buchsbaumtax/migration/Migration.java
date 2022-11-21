@@ -402,7 +402,7 @@ public class Migration {
             map.put("owesFee", owesFee);
             map.put("paidFee", castToDouble(row[15]));
 
-            String currency = (owesFee != null && owesFee < 600) ? "USD" : "NIS";
+            String currency = owesFee != null && owesFee > 599 ? "NIS" : "USD";
             map.put("currency", currency); // TODO
             map.put("fileType", row[16]);
             map.put("rebate", castToDouble(row[18]));
@@ -703,6 +703,9 @@ public class Migration {
                 map.put("tableName", field.getTableName());
                 map.put("field", field.getFieldName());
                 type = field.getType();
+            }
+            else {
+                System.out.println(row[2]);
             }
 
             map.put("type", type);
