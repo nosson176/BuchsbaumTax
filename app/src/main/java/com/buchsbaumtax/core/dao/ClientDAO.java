@@ -24,36 +24,36 @@ public interface ClientDAO {
     String MATCHING_CONTACTS = "matching_contacts AS (SELECT co.* FROM contacts co WHERE (main_detail, memo)::text ILIKE CONCAT('%', :q, '%')), ";
     String MATCHING_PERSONALS = "matching_personals AS (SELECT tp.* FROM tax_personals tp WHERE (first_name, last_name, ssn, informal)::text ILIKE CONCAT('%', :q, '%'))";
     String WITH = "WITH " + MATCHING_CLIENTS + MATCHING_CONTACTS + MATCHING_PERSONALS;
-    String SELECT_CLIENTS = "SELECT c.id as c_id, c.status as c_status, c.owes_status as c_owes_status, c.periodical as c_periodical, c.last_name as c_last_name, c.archived as c_archived, c.display_name as c_display_name, c.display_phone as c_display_phone, c.created as c_created, c.updated as c_updated, cf.* FROM matching_clients c JOIN client_flags cf ON c.id = cf.client_id UNION ";
-    String SELECT_CONTACTS = "SELECT c.id as c_id, c.status as c_status, c.owes_status as c_owes_status, c.periodical as c_periodical, c.last_name as c_last_name, c.archived as c_archived, c.display_name as c_display_name, c.display_phone as c_display_phone, c.created as c_created, c.updated as c_updated, cf.* FROM matching_contacts co JOIN clients c ON co.client_id = c.id JOIN client_flags cf ON c.id = cf.client_id UNION ";
-    String SELECT_PERSONALS = "SELECT c.id as c_id, c.status as c_status, c.owes_status as c_owes_status, c.periodical as c_periodical, c.last_name as c_last_name, c.archived as c_archived, c.display_name as c_display_name, c.display_phone as c_display_phone, c.created as c_created, c.updated as c_updated, cf.* FROM matching_personals p JOIN clients c ON p.client_id = c.id JOIN client_flags cf ON c.id = cf.client_id";
-    String SELECT = " SELECT * FROM(" + SELECT_CLIENTS + SELECT_CONTACTS + SELECT_PERSONALS + ") AS result ORDER BY c_last_name;";
+    String SELECT_CLIENTS = "SELECT c.*, cf.* FROM matching_clients c LEFT JOIN client_flags cf ON c.id = cf.client_id UNION ";
+    String SELECT_CONTACTS = "SELECT c.*, cf.* FROM matching_contacts co JOIN clients c ON co.client_id = c.id LEFT JOIN client_flags cf ON c.id = cf.client_id UNION ";
+    String SELECT_PERSONALS = "SELECT c.*, cf.* FROM matching_personals p JOIN clients c ON p.client_id = c.id LEFT JOIN client_flags cf ON c.id = cf.client_id";
+    String SELECT = " SELECT * FROM(" + SELECT_CLIENTS + SELECT_CONTACTS + SELECT_PERSONALS + ") AS result ORDER BY c.last_name;";
 
-    @RegisterFieldMapper(value = Client.class, prefix = "c")
+    @RegisterFieldMapper(Client.class)
     @RegisterFieldMapper(ClientFlag.class)
     @UseRowReducer(ClientReducer.class)
-    @SqlQuery("SELECT c.id as c_id, c.status as c_status, c.owes_status as c_owes_status, c.periodical as c_periodical, c.last_name as c_last_name, c.archived as c_archived, c.display_name as c_display_name, c.display_phone as c_display_phone, c.created as c_created, c.updated as c_updated, cf.* FROM clients c JOIN client_flags cf on c.id = cf.client_id ORDER BY last_name")
+    @SqlQuery("SELECT * FROM clients c LEFT JOIN client_flags cf on c.id = cf.client_id ORDER BY c.last_name")
     List<Client> getAll();
 
-    @RegisterFieldMapper(value = Client.class, prefix = "c")
+    @RegisterFieldMapper(Client.class)
     @RegisterFieldMapper(ClientFlag.class)
     @UseRowReducer(ClientReducer.class)
-    @SqlQuery("SELECT c.id as c_id, c.status as c_status, c.owes_status as c_owes_status, c.periodical as c_periodical, c.last_name as c_last_name, c.archived as c_archived, c.display_name as c_display_name, c.display_phone as c_display_phone, c.created as c_created, c.updated as c_updated, cf.* FROM clients c JOIN client_flags cf on c.id = cf.client_id WHERE c.id = :id")
+    @SqlQuery("SELECT * FROM clients c LEFT JOIN client_flags cf on c.id = cf.client_id WHERE c.id = :id")
     Client get(@Bind("id") int id);
 
-    @RegisterFieldMapper(value = Client.class, prefix = "c")
+    @RegisterFieldMapper(Client.class)
     @RegisterFieldMapper(ClientFlag.class)
     @UseRowReducer(ClientReducer.class)
-    @SqlQuery("SELECT c.id as c_id, c.status as c_status, c.owes_status as c_owes_status, c.periodical as c_periodical, c.last_name as c_last_name, c.archived as c_archived, c.display_name as c_display_name, c.display_phone as c_display_phone, c.created as c_created, c.updated as c_updated, cf.* FROM clients c JOIN client_flags cf on c.id = cf.client_id AND c.id IN (<ids>) ORDER BY last_name")
+    @SqlQuery("SELECT * FROM clients c LEFT JOIN client_flags cf on c.id = cf.client_id AND c.id IN (<ids>) ORDER BY c.last_name")
     List<Client> getBulk(@BindList("ids") List<Integer> ids);
 
-    @RegisterFieldMapper(value = Client.class, prefix = "c")
+    @RegisterFieldMapper(Client.class)
     @RegisterFieldMapper(ClientFlag.class)
     @UseRowReducer(ClientReducer.class)
     @SqlQuery(WITH + SELECT)
     List<Client> getFiltered(@Bind("q") String q);
 
-    @RegisterFieldMapper(value = Client.class, prefix = "c")
+    @RegisterFieldMapper(Client.class)
     @RegisterFieldMapper(ClientFlag.class)
     @UseRowReducer(ClientReducer.class)
     @SqlQuery("<query>")

@@ -10,10 +10,10 @@ import java.util.Map;
 public class ClientReducer implements LinkedHashMapRowReducer<Integer, Client> {
     @Override
     public void accumulate(Map<Integer, Client> container, RowView rowView) {
-        Client client = container.computeIfAbsent(rowView.getColumn("c_id", Integer.class),
+        Client client = container.computeIfAbsent(rowView.getColumn("id", Integer.class),
                 id -> rowView.getRow(Client.class));
 
-        if (rowView.getColumn("id", Integer.class) != null) {
+        if (rowView.getColumn("flag", Integer.class) != null) {
             client.getFlags().add(rowView.getRow(ClientFlag.class));
         }
     }

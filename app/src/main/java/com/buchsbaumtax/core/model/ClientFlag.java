@@ -3,25 +3,19 @@ package com.buchsbaumtax.core.model;
 
 public class ClientFlag {
 
-    private Integer id;
-    private Integer clientId;
-    private Integer userId;
-    private Integer flag;
+    private int clientId;
+    private int userId;
+    private int flag;
 
-
-    public Integer getId() {
-        return id;
-    }
-
-    public Integer getClientId() {
+    public int getClientId() {
         return clientId;
     }
 
-    public Integer getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public Integer getFlag() {
+    public int getFlag() {
         return flag;
     }
 }
