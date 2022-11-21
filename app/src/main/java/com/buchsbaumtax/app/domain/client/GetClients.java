@@ -45,7 +45,7 @@ public class GetClients {
         String table = fieldArray[0];
         String fieldName = fieldArray[1];
         StringBuilder query = new StringBuilder();
-        query.append("SELECT DISTINCT c.id as c_id, c.status as c_status, c.owes_status as c_owes_status, c.periodical as c_periodical, c.last_name as c_last_name, c.archived as c_archived, c.display_name as c_display_name, c.display_phone as c_display_phone, c.created as c_created, c.updated as c_updated, cf.* FROM clients c JOIN client_flags cf ON c.id = cf.client_id ");
+        query.append("SELECT DISTINCT c.*, cf.* FROM clients c LEFT JOIN client_flags cf ON c.id = cf.client_id ");
         if (!table.equals("clients")) {
             query.append(String.format("JOIN %s t ON c.id = t.client_id WHERE t.%s ILIKE '%%%s%%'", table, fieldName, q));
         }
