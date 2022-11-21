@@ -27,8 +27,8 @@ public interface UserMessageDAO {
     List<UserMessage> getByUser(@Bind("id") int id);
 
     @RegisterFieldMapper(UserMessage.class)
-    @SqlQuery("SELECT * FROM user_messages WHERE parent_id = :parentId ORDER BY created DESC")
-    List<UserMessage> getByParent(@Bind("parentId") int parentId);
+    @SqlQuery("SELECT * FROM user_messages WHERE thread_id = :parentId ORDER BY created")
+    List<UserMessage> getByThread(@Bind("parentId") int parentId);
 
     @SqlUpdate("UPDATE user_messages SET message = :message, status = :status WHERE id = :id")
     void update(@BindBean UserMessage userMessage);

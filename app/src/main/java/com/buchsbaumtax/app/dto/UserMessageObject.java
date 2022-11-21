@@ -24,7 +24,7 @@ public class UserMessageObject {
         this.message = userMessage.getMessage();
         this.status = userMessage.getStatus();
         this.created = userMessage.getCreated();
-        this.responses = Database.dao(UserMessageDAO.class).getByParent(userMessage.getId());
+        this.responses = Database.dao(UserMessageDAO.class).getByThread(userMessage.getId());
     }
 
     public int getId() {
