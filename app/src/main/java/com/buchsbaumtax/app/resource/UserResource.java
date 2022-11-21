@@ -111,9 +111,9 @@ public class UserResource {
     }
 
     @PUT
-    @Path("/current/client-flags/{clientFlagId}")
-    public BaseResponse updateClientFlag(@Authenticated User user, @PathParam("clientFlagId") int clientFlagId, ClientFlag clientFlag) {
-        return new UpdateClientFlag().updateClientFlag(user, clientFlagId, clientFlag);
+    @Path("/current/client-flags")
+    public BaseResponse updateClientFlag(@Authenticated User user, ClientFlag clientFlag) {
+        return new UpdateClientFlag().updateClientFlag(user, clientFlag);
     }
 
     @DELETE

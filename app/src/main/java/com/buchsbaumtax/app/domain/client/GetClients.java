@@ -9,7 +9,6 @@ import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -23,9 +22,6 @@ public class GetClients {
 
     public List<Client> getForSmartview(int smartviewId) {
         Smartview smartview = Database.dao(SmartviewDAO.class).get(smartviewId);
-        if (smartview.getClientIds().isEmpty() || smartview.getClientIds() == null) {
-            return new ArrayList<>();
-        }
         List<Client> clients = Database.dao(ClientDAO.class).getBulk(smartview.getClientIds());
         sort(clients);
         return clients;

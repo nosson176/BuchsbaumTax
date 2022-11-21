@@ -10,9 +10,10 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 public class UpdateClientFlag {
-    public BaseResponse updateClientFlag(User user, int clientFlagId, ClientFlag clientFlag) {
-        if (clientFlagId != clientFlag.getId() || user.getId() != clientFlag.getUserId()) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+
+    public BaseResponse updateClientFlag(User user, ClientFlag clientFlag) {
+        if (user.getId() != clientFlag.getUserId()) {
+            throw new WebApplicationException(Response.Status.UNAUTHORIZED);
         }
 
         Database.dao(ClientFlagDAO.class).updateFlag(clientFlag);
