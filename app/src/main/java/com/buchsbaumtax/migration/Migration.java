@@ -410,12 +410,9 @@ public class Migration {
             map.put("taxForm", row[5]);
             map.put("includeFee", castToBoolean(row[13]));
 
-            Double owesFee = castToDouble(row[14]);
-            map.put("owesFee", owesFee);
+            map.put("owesFee", castToDouble(row[14]));
             map.put("paidFee", castToDouble(row[15]));
 
-            String currency = owesFee != null && owesFee > 599 ? "NIS" : "USD";
-            map.put("currency", currency); // TODO
             map.put("fileType", row[16]);
             map.put("rebate", castToDouble(row[18]));
             map.put("filingType", Filing.FILING_TYPE_FEDERAL);
@@ -439,7 +436,6 @@ public class Migration {
                 stateMap.put("filingType", Filing.FILING_TYPE_STATE);
                 stateMap.put("fileType", null);
                 stateMap.put("taxYearId", taxYearIds.get(row[0]));
-                stateMap.put("currency", "USD"); // TODO
                 if (clientId != 0) {
                     stateMap.put("clientId", taxYearDAO.get(taxYearId).getClientId());
                 }
@@ -459,7 +455,6 @@ public class Migration {
                 state2Map.put("filingType", Filing.FILING_TYPE_STATE);
                 state2Map.put("fileType", null);
                 state2Map.put("taxYearId", taxYearIds.get(row[0]));
-                state2Map.put("currency", "USD"); // TODO
                 if (clientId != 0) {
                     state2Map.put("clientId", taxYearDAO.get(taxYearId).getClientId());
                 }
@@ -481,7 +476,6 @@ public class Migration {
                 fbarMap.put("fileType", row[56]);
                 fbarMap.put("filingType", "fbar");
                 fbarMap.put("taxYearId", taxYearIds.get(row[0]));
-                fbarMap.put("currency", "USD"); // TODO
                 if (clientId != 0) {
                     fbarMap.put("clientId", taxYearDAO.get(taxYearId).getClientId());
                 }
@@ -805,8 +799,11 @@ public class Migration {
             memo = memo.replace("\u000b", "\n");
         map.put("memo", memo);
         map.put("includeInRefund", castToBoolean(row.get(4)));
-        map.put("owes", castToDouble(row.get(5)));
+        Double owes = castToDouble(row.get(5));
+        map.put("owes", owes);
         map.put("paid", castToDouble(row.get(6)));
+        String currency = owes != null && owes > 599 ? "NIS" : "USD";
+        map.put("currency", currency); // TODO
         map.put("refund", castToDouble(row.get(7)));
         map.put("completed", castToBoolean(row.get(8)));
         map.put("deliveryContact", row.get(9));

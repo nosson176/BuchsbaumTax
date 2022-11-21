@@ -12,6 +12,7 @@ import java.util.List;
 
 @Dao
 public interface ClientFlagDAO {
+
     @RegisterFieldMapper(ClientFlag.class)
     @SqlQuery("SELECT * FROM client_flags")
     List<ClientFlag> getAll();
