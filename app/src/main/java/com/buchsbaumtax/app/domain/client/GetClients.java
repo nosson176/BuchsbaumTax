@@ -14,32 +14,30 @@ import java.util.Comparator;
 import java.util.List;
 
 public class GetClients {
-    ClientDAO clientDAO = Database.dao(ClientDAO.class);
-    SmartviewDAO smartviewDAO = Database.dao(SmartviewDAO.class);
 
     public List<Client> getAll() {
-        List<Client> clients = clientDAO.getAll();
+        List<Client> clients = Database.dao(ClientDAO.class).getAll();
         sort(clients);
         return clients;
     }
 
     public List<Client> getForSmartview(int smartviewId) {
-        Smartview smartview = smartviewDAO.get(smartviewId);
+        Smartview smartview = Database.dao(SmartviewDAO.class).get(smartviewId);
         if (smartview.getClientIds().isEmpty() || smartview.getClientIds() == null) {
             return new ArrayList<>();
         }
-        List<Client> clients = clientDAO.getBulk(smartview.getClientIds());
+        List<Client> clients = Database.dao(ClientDAO.class).getBulk(smartview.getClientIds());
         sort(clients);
         return clients;
     }
 
-    public List<Client> getForDefaultSearch(String q, int userId) {
-        List<Client> clients = clientDAO.getFiltered(q);
+    public List<Client> getForDefaultSearch(String q) {
+        List<Client> clients = Database.dao(ClientDAO.class).getFiltered(q);
         sort(clients);
         return clients;
     }
 
-    public List<Client> getForFieldSearch(String q, String field, int userId) {
+    public List<Client> getForFieldSearch(String q, String field) {
         String[] fieldArray = field.split("::");
         if (fieldArray.length < 2) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
@@ -49,10 +47,10 @@ public class GetClients {
         StringBuilder query = new StringBuilder();
         query.append("SELECT DISTINCT c.id as c_id, c.status as c_status, c.owes_status as c_owes_status, c.periodical as c_periodical, c.last_name as c_last_name, c.archived as c_archived, c.display_name as c_display_name, c.display_phone as c_display_phone, c.created as c_created, c.updated as c_updated, cf.* FROM clients c JOIN client_flags cf ON c.id = cf.client_id ");
         if (!table.equals("clients")) {
-            query.append(String.format("JOIN %s t ON c.id = t.client_id WHERE cf.user_id = %s AND t.%s ILIKE '%%%s%%'", table, userId, fieldName, q));
+            query.append(String.format("JOIN %s t ON c.id = t.client_id WHERE t.%s ILIKE '%%%s%%'", table, fieldName, q));
         }
         else {
-            query.append(String.format("WHERE cf.user_id = %s AND %s ILIKE '%%%s%%' ", userId, fieldName, q));
+            query.append(String.format("WHERE %s ILIKE '%%%s%%' ", fieldName, q));
         }
         query.append("ORDER BY c.last_name");
         String queryString = query.toString();

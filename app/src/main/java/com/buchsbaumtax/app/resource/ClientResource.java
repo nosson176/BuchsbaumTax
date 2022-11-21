@@ -26,23 +26,23 @@ public class ClientResource {
     }
 
     @GET
-    public List<Client> getAllClients(@Authenticated User user, @QueryParam("smartview") Integer smartviewId, @QueryParam("q") String q, @QueryParam("field") String field) {
+    public List<Client> getAllClients(@QueryParam("smartview") Integer smartviewId, @QueryParam("q") String q, @QueryParam("field") String field) {
         GetClients getClients = new GetClients();
         if (smartviewId != null) {
             return getClients.getForSmartview(smartviewId);
         }
         if (q != null) {
             if (field != null) {
-                return getClients.getForFieldSearch(q, field, user.getId());
+                return getClients.getForFieldSearch(q, field);
             }
-            return getClients.getForDefaultSearch(q, user.getId());
+            return getClients.getForDefaultSearch(q);
         }
         return getClients.getAll();
     }
 
     @GET
     @Path("/{clientId}")
-    public Client getClient(@Authenticated User user, @PathParam("clientId") int clientId) {
+    public Client getClient(@PathParam("clientId") int clientId) {
         return Database.dao(ClientDAO.class).get(clientId);
     }
 
