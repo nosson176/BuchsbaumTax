@@ -210,7 +210,7 @@ CREATE TABLE filings (
     delivery_contact TEXT,
     second_delivery_contact TEXT,
     date_filed DATE,
-    currency TEXT,
+    currency TEXT DEFAULT 'USD',
     filing_type TEXT,
     state TEXT,
     tax_year_id INTEGER,
@@ -237,7 +237,7 @@ CREATE TABLE fees (
     sum BOOLEAN NOT NULL DEFAULT FALSE,
     archived BOOLEAN NOT NULL DEFAULT FALSE,
     notes TEXT,
-    currency TEXT
+    currency TEXT DEFAULT 'USD'
 );
 
 CREATE INDEX ON fees (client_id);
