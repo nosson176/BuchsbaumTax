@@ -8,6 +8,8 @@ import com.sifradigital.framework.db.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 public class ReceiveSMS {
 
     private static final Logger Log = LoggerFactory.getLogger(ReceiveSMS.class);
@@ -20,8 +22,9 @@ public class ReceiveSMS {
             return;
         }
 
-        User recipient = Database.dao(UserDAO.class).getByUsername(stringParts[0].trim());
-
+        String forName = stringParts[0].toLowerCase().trim();
+        List<User> users = Database.dao(UserDAO.class).getAll();
+        User recipient = users.stream().filter(u -> u.getUsername().toLowerCase().equals(forName)).findAny().orElse(null);
         if (recipient == null) {
             Log.error("Error creating message object: Recipient not found");
             return;
