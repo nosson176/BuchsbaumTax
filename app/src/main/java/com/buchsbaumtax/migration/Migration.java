@@ -395,11 +395,15 @@ public class Migration {
             federalFiling.subList(7, 11).clear();
             federalFiling.remove(8);
             Map<String, Object> map = setFilingData(federalFiling);
-            map.put("currency", "USD"); // TODO
             map.put("taxForm", row[5]);
             map.put("includeFee", castToBoolean(row[13]));
-            map.put("owesFee", castToDouble(row[14]));
+
+            Double owesFee = castToDouble(row[14]);
+            map.put("owesFee", owesFee);
             map.put("paidFee", castToDouble(row[15]));
+
+            String currency = (owesFee != null && owesFee < 600) ? "USD" : "NIS";
+            map.put("currency", currency); // TODO
             map.put("fileType", row[16]);
             map.put("rebate", castToDouble(row[18]));
             map.put("filingType", Filing.FILING_TYPE_FEDERAL);
@@ -599,14 +603,18 @@ public class Migration {
             map.put("status", row[2]);
             map.put("statusDetail", row[3]);
             map.put("feeType", row[4]);
-            map.put("manualAmount", castToDouble(row[5]));
+
+            Double owesFee = castToDouble(row[5]);
+            map.put("manualAmount", owesFee);
             map.put("paidAmount", castToDouble(row[6]));
+            String currency = (owesFee != null && owesFee < 600) ? "USD" : "NIS";
+            map.put("currency", currency); // TODO
+
             map.put("include", castToBoolean(row[7]));
             map.put("rate", castToDouble(row[8]));
             map.put("dateFee", parseDate(row[9]));
             map.put("sum", castToBoolean(row[10]));
             map.put("archived", castToBoolean(row[11]));
-            map.put("currency", "USD"); // TODO
 
             feeDAO.create(map);
         }
