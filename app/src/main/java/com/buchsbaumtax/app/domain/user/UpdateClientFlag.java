@@ -16,7 +16,7 @@ public class UpdateClientFlag {
             throw new WebApplicationException(Response.Status.UNAUTHORIZED);
         }
 
-        Database.dao(ClientFlagDAO.class).updateFlag(clientFlag);
+        Database.dao(ClientFlagDAO.class).upsert(clientFlag);
         return new BaseResponse(true);
     }
 }

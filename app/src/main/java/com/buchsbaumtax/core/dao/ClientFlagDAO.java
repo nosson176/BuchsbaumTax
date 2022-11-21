@@ -16,8 +16,8 @@ public interface ClientFlagDAO {
     @SqlQuery("SELECT * FROM client_flags order by id")
     List<ClientFlag> getAll();
 
-    @SqlUpdate("UPDATE client_flags SET client_id = :clientId, user_id = :userId, flag = :flag WHERE id = :id")
-    void updateFlag(@BindBean ClientFlag clientFlag);
+    @SqlUpdate("INSERT INTO client_flags (client_id, user_id, flag) VALUES (:clientId, :userId, :flag) ON CONFLICT (client_id, user_id) DO UPDATE SET flag = :flag WHERE client_id = :clientId AND user_id = :userId")
+    void upsert(@BindBean ClientFlag clientFlag);
 
     @SqlQuery("SELECT flag FROM client_flags WHERE user_id = :userId AND client_id = :clientId")
     Integer getFlagForUserClient(@Bind("userId") int userId, @Bind("clientId") int clientId);
