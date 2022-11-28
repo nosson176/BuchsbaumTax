@@ -24,7 +24,7 @@ public interface ClientDAO {
     String SELECT_CLIENTS = "SELECT c.*, cf.* FROM matching_clients c LEFT JOIN client_flags cf ON c.id = cf.client_id UNION ";
     String SELECT_CONTACTS = "SELECT c.*, cf.* FROM matching_contacts co JOIN clients c ON co.client_id = c.id LEFT JOIN client_flags cf ON c.id = cf.client_id UNION ";
     String SELECT_PERSONALS = "SELECT c.*, cf.* FROM matching_personals p JOIN clients c ON p.client_id = c.id LEFT JOIN client_flags cf ON c.id = cf.client_id";
-    String SELECT = " SELECT * FROM(" + SELECT_CLIENTS + SELECT_CONTACTS + SELECT_PERSONALS + ") AS result ORDER BY c.last_name;";
+    String SELECT = " SELECT * FROM(" + SELECT_CLIENTS + SELECT_CONTACTS + SELECT_PERSONALS + ") AS result ORDER BY last_name;";
 
     @RegisterFieldMapper(Client.class)
     @RegisterFieldMapper(ClientFlag.class)
