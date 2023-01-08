@@ -10,6 +10,7 @@ CREATE TABLE clients (
     created TIMESTAMPTZ DEFAULT NOW(),
     updated TIMESTAMPTZ DEFAULT NOW()
 );
+
 CREATE INDEX ON clients (last_name);
 CREATE INDEX clients_fts ON clients USING gin(to_tsvector('simple', status||' '||owes_status||' '||periodical||' '||last_name||' '||display_name||' '||display_phone));
 
@@ -38,8 +39,8 @@ CREATE TABLE exchange_rates (
     rate FLOAT
 );
 
-CREATE INDEX ON exchange_rates(currency);
-CREATE INDEX ON exchange_rates(year);
+CREATE INDEX ON exchange_rates (currency);
+CREATE INDEX ON exchange_rates (year);
 
 CREATE TABLE fbar_breakdowns (
     id SERIAL PRIMARY KEY,
@@ -142,7 +143,7 @@ CREATE TABLE users (
     updated TIMESTAMPTZ DEFAULT now()
 );
 
-CREATE INDEX ON users(username);
+CREATE INDEX ON users (username);
 
 CREATE TABLE sessions (
     token TEXT PRIMARY KEY,
@@ -220,6 +221,7 @@ CREATE TABLE filings (
 );
 
 CREATE INDEX ON filings (tax_year_id);
+CREATE INDEX ON filings (client_id);
 CREATE INDEX filings_fts ON filings USING gin(to_tsvector('simple', currency||' '||memo||' '||state||' '||filing_type||' '||file_type||' '||status_detail||' '||status||' '||tax_form));
 
 CREATE TABLE fees (
@@ -253,6 +255,7 @@ CREATE TABLE value_lists (
     show BOOLEAN NOT NULL DEFAULT TRUE,
     include BOOLEAN NOT NULL DEFAULT TRUE
 );
+CREATE INDEX ON value_lists (key);
 
 CREATE TABLE tax_groups(
     id SERIAL PRIMARY KEY,
@@ -276,7 +279,7 @@ CREATE TABLE smartviews (
     updated TIMESTAMPTZ DEFAULT now()
 );
 
-CREATE INDEX ON smartviews(user_id);
+CREATE INDEX ON smartviews (user_id);
 
 CREATE TABLE smartview_lines (
     id SERIAL PRIMARY KEY,
@@ -291,6 +294,8 @@ CREATE TABLE smartview_lines (
     type TEXT
 );
 
+CREATE INDEX ON smartview_lines (smartview_id);
+
 CREATE TABLE checklist_items (
     id SERIAL PRIMARY KEY,
     archived BOOLEAN NOT NULL DEFAULT FALSE,
@@ -302,7 +307,7 @@ CREATE TABLE checklist_items (
     sort_number INTEGER
 );
 
-CREATE INDEX ON checklist_items(client_id);
+CREATE INDEX ON checklist_items (client_id);
 
 CREATE TABLE time_slips (
     id SERIAL PRIMARY KEY,
@@ -316,7 +321,7 @@ CREATE TABLE time_slips (
 
 CREATE INDEX ON time_slips(user_id);
 
-CREATE TABLE client_history(
+CREATE TABLE client_history (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users ON DELETE CASCADE,
     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
@@ -329,29 +334,30 @@ CREATE TABLE client_flags (
     flag INTEGER,
     PRIMARY KEY (client_id, user_id)
 );
+
 CREATE INDEX ON client_flags(client_id);
 CREATE INDEX client_flags_fts ON client_flags USING gin(to_tsvector('simple', user_id||' '||flag));
 
-CREATE TABLE phone_numbers(
+CREATE TABLE phone_numbers (
     id SERIAL PRIMARY KEY,
     phone_number TEXT NOT NULL UNIQUE,
     name TEXT
 );
 
-CREATE TABLE sms_messages(
+CREATE TABLE sms_messages (
     id SERIAL PRIMARY KEY,
     phone_number_id INTEGER references phone_numbers ON DELETE CASCADE,
     message TEXT,
     created TIMESTAMPTZ DEFAULT now()
 );
 
-CREATE TABLE environment_properties(
+CREATE TABLE environment_properties (
     id SERIAL PRIMARY KEY,
     property_key TEXT NOT NULL UNIQUE,
     property_value TEXT
 );
 
-CREATE TABLE user_messages(
+CREATE TABLE user_messages (
     id SERIAL PRIMARY KEY,
     sender_id INTEGER REFERENCES users ON DELETE CASCADE,
     recipient_id INTEGER REFERENCES users ON DELETE CASCADE,
@@ -362,4 +368,4 @@ CREATE TABLE user_messages(
     created TIMESTAMPTZ DEFAULT now()
 );
 
-CREATE INDEX ON user_messages(recipient_id);
+CREATE INDEX ON user_messages (recipient_id);
