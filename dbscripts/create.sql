@@ -328,6 +328,8 @@ CREATE TABLE client_history (
     created TIMESTAMPTZ DEFAULT NOW()
 );
 
+CREATE INDEX ON client_history (user_id);
+
 CREATE TABLE client_flags (
     client_id INTEGER REFERENCES clients ON DELETE CASCADE,
     user_id INTEGER REFERENCES users ON DELETE CASCADE,
@@ -335,7 +337,8 @@ CREATE TABLE client_flags (
     PRIMARY KEY (client_id, user_id)
 );
 
-CREATE INDEX ON client_flags(client_id);
+CREATE INDEX ON client_flags (client_id);
+CREATE INDEX ON client_flags (user_id);
 CREATE INDEX client_flags_fts ON client_flags USING gin(to_tsvector('simple', user_id||' '||flag));
 
 CREATE TABLE phone_numbers (
