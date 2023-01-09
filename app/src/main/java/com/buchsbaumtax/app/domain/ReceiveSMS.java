@@ -30,7 +30,12 @@ public class ReceiveSMS {
             return;
         }
 
-        User sender = Database.dao(UserDAO.class).getByUsername("NOSSON");
+        User sender = users.stream().filter(u -> u.getPhoneNumber() != null && u.getPhoneNumber().equals(from)).findAny().orElse(null);
+
+        if (sender == null) {
+            sender = Database.dao(UserDAO.class).getByUsername("NOSSON");
+        }
+
         UserMessage userMessage = new UserMessage();
         userMessage.setRecipientId(recipient.getId());
         userMessage.setSenderId(sender.getId());
