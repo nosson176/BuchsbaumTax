@@ -5,7 +5,7 @@ import java.util.Date;
 public class SMSMessage {
 
     private int id;
-    private int phoneNumberId;
+    private String phoneNumber;
     private String message;
     private Date created;
 
@@ -13,8 +13,8 @@ public class SMSMessage {
         return id;
     }
 
-    public int getPhoneNumberId() {
-        return phoneNumberId;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
     public String getMessage() {

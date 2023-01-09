@@ -341,15 +341,9 @@ CREATE INDEX ON client_flags (client_id);
 CREATE INDEX ON client_flags (user_id);
 CREATE INDEX client_flags_fts ON client_flags USING gin(to_tsvector('simple', user_id||' '||flag));
 
-CREATE TABLE phone_numbers (
-    id SERIAL PRIMARY KEY,
-    phone_number TEXT NOT NULL UNIQUE,
-    name TEXT
-);
-
 CREATE TABLE sms_messages (
     id SERIAL PRIMARY KEY,
-    phone_number_id INTEGER references phone_numbers ON DELETE CASCADE,
+    phone_number TEXT,
     message TEXT,
     created TIMESTAMPTZ DEFAULT now()
 );
