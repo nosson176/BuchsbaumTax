@@ -14,6 +14,7 @@ import java.util.List;
 
 @Dao
 public interface SmartviewDAO {
+
     @RegisterFieldMapper(value = Smartview.class, prefix = "s")
     @RegisterFieldMapper(SmartviewLine.class)
     @UseRowReducer(SmartviewReducer.class)

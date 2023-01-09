@@ -13,6 +13,7 @@ import java.util.List;
 
 @Dao
 public interface TaxGroupDAO {
+
     @RegisterFieldMapper(TaxGroup.class)
     @SqlQuery("SELECT * FROM tax_groups ORDER BY id")
     List<TaxGroup> getAll();

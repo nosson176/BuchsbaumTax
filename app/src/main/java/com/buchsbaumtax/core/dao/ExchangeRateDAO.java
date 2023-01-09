@@ -10,6 +10,7 @@ import java.util.List;
 
 @Dao
 public interface ExchangeRateDAO {
+
     @RegisterFieldMapper(ExchangeRate.class)
     @SqlQuery("SELECT * FROM exchange_rates ORDER BY id")
     List<ExchangeRate> getAll();

@@ -14,6 +14,7 @@ import java.util.List;
 
 @Dao
 public interface FeeDAO {
+
     @GetGeneratedKeys
     @SqlUpdate("INSERT INTO fees (client_id, year, status, status_detail, fee_type, manual_amount, paid_amount, include, rate, date_fee, sum, archived, notes, currency) VALUES (:clientId, :year, :status, :statusDetail, :feeType, :manualAmount, :paidAmount, :include, :rate, :dateFee, :sum, :archived, :notes, :currency)")
     int create(@BindBean Fee fee);

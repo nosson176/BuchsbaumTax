@@ -13,6 +13,7 @@ import java.util.List;
 
 @Dao
 public interface TimeSlipDAO {
+
     @RegisterFieldMapper(TimeSlip.class)
     @SqlQuery("SELECT * FROM time_slips")
     List<TimeSlip> getAll();

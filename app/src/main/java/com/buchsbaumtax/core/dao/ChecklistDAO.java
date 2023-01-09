@@ -14,6 +14,7 @@ import java.util.List;
 
 @Dao
 public interface ChecklistDAO {
+
     @GetGeneratedKeys
     @SqlUpdate("INSERT INTO checklist_items (client_id, finished, memo, tax_year_id, translated, sort_number) VALUES (:clientId, :finished, :memo, :taxYearId, :translated, :sortNumber)")
     int create(@BindBean Checklist checklist);

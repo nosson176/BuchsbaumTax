@@ -8,6 +8,7 @@ import org.jdbi.v3.core.result.RowView;
 import java.util.Map;
 
 public class SmartviewReducer implements LinkedHashMapRowReducer<Integer, Smartview> {
+
     @Override
     public void accumulate(Map<Integer, Smartview> container, RowView rowView) {
         Smartview smartview = container.computeIfAbsent(rowView.getColumn("s_id", Integer.class),

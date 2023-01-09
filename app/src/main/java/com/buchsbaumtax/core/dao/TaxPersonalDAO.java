@@ -14,6 +14,7 @@ import java.util.List;
 
 @Dao
 public interface TaxPersonalDAO {
+
     @GetGeneratedKeys
     @SqlUpdate("INSERT INTO tax_personals (client_id, category, include, language, relation, first_name, middle_initial, last_name, date_of_birth, ssn, informal, archived) VALUES (:clientId, :category, :include, :language, :relation, :firstName, :middleInitial, :lastName, :dateOfBirth, :ssn, :informal, :archived)")
     int create(@BindBean TaxPersonal taxPersonal);

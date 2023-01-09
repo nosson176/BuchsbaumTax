@@ -14,6 +14,7 @@ import java.util.List;
 
 @Dao
 public interface PhoneNumberDAO {
+
     @GetGeneratedKeys
     @SqlUpdate("INSERT INTO phone_numbers (phone_number, name) VALUES (:phoneNumber, :name)")
     int create(@BindBean PhoneNumber phoneNumber);
