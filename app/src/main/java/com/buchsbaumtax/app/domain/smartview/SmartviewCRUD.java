@@ -25,7 +25,8 @@ public class SmartviewCRUD {
 
     public List<SmartviewData> getForUser(User user) {
         List<Smartview> smartviews = Database.dao(SmartviewDAO.class).getByUser(user.getId());
-        return smartviews.stream().map(s -> new SmartviewLineUtils().convertToSmartviewData(s)).collect(Collectors.toList());
+        SmartviewLineUtils smartviewLineUtils = new SmartviewLineUtils();
+        return smartviews.stream().map(smartviewLineUtils::convertToSmartviewData).collect(Collectors.toList());
     }
 
     public SmartviewData update(User user, int smartviewId, SmartviewData smartviewData) {

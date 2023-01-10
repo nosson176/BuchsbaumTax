@@ -6,7 +6,7 @@ import com.buchsbaumtax.app.dto.SmartviewLineField;
 import com.buchsbaumtax.core.dao.SmartviewDAO;
 import com.buchsbaumtax.core.model.Smartview;
 import com.buchsbaumtax.core.model.SmartviewLine;
-import com.google.common.reflect.TypeToken;
+import com.google.gson.reflect.TypeToken;
 import com.sifradigital.framework.db.Database;
 import com.sifradigital.framework.util.ResourceUtils;
 import org.apache.commons.collections4.BidiMap;
@@ -23,14 +23,12 @@ public class SmartviewLineUtils {
     private static final String FIELD_FILING_TYPE = "filing_type";
     private static final String TYPE_BOOLEAN = "boolean";
 
-    private final BidiMap<String, SmartviewLineField> classFieldMap;
-    private final List<String> combinedFilings;
+    private static final BidiMap<String, SmartviewLineField> classFieldMap;
+    private static final List<String> combinedFilings;
 
-    public SmartviewLineUtils() {
-        classFieldMap = ResourceUtils.loadFromResource("class_field_map.json", new TypeToken<DualHashBidiMap<String, SmartviewLineField>>() {
-        }.getType());
-        combinedFilings = ResourceUtils.loadFromResource("combined_filings.json", new TypeToken<ArrayList<String>>() {
-        }.getType());
+    static {
+        classFieldMap = ResourceUtils.loadFromResource("class_field_map.json", TypeToken.getParameterized(DualHashBidiMap.class, String.class, SmartviewLineField.class).getType());
+        combinedFilings = ResourceUtils.loadFromResource("combined_filings.json", TypeToken.getParameterized(List.class, String.class).getType());
     }
 
     public BidiMap<String, SmartviewLineField> getClassFieldMap() {
