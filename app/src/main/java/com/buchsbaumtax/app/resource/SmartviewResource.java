@@ -1,6 +1,6 @@
 package com.buchsbaumtax.app.resource;
 
-import com.buchsbaumtax.app.domain.SmartviewCRUD;
+import com.buchsbaumtax.app.domain.smartview.SmartviewCRUD;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.SmartviewData;
 import com.buchsbaumtax.core.dao.SmartviewDAO;

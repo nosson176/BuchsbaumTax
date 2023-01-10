@@ -1,4 +1,4 @@
-package com.buchsbaumtax.app.domain;
+package com.buchsbaumtax.app.domain.smartview;
 
 import com.buchsbaumtax.core.dao.ClientDAO;
 import com.buchsbaumtax.core.dao.SmartviewDAO;

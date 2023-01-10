@@ -1,6 +1,6 @@
 package com.buchsbaumtax.app.job;
 
-import com.buchsbaumtax.app.domain.UpdateSmartviews;
+import com.buchsbaumtax.app.domain.smartview.UpdateSmartviews;
 import com.buchsbaumtax.core.dao.SmartviewDAO;
 import com.buchsbaumtax.core.model.Smartview;
 import com.sifradigital.framework.db.Database;
