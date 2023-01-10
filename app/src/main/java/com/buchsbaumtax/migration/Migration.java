@@ -655,12 +655,10 @@ public class Migration {
 
             map.put("userName", row[1]);
             User user = userDAO.getByUsername(row[1].toUpperCase());
-            if (user != null) {
-                map.put("userId", user.getId());
+            if (user == null) {
+                return;
             }
-            else {
-                map.put("userId", null);
-            }
+            map.put("userId", user.getId());
             map.put("name", row[2]);
             map.put("sortNumber", castToInt(row[3]));
             map.put("archived", castToBoolean(row[4]));
@@ -672,7 +670,6 @@ public class Migration {
 
     private void csvToSmartViewLines(List<String[]> smartViews) {
         Map<String, SmartviewLineField> classFieldMap = new SmartviewLineUtils().getClassFieldMap();
-
 
         SmartViewLineDAO smartViewLineDAO = handle.attach(SmartViewLineDAO.class);
 
