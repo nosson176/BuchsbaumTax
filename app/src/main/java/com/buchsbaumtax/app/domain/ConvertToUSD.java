@@ -9,7 +9,8 @@ import com.sifradigital.framework.db.Database;
 import java.util.Objects;
 
 public class ConvertToUSD {
-    static Cache<CurrencyYear, Double> cache = Caffeine.newBuilder().build();
+
+    private static Cache<CurrencyYear, Double> cache = Caffeine.newBuilder().build();
 
     public static Double convertToUSD(double amount, String currency, String year) {
         if (currency != null && year != null) {
