@@ -1,32 +1,15 @@
 package com.buchsbaumtax.app.domain;
 
-import com.buchsbaumtax.app.job.UpdateSmartviewsJob;
 import com.buchsbaumtax.core.dao.ClientDAO;
 import com.buchsbaumtax.core.dao.SmartviewDAO;
 import com.buchsbaumtax.core.model.Smartview;
 import com.buchsbaumtax.core.model.SmartviewLine;
 import com.sifradigital.framework.db.Database;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class UpdateSmartviews {
-
-    private static final Logger Log = LoggerFactory.getLogger(UpdateSmartviewsJob.class);
-
-    public void updateClients() {
-        Log.info("Starting Update Smartviews Job...");
-
-        List<Smartview> smartviews = Database.dao(SmartviewDAO.class).getAll();
-
-        for (Smartview smartview : smartviews) {
-            updateSmartview(smartview);
-        }
-
-        Log.info("UpdateSmartviews Job completed.");
-    }
 
     public void updateSmartview(Smartview smartview) {
         List<SmartviewLine> smartviewLines = smartview.getSmartviewLines();
