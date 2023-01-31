@@ -656,7 +656,8 @@ public class Migration {
             map.put("userName", row[1]);
             User user = userDAO.getByUsername(row[1].toUpperCase());
             if (user == null) {
-                return;
+                //System.out.println("No user found: " + row[1].toUpperCase());
+                continue;
             }
             map.put("userId", user.getId());
             map.put("name", row[2]);
@@ -705,7 +706,7 @@ public class Migration {
                 type = field.getType();
             }
             else {
-                System.out.println(row[2]);
+              //  System.out.println(row[2]);
             }
 
             map.put("type", type);
