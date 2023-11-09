@@ -41,6 +41,7 @@ module "database" {
   source = "github.com/SifraDigital/DevOpsCommon//terraform/modules/database"
   context = local.context
 
+  source_snapshot = "buchsbaum-db-dev-final"
   postgres_version = "12.14"
 }
 
