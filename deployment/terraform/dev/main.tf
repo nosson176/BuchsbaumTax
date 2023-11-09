@@ -8,7 +8,7 @@ locals {
 
 provider "aws" {
   region = "eu-central-1"
-  shared_credentials_file = "/Users/shuie/dev/certificates/aws-credentials"
+  shared_credentials_files = ["/Users/shuie/dev/certificates/aws-credentials"]
   profile = "sifra"
 }
 
@@ -41,7 +41,7 @@ module "database" {
   source = "github.com/SifraDigital/DevOpsCommon//terraform/modules/database"
   context = local.context
 
-  postgres_version = "12.7"
+  postgres_version = "12.14"
 }
 
 resource "local_file" "ansible" {
