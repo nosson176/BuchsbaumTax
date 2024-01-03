@@ -13,22 +13,12 @@
     <artifactId>app</artifactId>
     <packaging>war</packaging>
 
-    <properties>
-        <sifra.framework.version>0.7.3</sifra.framework.version>
-    </properties>
-
     <dependencies>
 
         <dependency>
-            <groupId>com.sifradigital.framework</groupId>
-            <artifactId>core</artifactId>
-            <version>${sifra.framework.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.sifradigital.framework</groupId>
-            <artifactId>mail</artifactId>
-            <version>${sifra.framework.version}</version>
+            <groupId>com.buchsbaumtax</groupId>
+            <artifactId>framework</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>

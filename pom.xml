@@ -17,15 +17,8 @@
 
     <modules>
         <module>app</module>
+        <module>framework</module>
     </modules>
-
-    <repositories>
-        <repository>
-            <id>github</id>
-            <name>GitHub Sifra Framework</name>
-            <url>https://maven.pkg.github.com/SifraDigital/SifraFramework</url>
-        </repository>
-    </repositories>
 
     <dependencies>
         <dependency>
