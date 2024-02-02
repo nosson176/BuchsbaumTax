@@ -1,0 +1,6 @@
+---
+- name: Deploy
+  hosts: app
+  become: yes
+  roles:
+    - sifra-java-app-deployment

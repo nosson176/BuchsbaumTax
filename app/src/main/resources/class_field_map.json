@@ -1,0 +1,320 @@
+{
+  "CLIENT::id": {
+    "tableName": "clients",
+    "fieldName": "id",
+    "type": "int"
+  },
+  "CLIENT::owes_status": {
+    "tableName": "clients",
+    "fieldName": "owes_status",
+    "type": "String"
+  },
+  "CLIENT::periodical": {
+    "tableName": "clients",
+    "fieldName": "periodical",
+    "type": "String"
+  },
+  "CLIENT::status": {
+    "tableName": "clients",
+    "fieldName": "status",
+    "type": "String"
+  },
+
+  "CONTACT::address_or_number": {
+    "tableName": "contacts",
+    "fieldName": "main_detail",
+    "type": "String"
+  },
+  "CONTACT::city_or_account": {
+    "tableName": "contacts",
+    "fieldName": "secondary_detail",
+    "type": "String"
+  },
+  "CONTACT::memo": {
+    "tableName": "contacts",
+    "fieldName": "memo",
+    "type": "String"
+  },
+  "CONTACT::state": {
+    "tableName": "contacts",
+    "fieldName": "state",
+    "type": "String"
+  },
+  "CONTACT::type": {
+    "tableName": "contacts",
+    "fieldName": "contact_type",
+    "type": "String"
+  },
+  "CONTACT::zip": {
+    "tableName": "contacts",
+    "fieldName": "zip",
+    "type": "String"
+  },
+
+  "INCOME_BREAKDOWN::category": {
+    "tableName": "income_breakdowns",
+    "fieldName": "category",
+    "type": "String"
+  },
+  "INCOME_BREAKDOWN::description": {
+    "tableName": "income_breakdowns",
+    "fieldName": "description",
+    "type": "String"
+  },
+  "INCOME_BREAKDOWN::job": {
+    "tableName": "income_breakdowns",
+    "fieldName": "job",
+    "type": "String"
+  },
+  "INCOME_BREAKDOWN::tax_group": {
+    "tableName": "income_breakdowns",
+    "fieldName": "tax_group",
+    "type": "String"
+  },
+  "INCOME_BREAKDOWN::tax_type": {
+    "tableName": "income_breakdowns",
+    "fieldName": "tax_type",
+    "type": "String"
+  },
+  "INCOME_BREAKDOWN::year_name": {
+    "tableName": "income_breakdowns",
+    "fieldName": "years",
+    "type": "String"
+  },
+
+  "LOG::alarm_date": {
+    "tableName": "logs",
+    "fieldName": "alarm_date",
+    "type": "Date"
+  },
+  "LOG::alarm_complete": {
+    "tableName": "logs",
+    "fieldName": "alarm_complete",
+    "type": "boolean"
+  },
+  "LOG::date_of_log": {
+    "tableName": "logs",
+    "fieldName": "log_date",
+    "type": "Date"
+  },
+  "LOG::employee_alarm": {
+    "tableName": "logs",
+    "fieldName": "alarm_user_name",
+    "type": "String"
+  },
+  "LOG::timetrack": {
+    "tableName": "logs",
+    "fieldName": "seconds_spent",
+    "type": "int"
+  },
+  "LOG::note": {
+    "tableName": "logs",
+    "fieldName": "note",
+    "type": "String"
+  },
+  "LOG::priority": {
+    "tableName": "logs",
+    "fieldName": "priority",
+    "type": "int"
+  },
+  "LOG::year_name": {
+    "tableName": "logs",
+    "fieldName": "years",
+    "type": "String"
+  },
+
+  "TAX_PERSONAL::category": {
+    "tableName": "tax_personals",
+    "fieldName": "category",
+    "type": "String"
+  },
+  "TAX_PERSONAL::date_of_birth": {
+    "tableName": "tax_personals",
+    "fieldName": "date_of_birth",
+    "type": "Date"
+  },
+  "TAX_PERSONAL::first_name": {
+    "tableName": "tax_personals",
+    "fieldName": "first_name",
+    "type": "String"
+  },
+  "TAX_PERSONAL::informal": {
+    "tableName": "tax_personals",
+    "fieldName": "informal",
+    "type": "String"
+  },
+  "TAX_PERSONAL::language_spoken": {
+    "tableName": "tax_personals",
+    "fieldName": "language",
+    "type": "String"
+  },
+  "TAX_PERSONAL::last_name": {
+    "tableName": "tax_personals",
+    "fieldName": "last_name",
+    "type": "String"
+  },
+  "TAX_PERSONAL::relation": {
+    "tableName": "tax_personals",
+    "fieldName": "relation",
+    "type": "String"
+  },
+  "TAX_PERSONAL::ssn": {
+    "tableName": "tax_personals",
+    "fieldName": "ssn",
+    "type": "String"
+  },
+
+
+  "TAX_YEAR::extension_status": {
+    "tableName": "filings",
+    "fieldName": "status",
+    "type": "String",
+    "tableName2": "filings",
+    "fieldName2": "filing_type",
+    "searchValue": "ext"
+  },
+  "TAX_YEAR::extension_form": {
+    "tableName": "filings",
+    "fieldName": "tax_form",
+    "type": "String",
+    "tableName2": "filings",
+    "fieldName2": "filing_type",
+    "searchValue": "ext"
+  },
+  "TAX_YEAR::FBAR_status_detail": {
+    "tableName": "filings",
+    "fieldName": "status_detail",
+    "type": "String",
+    "tableName2": "filings",
+    "fieldName2": "filing_type",
+    "searchValue": "fbar"
+  },
+  "TAX_YEAR::owes_federal": {
+    "tableName": "filings",
+    "fieldName": "owes",
+    "type": "double",
+    "tableName2": "filings",
+    "fieldName2": "filing_type",
+    "searchValue": "federal"
+  },
+  "TAX_YEAR::tax_state": {
+    "tableName": "filings",
+    "fieldName": "state",
+    "type": "String"
+  },
+  "TAX_YEAR::tax_year_status_federal": {
+    "tableName": "filings",
+    "fieldName": "status",
+    "type": "String",
+    "tableName2": "filings",
+    "fieldName2": "filing_type",
+    "searchValue": "federal"
+  },
+  "TAX_YEAR::tax_year_status_detail": {
+    "tableName": "filings",
+    "fieldName": "status_detail",
+    "type": "String"
+  },
+  "TAX_YEAR::date_filed": {
+    "tableName": "filings",
+    "fieldName": "date_filed",
+    "type": "Date",
+    "tableName2": "filings",
+    "fieldName2": "filing_type",
+    "searchValue": "federal"
+  },
+  "TAX_YEAR::IRS_HISTORY": {
+    "tableName": "tax_years",
+    "fieldName": "irs_history",
+    "type": "boolean"
+  },
+  "TAX_YEAR::file_type": {
+    "tableName": "filings",
+    "fieldName": "file_type",
+    "type": "String"
+  },
+  "TAX_YEAR::paid_federal": {
+    "tableName": "filings",
+    "fieldName": "paid",
+    "type": "double",
+    "tableName2": "filings",
+    "fieldName2": "filing_type",
+    "searchValue": "federal"
+  },
+  "TAX_YEAR::comment": {
+    "tableName": "filings",
+    "fieldName": "memo",
+    "type": "String"
+  },
+  "TAX_YEAR::year_name": {
+    "tableName": "tax_years",
+    "fieldName": "year",
+    "type": "String"
+  },
+  "TAX_YEAR::delivery": {
+    "tableName": "filings",
+    "fieldName": "delivery_contact",
+    "type": "String"
+  },
+  "TAX_YEAR::tax_form": {
+    "tableName": "filings",
+    "fieldName": "tax_form",
+    "type": "String"
+  },
+  "TAX_YEAR::state_status_detail": {
+    "tableName": "filings",
+    "fieldName": "status_detail",
+    "type": "String",
+    "tableName2": "filings",
+    "fieldName2": "filing_type",
+    "searchValue": "state"
+  },
+  "TAX_YEAR::tax_year_status_state": {
+    "tableName": "filings",
+    "fieldName": "status",
+    "type": "String",
+    "tableName2": "filings",
+    "fieldName2": "filing_type",
+    "searchValue": "state"
+  },
+  "TAX_YEAR::FBAR_status": {
+    "tableName": "filings",
+    "fieldName": "status",
+    "type": "String",
+    "tableName2": "filings",
+    "fieldName2": "filing_type",
+    "searchValue": "fbar"
+  },
+
+  "FEE::status": {
+    "tableName": "fees",
+    "fieldName": "status",
+    "type": "String"
+  },
+  "FEE::tax_year": {
+    "tableName": "fees",
+    "fieldName": "year",
+    "type": "String"
+  },
+  "FEE::status_detail": {
+    "tableName": "fees",
+    "fieldName": "status_detail",
+    "type": "String"
+  },
+  "FEE::fee_type": {
+    "tableName": "fees",
+    "fieldName": "fee_type",
+    "type": "String"
+  },
+
+  "CLIENT_FLAGS::flag_name": {
+    "tableName": "client_flags",
+    "fieldName": "flag",
+    "type": "int"
+  },
+  "CLIENT_FLAGS::user_name": {
+    "tableName": "client_flags",
+    "fieldName": "user_id",
+    "type": "int"
+  }
+}

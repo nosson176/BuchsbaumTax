@@ -1,0 +1,25 @@
+LOAD DATABASE
+     FROM mysql://sfradmin:Buchs-Ah0y!@bt-temp.cdxrjppjrugk.me-south-1.rds.amazonaws.com/buchsbaum_beta
+     INTO postgresql://localhost/buchsbaum
+
+WITH include drop, create tables, create indexes, reset sequences,
+     workers = 8, concurrency = 1,
+     multiple readers per thread, rows per range = 50000
+
+SET PostgreSQL PARAMETERS
+    maintenance_work_mem to '128MB',
+    work_mem to '12MB'
+
+SET MySQL PARAMETERS
+    net_read_timeout  = '120',
+    net_write_timeout = '120'
+
+ALTER SCHEMA 'buchsbaum_beta' rename to 'public'
+
+CAST type varchar to text drop typemod using remove-null-characters,
+     type int with extra auto_increment to serial drop typemod,
+     type bigint with extra auto_increment to serial drop typemod,
+     type bigint to integer drop typemod,
+     type double to float drop typemod,
+     type datetime to timestamptz drop not null using zero-dates-to-null
+;

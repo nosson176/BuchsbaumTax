@@ -1,0 +1,55 @@
+\# User-specific stuff:
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/dictionaries
+.idea/**/vcs.xml
+.idea/**/jsLibraryMappings.xml
+.idea/**/libraries/*
+.idea/**/codeStyles/*
+
+# Sensitive or high-churn files:
+.idea/**/dataSources.ids
+.idea/**/dataSources.xml
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+.idea/**/dataSources/*
+
+# Gradle and Maven with auto-import
+# When using Gradle or Maven with auto-import, you should exclude module files,
+# since they will be recreated, and may cause churn.  Uncomment if using
+# auto-import.
+.idea/artifacts
+.idea/compiler.xml
+.idea/jarRepositories.xml
+.idea/modules.xml
+.idea/aws.xml
+.idea/*.iml
+.idea/modules
+*.iml
+*.ipr
+
+# Mac crap
+.DS_Store
+
+# Maven
+log/
+target/
+overlays/
+
+# Vagrant
+.vagrant/
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+*.retry
+
+temp/*
+
+**/ansible/env/*
