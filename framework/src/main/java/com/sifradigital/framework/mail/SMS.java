@@ -27,12 +27,12 @@ public class SMS {
         try {
             ResolvedSendInfo info = send.resolve(config);
             if (config.getFilter() != null && !config.getFilter().shouldSend(info.getToAddress())) {
+                Log.warn("SMS to {} filtered out by configuration", info.getToAddress());
                 return false;
             }
             return service.send(info);
-        }
-        catch (Exception e) {
-            Log.error("Error sending SMS", e);
+        } catch (Exception e) {
+            Log.error("Error sending SMS to {}: {}", e.getMessage(), e);
             return false;
         }
     }
