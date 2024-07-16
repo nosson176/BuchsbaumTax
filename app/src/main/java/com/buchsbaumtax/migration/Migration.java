@@ -69,7 +69,7 @@ public class Migration {
     private Handle getHandle() {
         try {
             Connection connection = DriverManager.getConnection(
-                    "jdbc:postgresql://buchsbaumdb.c1w2s6uqe11n.il-central-1.rds.amazonaws.com:5432/buchsbaum",
+                    "jdbc:postgresql://localhost:5432/buchsbaum",
                     "postgres", "sifra123");
             Jdbi jdbi = Jdbi.create(connection);
             jdbi.installPlugin(new SqlObjectPlugin());
@@ -1084,7 +1084,7 @@ public class Migration {
 
     public static void main(String[] args) {
         // String root = "/Users/shuie/dev/buchsbaum-main/lib/fm_uploads/";
-        String root = "D:\\elyasaf\\BuchsbaumTaxProject\\Project-Files\\datadump\\";
+        String root = "C:\\Users\\matanya\\Desktop\\buchsbaum\\dbxml\\";
 
         Migration migration = new Migration(root);
 
