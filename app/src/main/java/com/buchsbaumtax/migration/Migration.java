@@ -1084,7 +1084,7 @@ public class Migration {
 
     public static void main(String[] args) {
         // String root = "/Users/shuie/dev/buchsbaum-main/lib/fm_uploads/";
-        String root = "C:\\Users\\matanya\\Desktop\\buchsbaum\\dbxml\\";
+        String root = "C:\\Users\\ELYAS\\OneDrive\\Desktop\\buchsbaumProject\\Project Files\\Project Files\\datadump\\";
 
         Migration migration = new Migration(root);
 
