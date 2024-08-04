@@ -28,6 +28,6 @@ public class Login {
 
         String token = GenerateToken.generateToken();
         Database.dao(UserSessionDAO.class).create(token, user.getId());
-        return new Token(token);
+        return new Token(token, user.getId(),user.getUsername());
     }
 }
