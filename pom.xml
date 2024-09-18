@@ -34,7 +34,21 @@
             <version>5.5.1</version>
             <scope>test</scope>
         </dependency>
-        
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.14.1</version> <!-- Or latest version -->
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.14.1</version> <!-- For Java 8 Date/Time API -->
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+            <version>2.14.1</version> <!-- For Optional and other JDK8 classes -->
+        </dependency>
             <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>

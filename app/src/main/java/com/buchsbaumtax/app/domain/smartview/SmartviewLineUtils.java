@@ -1,5 +1,6 @@
 package com.buchsbaumtax.app.domain.smartview;
 
+import com.buchsbaumtax.app.config.BuchsbaumApplication;
 import com.buchsbaumtax.app.dto.SmartviewData;
 import com.buchsbaumtax.app.dto.SmartviewLineData;
 import com.buchsbaumtax.app.dto.SmartviewLineField;
@@ -16,8 +17,11 @@ import org.apache.commons.lang3.SerializationUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SmartviewLineUtils {
+    private static final Logger logger = LoggerFactory.getLogger(BuchsbaumApplication.class);
 
     private static final String TABLE_FILINGS = "filings";
     private static final String FIELD_FILING_TYPE = "filing_type";
@@ -63,30 +67,37 @@ public class SmartviewLineUtils {
     public Smartview convertToSmartview(SmartviewData smartviewData) {
         List<SmartviewLine> smartviewLines = new ArrayList<>();
 
-        for (SmartviewLineData smartviewLineData : smartviewData.getSmartviewLines()) {
-            String fieldName = smartviewLineData.getFieldName();
+        logger.debug("Converting SmartviewData: {}", smartviewData);
 
+        for (SmartviewLineData smartviewLineData : smartviewData.getSmartviewLines()) {
+            logger.debug("Processing SmartviewLineData: {}", smartviewLineData);
+
+            String fieldName = smartviewLineData.getFieldName();
             SmartviewLineField field = classFieldMap.get(fieldName);
 
             if (field != null) {
+                logger.debug("Found field mapping: {}", field);
+
                 if (field.getTableName2() != null) {
                     SmartviewLine line = new SmartviewLine(smartviewLineData, new SmartviewLineField(field.getTableName2(), field.getFieldName2(), "String"), field.getSearchValue());
                     smartviewLines.add(line);
                 }
 
                 String searchValue = smartviewLineData.getSearchValue();
-
                 if (field.getType().equals(TYPE_BOOLEAN)) {
                     searchValue = searchValue.equals("1") ? "true" : "false";
-                }
-                else if (searchValue.equalsIgnoreCase("today")) {
+                } else if (searchValue.equalsIgnoreCase("today")) {
                     searchValue = "now()";
                 }
 
                 SmartviewLine line = new SmartviewLine(smartviewLineData, field, searchValue);
                 smartviewLines.add(line);
+            } else {
+                logger.warn("No field mapping found for: {}", fieldName);
             }
         }
+
+        logger.debug("Converted SmartviewLines: {}", smartviewLines);
         return new Smartview(smartviewData, smartviewLines);
     }
 

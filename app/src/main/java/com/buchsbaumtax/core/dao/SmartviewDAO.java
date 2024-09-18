@@ -1,5 +1,6 @@
 package com.buchsbaumtax.core.dao;
 
+import com.buchsbaumtax.app.config.BuchsbaumApplication;
 import com.buchsbaumtax.core.dao.mapper.SmartviewReducer;
 import com.buchsbaumtax.core.model.Smartview;
 import com.buchsbaumtax.core.model.SmartviewLine;
@@ -9,11 +10,14 @@ import org.jdbi.v3.sqlobject.config.RegisterFieldMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 @Dao
 public interface SmartviewDAO {
+    static final Logger logger = LoggerFactory.getLogger(BuchsbaumApplication.class);
 
     @RegisterFieldMapper(value = Smartview.class, prefix = "s")
     @RegisterFieldMapper(SmartviewLine.class)
@@ -58,7 +62,9 @@ public interface SmartviewDAO {
     void delete(@Bind("id") int id);
 
     default Smartview create(Smartview smartview) {
+        logger.info("smartviewDAO IS HERE!: {}", smartview);
         int id = createSmartview(smartview);
+        logger.info("idDAO IS HERE!: {}", id);
         for (SmartviewLine smartviewLine : smartview.getSmartviewLines()) {
             smartviewLine.setSmartviewId(id);
             createSmartviewLine(smartviewLine);

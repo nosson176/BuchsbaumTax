@@ -16,8 +16,8 @@ import java.util.List;
 public class SmartviewResource {
 
     @POST
-    public SmartviewData createSmartview(@Authenticated User user, SmartviewData smartview) {
-        return new SmartviewCRUD().create(user, smartview);
+    public SmartviewData createSmartview(@Authenticated User user, SmartviewData smartview, @QueryParam("clientId") Integer clientId) {
+        return new SmartviewCRUD().create(user, smartview,clientId);
     }
 
     @GET

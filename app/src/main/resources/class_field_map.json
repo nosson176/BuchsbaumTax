@@ -19,6 +19,26 @@
     "fieldName": "status",
     "type": "String"
   },
+  "CLIENT::year_of_last_log": {
+    "tableName": "clients",
+    "fieldName": "year_of_last_log",
+    "type": "String"
+  },
+  "CLIENT::year_of_first_log": {
+    "tableName": "clients",
+    "fieldName": "year_of_first_log",
+    "type": "String"
+  },
+  "CLIENT::date_of_first_log": {
+    "tableName": "clients",
+    "fieldName": "date_of_first_log",
+    "type": "Date"
+  },
+  "CLIENT::last_name": {
+    "tableName": "clients",
+    "fieldName": "last_name",
+    "type": "String"
+  },
 
   "CONTACT::address_or_number": {
     "tableName": "contacts",
@@ -163,7 +183,6 @@
     "fieldName": "ssn",
     "type": "String"
   },
-
 
   "TAX_YEAR::extension_status": {
     "tableName": "filings",

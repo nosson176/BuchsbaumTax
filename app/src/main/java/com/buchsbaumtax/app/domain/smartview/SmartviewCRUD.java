@@ -1,5 +1,6 @@
 package com.buchsbaumtax.app.domain.smartview;
 
+import com.buchsbaumtax.app.config.BuchsbaumApplication;
 import com.buchsbaumtax.app.dto.SmartviewData;
 import com.buchsbaumtax.core.dao.SmartviewDAO;
 import com.buchsbaumtax.core.model.Smartview;
@@ -10,16 +11,30 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SmartviewCRUD {
+    private static final Logger logger = LoggerFactory.getLogger(BuchsbaumApplication.class);
 
-    public SmartviewData create(User user, SmartviewData smartviewData) {
+    public SmartviewData create(User user, SmartviewData smartviewData, Integer clientId) {
+        logger.info("smartviewData IS HERE!: {}", smartviewData);
         Smartview smartview = new SmartviewLineUtils().convertToSmartview(smartviewData);
+        logger.info("SmartviewLineUtils IS HERE!: {}", smartview);
 
-        smartview.setUserId(user.getId());
-        smartview.setUserName(user.getUsername());
+        if (clientId != null && clientId > 0) {
+            smartview.setUserId(clientId);
+            smartview.setUserName(smartviewData.getUserName());
+        } else {
+            smartview.setUserId(user.getId());
+            smartview.setUserName(user.getUsername());
+        }
+
+        logger.info("setsmartview IS HERE!: {}", smartview);
         Smartview created = Database.dao(SmartviewDAO.class).create(smartview);
+        logger.info("created IS HERE!: {}", created);
         new UpdateSmartviews().updateSmartview(created);
+
         return new SmartviewLineUtils().convertToSmartviewData(Database.dao(SmartviewDAO.class).get(created.getId()));
     }
 

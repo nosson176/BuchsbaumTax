@@ -25,7 +25,7 @@ public class LogResource {
 
     @PUT
     public List<Log> updateLogs(List<Log> logs) {
-        return new LogCRUD().update(logs);
+        return new LogCRUD().saveOrUpdateLogs(logs);
     }
 
     @PUT

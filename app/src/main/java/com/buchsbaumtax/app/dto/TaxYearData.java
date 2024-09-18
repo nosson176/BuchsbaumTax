@@ -73,4 +73,17 @@ public class TaxYearData implements Comparable<TaxYearData> {
         }
         return getYear().compareTo(ty.getYear());
     }
+
+    @Override
+    public String toString() {
+        return "TaxYearData{" +
+                "id=" + id +
+                ", clientId=" + clientId +
+                ", year='" + year + '\'' +
+                ", archived=" + archived +
+                ", show=" + show +
+                ", irsHistory=" + irsHistory +
+                ", filings=" + filings +
+                '}';
+    }
 }

@@ -34,7 +34,6 @@ public class SmartviewData {
         this.smartviewLines = smartviewLines;
     }
 
-
     public Integer getId() {
         return id;
     }
@@ -81,5 +80,21 @@ public class SmartviewData {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    @Override
+    public String toString() {
+        return "SmartviewData{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", userId=" + userId +
+                ", name='" + name + '\'' +
+                ", sortNumber=" + sortNumber +
+                ", archived=" + archived +
+                ", clientIds=" + clientIds +
+                ", created=" + created +
+                ", updated=" + updated +
+                ", smartviewLines=" + smartviewLines +
+                '}';
     }
 }

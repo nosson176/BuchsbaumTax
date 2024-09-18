@@ -78,4 +78,7 @@ public class Client {
     public void setFlags(List<ClientFlag> flags) {
         this.flags = flags;
     }
+
+
 }
+

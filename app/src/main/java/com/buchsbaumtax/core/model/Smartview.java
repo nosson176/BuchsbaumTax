@@ -90,4 +90,20 @@ public class Smartview {
     public List<SmartviewLine> getSmartviewLines() {
         return smartviewLines;
     }
+
+    @Override
+    public String toString() {
+        return "Smartview{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", userId=" + userId +
+                ", name='" + name + '\'' +
+                ", sortNumber=" + sortNumber +
+                ", archived=" + archived +
+                ", clientIds=" + clientIds +
+                ", created=" + created +
+                ", updated=" + updated +
+                ", smartviewLines=" + smartviewLines +
+                '}';
+    }
 }

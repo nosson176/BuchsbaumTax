@@ -42,4 +42,16 @@ public class TaxYear {
     public boolean isIrsHistory() {
         return irsHistory;
     }
+
+    @Override
+    public String toString() {
+        return "TaxYear{" +
+                "id=" + id +
+                ", clientId=" + clientId +
+                ", year='" + year + '\'' +
+                ", archived=" + archived +
+                ", show=" + show +
+                ", irsHistory=" + irsHistory +
+                '}';
+    }
 }

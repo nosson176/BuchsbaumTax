@@ -39,6 +39,10 @@ public interface ClientDAO {
     Client get(@Bind("id") int id);
 
     @RegisterFieldMapper(Client.class)
+    @SqlQuery("SELECT * FROM clients WHERE id = :id")
+    List<Client> getClientById(@Bind("id") Long id);
+
+    @RegisterFieldMapper(Client.class)
     @RegisterFieldMapper(ClientFlag.class)
     @UseRowReducer(ClientReducer.class)
     @SqlQuery("SELECT * FROM clients c LEFT JOIN client_flags cf on c.id = cf.client_id AND c.id IN (<ids>) ORDER BY c.last_name")
