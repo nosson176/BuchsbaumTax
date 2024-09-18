@@ -27,7 +27,7 @@ public class JsonArgumentFactory implements ArgumentFactory {
     Logger logger = LoggerFactory.getLogger(BuchsbaumApplication.class);
 
     public JsonArgumentFactory() {
-        logger.info("JsonArgumentFactory initialized.");
+//        logger.info("JsonArgumentFactory initialized.");
 
         this.objectMapper = new ObjectMapper()
                 .registerModule(new JavaTimeModule()) // Register support for Java 8 date/time types
@@ -57,7 +57,7 @@ public class JsonArgumentFactory implements ArgumentFactory {
 //    }
 @Override
 public Optional<Argument> build(Type type, Object value, ConfigRegistry config) {
-    logger.info("JsonArgumentFactory - type: {}, value: {}", type, value);
+//    logger.info("JsonArgumentFactory - type: {}, value: {}", type, value);
 
     return Optional.of((position, statement, ctx) -> {
         try {

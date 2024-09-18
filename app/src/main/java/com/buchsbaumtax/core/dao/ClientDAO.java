@@ -66,10 +66,10 @@ public interface ClientDAO {
     Set<Integer> getClientIdsByQuery(@Define("query") String query);
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO clients (status, owes_status, periodical, last_name, archived, display_name, display_phone) VALUES (:status, :owesStatus, :periodical, :lastName, :archived, :displayName, :displayPhone)")
+    @SqlUpdate("INSERT INTO clients (status, owes_status, periodical, last_name, archived, display_name, display_phone, status_change_date) VALUES (:status, :owesStatus, :periodical, :lastName, :archived, :displayName, :displayPhone, :statusChangeDate)")
     int create(@BindBean Client client);
 
-    @SqlUpdate("UPDATE clients SET status = :status, owes_status = :owesStatus, periodical = :periodical, last_name = :lastName, archived = :archived, display_name = :displayName, display_phone = :displayPhone, updated = now() WHERE id = :id")
+    @SqlUpdate("UPDATE clients SET status = :status, owes_status = :owesStatus, periodical = :periodical, last_name = :lastName, archived = :archived, display_name = :displayName, display_phone = :displayPhone, status_change_date = :statusChangeDate, updated = now() WHERE id = :id")
     void update(@BindBean Client client);
 
     @SqlUpdate("DELETE FROM clients WHERE id = :id")

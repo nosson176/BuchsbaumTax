@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class Filing {
     public static final String FILING_TYPE_FEDERAL = "federal";
     public static final String FILING_TYPE_STATE = "state";
-    static final Logger logger = LoggerFactory.getLogger(BuchsbaumApplication.class);
+    static final Logger logger = LoggerFactory.getLogger(Filing.class);
     private int id;
     private String currency;
     private boolean completed;
@@ -222,7 +222,7 @@ public class Filing {
     }
 
     public void setStatus(Status status) {
-        logger.info("Retrieved statusJson from filings - ID: {}", status);
+//        logger.info("Retrieved statusJson from filings - ID: {}", status);
         this.status = status;
     }
 

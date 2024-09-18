@@ -228,6 +228,7 @@ public class ClientData {
     private final String displayName;
     private final String displayPhone;
     private final Date created;
+    private Long statusChangeDate;
     private final List<TaxYearData> taxYearData;
     private final List<FbarBreakdown> fbarBreakdowns;
     private final List<IncomeBreakdown> incomeBreakdowns;
@@ -256,6 +257,7 @@ public class ClientData {
         this.displayName = client.getDisplayName();
         this.displayPhone = client.getDisplayPhone();
         this.created = client.getCreated();
+        this.statusChangeDate = client.getStatusChangeDate();
         this.taxYearData = taxYearData;
         this.fbarBreakdowns = Database.dao(FbarBreakdownDAO.class).getForClient(client.getId());
         this.incomeBreakdowns = Database.dao(IncomeBreakdownDAO.class).getForClient(client.getId());
@@ -336,6 +338,8 @@ public class ClientData {
     public Date getCreated() {
         return created;
     }
+
+    public Long getStatusChangeDate() {return statusChangeDate; }
 
     public List<TaxYearData> getTaxYears() {
         return taxYearData;
@@ -421,6 +425,7 @@ public class ClientData {
                 ", displayName='" + displayName + '\'' +
                 ", displayPhone='" + displayPhone + '\'' +
                 ", created=" + created +
+                ", statusChangeDate=" + statusChangeDate +
                 ", taxYearData=" + taxYearData +
                 ", fbarBreakdowns=" + fbarBreakdowns +
                 ", incomeBreakdowns=" + incomeBreakdowns +

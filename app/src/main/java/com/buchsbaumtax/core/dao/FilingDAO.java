@@ -95,7 +95,7 @@ public interface FilingDAO {
           filing.setStatus(parseJson(rs.getString("status"), Status.class, "status"));
             filing.setStatusDetail(parseJson(rs.getString("status_detail"), Status.class, "status_detail"));
 
-            logger.info("bigDecimal : {}", filing);
+//            logger.info("bigDecimal : {}", filing);
             return filing;
         }
 
@@ -105,7 +105,7 @@ public interface FilingDAO {
         }
 
         private String stripQuotes(String value) {
-            logger.info("value : {}", value);
+//            logger.info("value : {}", value);
             if (value != null && value.length() > 1 && value.startsWith("\"") && value.endsWith("\"")) {
                 return value.substring(1, value.length() - 1);
             }
@@ -114,9 +114,9 @@ public interface FilingDAO {
 
         // Utility to convert BigDecimal to double
         public Double getDoubleFromBigDecimal(BigDecimal bigDecimal) {
-            logger.info("bigDecimal : {}", bigDecimal);
+//            logger.info("bigDecimal : {}", bigDecimal);
             if (bigDecimal == null) {
-                logger.info("bigDecimal inside!!!");
+//                logger.info("bigDecimal inside!!!");
                 return 0.0;  // Or any appropriate default value
             }
             return bigDecimal.doubleValue();
@@ -125,17 +125,17 @@ public interface FilingDAO {
         // Generic method to parse JSON
         private <T> T parseJson(String json, Class<T> valueType, String fieldName) {
             if (json == null || json.isEmpty()) {
-                logger.info("{} JSON is null or empty", fieldName);
+//                logger.info("{} JSON is null or empty", fieldName);
                 return null;
             }
             try {
-                logger.info("Parsing JSON for field '{}'. JSON: {}, ValueType: {}", fieldName, json, valueType);
+//                logger.info("Parsing JSON for field '{}'. JSON: {}, ValueType: {}", fieldName, json, valueType);
 
                 // Parse the JSON and store the result in a variable
                 T result = objectMapper.readValue(json, valueType);
 
                 // Log the result
-                logger.info("Parsed result for field '{}': {}", fieldName, result);
+//                logger.info("Parsed result for field '{}': {}", fieldName, result);
 
                 // Return the result
                 return result;

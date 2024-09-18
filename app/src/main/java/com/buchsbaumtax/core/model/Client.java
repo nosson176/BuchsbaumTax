@@ -16,6 +16,7 @@ public class Client {
     private String displayPhone;
     private Date created;
     private Date updated;
+    private Long statusChangeDate;
     private List<ClientFlag> flags = new ArrayList<>();
 
 
@@ -71,12 +72,38 @@ public class Client {
         return updated;
     }
 
+    public Long getStatusChangeDate() {
+        return statusChangeDate;
+    }
+
+    public Long setStatusChangeDate(Long date) {
+        return statusChangeDate = date;
+    }
+
     public List<ClientFlag> getFlags() {
         return flags;
     }
 
     public void setFlags(List<ClientFlag> flags) {
         this.flags = flags;
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", lastName='" + lastName + '\'' +
+                ", status='" + status + '\'' +
+                ", owesStatus='" + owesStatus + '\'' +
+                ", archived=" + archived +
+                ", periodical='" + periodical + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", displayPhone='" + displayPhone + '\'' +
+                ", created=" + created +
+                ", updated=" + updated +
+                ", statusChangeDate=" + statusChangeDate +
+                ", flags=" + flags +
+                '}';
     }
 
 

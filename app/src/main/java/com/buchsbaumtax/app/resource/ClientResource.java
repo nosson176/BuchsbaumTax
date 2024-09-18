@@ -33,7 +33,7 @@ import javax.ws.rs.core.UriInfo;
 @Authenticated
 @Path("/clients")
 public class ClientResource {
-    private static final Logger logger = LoggerFactory.getLogger(BuchsbaumApplication.class);
+    private static final Logger logger = LoggerFactory.getLogger(ClientResource.class);
 
     @POST
     public Client createClient(Client client) {
@@ -89,6 +89,7 @@ public class ClientResource {
     @PUT
     @Path("/{clientId}")
     public Client updateClient(@PathParam("clientId") int clientId, Client client) {
+//        logger.info("updateClient=> {}" ,client);
         return new UpdateClient().updateClient(clientId, client);
     }
 
@@ -96,11 +97,11 @@ public class ClientResource {
     @Path("/{clientId}/data")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTaxYearsByClient(@Authenticated User user, @PathParam("clientId") int clientId) {
-        logger.debug("Received request to get client data for clientId {} by user {}", clientId, user.getId());
+//        logger.debug("Received request to get client data for clientId {} by user {}", clientId, user.getId());
 
         GetClientData getClientData = new GetClientData();
         ClientData clientData = getClientData.getByClient(user, clientId);
-        logger.debug("Received clientData {}", clientData);
+//        logger.debug("Received clientData {}", clientData);
         if (clientData == null) {
             logger.warn("No data found for clientId {}", clientId);
             return Response.status(Response.Status.NOT_FOUND)
@@ -115,7 +116,7 @@ public class ClientResource {
 
         try {
             String json = objectMapper.writeValueAsString(clientData);
-            logger.debug("Serialized client data: {}", json);
+//            logger.debug("Serialized client data: {}", json);
             return Response.ok(json, MediaType.APPLICATION_JSON).build();
         } catch (JsonProcessingException e) {
             logger.error("Error serializing client data", e);
