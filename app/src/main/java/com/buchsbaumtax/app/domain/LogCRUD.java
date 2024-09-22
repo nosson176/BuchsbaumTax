@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LogCRUD {
-    private static final Logger logger = LoggerFactory.getLogger(WorkTimesResource.class);
+    private static final Logger logger = LoggerFactory.getLogger(LogCRUD.class);
 
     public Log create(Log log) {
         validate(log);

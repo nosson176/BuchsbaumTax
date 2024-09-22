@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.util.Set;
 
 public class Database {
@@ -78,4 +79,6 @@ public class Database {
             map.put(c, jdbi.onDemand(c));
         }
     }
+
+
 }

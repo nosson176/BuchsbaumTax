@@ -3,6 +3,7 @@ package com.buchsbaumtax.core.dao;
 import com.buchsbaumtax.core.dao.mapper.ClientReducer;
 import com.buchsbaumtax.core.model.Client;
 import com.buchsbaumtax.core.model.ClientFlag;
+import com.buchsbaumtax.core.model.CustomerContactInfo;
 import com.sifradigital.framework.db.Dao;
 import org.jdbi.v3.sqlobject.config.RegisterFieldMapper;
 import org.jdbi.v3.sqlobject.customizer.*;
@@ -74,4 +75,15 @@ public interface ClientDAO {
 
     @SqlUpdate("DELETE FROM clients WHERE id = :id")
     void delete(@Bind("id") int id);
+
+    // New method to fetch contact info for a specific client
+    @RegisterFieldMapper(CustomerContactInfo.class)
+    @SqlQuery("SELECT contact_type, memo, main_detail FROM contacts WHERE client_id = :clientId")
+    CustomerContactInfo getContactInfoForClient(@Bind("clientId") int clientId);
+
+    @RegisterFieldMapper(Client.class)
+    @RegisterFieldMapper(ClientFlag.class)
+    @UseRowReducer(ClientReducer.class)
+    @SqlQuery("SELECT * FROM clients c LEFT JOIN client_flags cf on c.id = cf.client_id WHERE c.id IN (<ids>)")
+    List<Client> getClientsByIds(@BindList("ids") List<Long> ids);
 }

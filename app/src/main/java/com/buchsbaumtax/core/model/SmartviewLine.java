@@ -82,4 +82,20 @@ public class SmartviewLine implements Serializable {
     public String getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "SmartviewLine{" +
+                "id=" + id +
+                ", created=" + created +
+                ", updated=" + updated +
+                ", smartviewId=" + smartviewId +
+                ", groupNum=" + groupNum +
+                ", tableName='" + tableName + '\'' +
+                ", field='" + field + '\'' +
+                ", searchValue='" + searchValue + '\'' +
+                ", operator='" + operator + '\'' +
+                ", type='" + type + '\'' +
+                '}';
+    }
 }

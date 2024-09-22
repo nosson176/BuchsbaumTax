@@ -20,14 +20,14 @@ public class GetClientData {
 
     public ClientData getByClient(User user, int clientId) {
         Client client = Database.dao(ClientDAO.class).get(clientId);
-        logger.info("Client data retrieved successfully for ccccccc {}: {}", client);
+//        logger.info("Client data retrieved successfully for ccccccc {}: {}", client);
         List<TaxYear> taxYears = Database.dao(TaxYearDAO.class).getByClient(client.getId());
-        logger.info("Client 1111111111111111111111 {}: {}",taxYears);
+//        logger.info("Client 1111111111111111111111 {}: {}",taxYears);
         List<TaxYearData> taxYearData = taxYears.stream()
                 .map(TaxYearData::new)
                 .sorted(Comparator.reverseOrder())
                 .collect(Collectors.toList());
-        logger.info("Client 22222222222222222222 {}: {}", taxYearData);
+//        logger.info("Client 22222222222222222222 {}: {}", taxYearData);
         Database.dao(ClientHistoryDAO.class).create(user.getId(), clientId);
 
         ClientData clientData = new ClientData(client, taxYearData);
@@ -43,14 +43,14 @@ public class GetClientData {
         }
         Integer clientFlag = Database.dao(ClientFlagDAO.class).getFlagForUserClient(user.getId(), clientId);
         clientData.setFlag(clientFlag);
-        logger.info("Client data for clientId {}: {}", clientId, clientData);
-        logger.info("Client data for clientId {}: {}", clientId, clientData.getIncomeBreakdowns().size());
-        logger.info("Client data for clientId {}: {}", clientId, clientData.getFbarBreakdowns().size());
+//        logger.info("Client data for clientId {}: {}", clientId, clientData);
+//        logger.info("Client data for clientId {}: {}", clientId, clientData.getIncomeBreakdowns().size());
+//        logger.info("Client data for clientId {}: {}", clientId, clientData.getFbarBreakdowns().size());
         return clientData;
     }
 
     public static List<ClientWithLogs> getClientAndLogs(Long clientId) {
-        logger.info("Fetching clients and logs data for client with ID {}", clientId);
+//        logger.info("Fetching clients and logs data for client with ID {}", clientId);
 
         return fetchClientsWithLogs(clientId);
     }
@@ -65,22 +65,22 @@ public class GetClientData {
                     .stream()
                     .limit(10)
                     .collect(Collectors.toList());
-            logger.info("Retrieved {} clients", clients.size());
+//            logger.info("Retrieved {} clients", clients.size());
         } else {
             // Fetch a specific client by clientId
             clients = Database.dao(ClientDAO.class).getClientById(clientId);
-            logger.info("Retrieved client with ID {}: {}", clientId, clients.size() == 1 ? clients.get(0) : "Not found");
+//            logger.info("Retrieved client with ID {}: {}", clientId, clients.size() == 1 ? clients.get(0) : "Not found");
         }
 
         List<ClientWithLogs> clientsWithLogs = new ArrayList<>();
 
         for (Client client : clients) {
             List<Log> logs = Database.dao(LogDAO.class).getForClient(client.getId());
-            logger.info("Retrieved {} logs for client with ID {}", logs.size(), client.getId());
+//            logger.info("Retrieved {} logs for client with ID {}", logs.size(), client.getId());
             clientsWithLogs.add(new ClientWithLogs(client, logs));
         }
 
-        logger.info("Prepared clientsWithLogs data with {} entries", clientsWithLogs.size());
+//        logger.info("Prepared clientsWithLogs data with {} entries", clientsWithLogs.size());
         return clientsWithLogs;
     }
 

@@ -3,10 +3,19 @@ package com.buchsbaumtax.core.model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 
 public class Client {
 
+    public interface BasicView {}
+
+    @JsonView(BasicView.class)
     private int id;
+    @JsonView(BasicView.class)
     private String lastName;
     private String status;
     private String owesStatus;
@@ -17,8 +26,11 @@ public class Client {
     private Date created;
     private Date updated;
     private Long statusChangeDate;
+    @JsonView(BasicView.class)
     private List<ClientFlag> flags = new ArrayList<>();
+    private List<Filing> filings = new ArrayList<>(); // Add a list of filings
 
+    // Getters and Setters for Client fields
 
     public int getId() {
         return id;
@@ -88,6 +100,15 @@ public class Client {
         this.flags = flags;
     }
 
+    // Getter and setter for filings
+    public List<Filing> getFilings() {
+        return filings;
+    }
+
+    public void setFilings(List<Filing> filings) {
+        this.filings = filings;
+    }
+
     @Override
     public String toString() {
         return "Client{" +
@@ -103,9 +124,7 @@ public class Client {
                 ", updated=" + updated +
                 ", statusChangeDate=" + statusChangeDate +
                 ", flags=" + flags +
+                ", filings=" + filings + // Include filings in toString method
                 '}';
     }
-
-
 }
-

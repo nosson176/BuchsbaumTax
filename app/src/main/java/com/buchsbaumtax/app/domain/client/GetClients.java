@@ -3,17 +3,23 @@ package com.buchsbaumtax.app.domain.client;
 import com.buchsbaumtax.core.dao.ClientDAO;
 import com.buchsbaumtax.core.dao.SmartviewDAO;
 import com.buchsbaumtax.core.model.Client;
+import com.buchsbaumtax.core.model.CustomerContactInfo;
+import com.buchsbaumtax.core.model.Filing;
 import com.buchsbaumtax.core.model.Smartview;
 import com.buchsbaumtax.core.util.NaturalOrderComparator;
 import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GetClients {
-
+    static final Logger logger = LoggerFactory.getLogger(GetClients.class);
     public List<Client> getAll() {
         List<Client> clients = Database.dao(ClientDAO.class).getAll();
         sort(clients);
@@ -58,4 +64,36 @@ public class GetClients {
     private void sort(List<Client> clients) {
         clients.sort(Comparator.comparing(Client::getLastName, new NaturalOrderComparator()));
     }
+
+    public List<CustomerContactInfo> getExportClients(List<Client> clients) throws SQLException {
+        List<CustomerContactInfo> customerContactInfos = new ArrayList<>();
+        logger.info("get parameter clients: {}", clients);
+
+        for (Client client : clients) {
+            CustomerContactInfo contactInfo = Database.dao(ClientDAO.class).getContactInfoForClient(client.getId());
+
+            if (contactInfo != null) {
+                String mainDetail = contactInfo.getMainDetail();
+                // Check if mainDetail is a valid email
+                String email = isValidEmail(mainDetail) ? mainDetail : "";
+
+                customerContactInfos.add(new CustomerContactInfo(
+                        client.getId(),
+                        client.getLastName(),
+                        contactInfo.getContactType(),
+                        contactInfo.getMemo(),
+                        email // Use the email or empty string
+                ));
+            }
+        }
+        logger.info("Retrieved customerContactInfos: {}", customerContactInfos);
+        return customerContactInfos;
+    }
+
+    private boolean isValidEmail(String email) {
+        // Simple regex to check if the string is an email
+        String emailRegex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+        return email != null && email.matches(emailRegex);
+    }
+
 }

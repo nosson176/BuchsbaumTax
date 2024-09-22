@@ -1,6 +1,5 @@
 package com.buchsbaumtax.app.resource;
 
-import com.buchsbaumtax.app.config.BuchsbaumApplication;
 import com.buchsbaumtax.app.domain.GetClientData;
 import com.buchsbaumtax.app.domain.client.CreateClient;
 import com.buchsbaumtax.app.domain.client.GetClients;
@@ -9,9 +8,7 @@ import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.ClientData;
 import com.buchsbaumtax.core.dao.ClientDAO;
 import com.buchsbaumtax.core.dao.ClientHistoryDAO;
-import com.buchsbaumtax.core.model.Client;
-import com.buchsbaumtax.core.model.ClientWithLogs;
-import com.buchsbaumtax.core.model.User;
+import com.buchsbaumtax.core.model.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +18,7 @@ import com.sifradigital.framework.db.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.ws.rs.*;
+import java.sql.SQLException;
 import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -131,4 +129,20 @@ public class ClientResource {
     public List<Client> getClientHistory(@Authenticated User user) {
         return Database.dao(ClientHistoryDAO.class).getRecentByUser(user.getId(), 20);
     }
+
+    @POST
+    @Path("/exportClients")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response exportClients(List<Client> clients) {
+        try {
+            List<CustomerContactInfo> contactInfos = new GetClients().getExportClients(clients);
+            return Response.ok(contactInfos).build(); // Ensure that contactInfos is serialized as a JSON array
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error fetching clients: " + e.getMessage())
+                    .build();
+        }
+    }
+
 }

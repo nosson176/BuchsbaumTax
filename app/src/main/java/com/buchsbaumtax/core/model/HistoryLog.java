@@ -5,7 +5,10 @@ public class HistoryLog {
     private String userName;      // User who made the changes
     private long date;            // Date of the change in Unix time (milliseconds)
     private String field;         // The field that was changed
-    private int logId;            // Reference to the related log (foreign key)
+    private int logId;
+    private String val;
+
+    public HistoryLog() {}
 
     // Constructor
     public HistoryLog(int id, String userName, long date, String field, int logId) {
@@ -14,6 +17,7 @@ public class HistoryLog {
         this.date = date;
         this.field = field;
         this.logId = logId;
+        this.val = val;
     }
 
     // Getters and Setters
@@ -55,6 +59,13 @@ public class HistoryLog {
 
     public void setLogId(int logId) {
         this.logId = logId;
+    }
+    public String getVal() {
+        return val;
+    }
+
+    public void setVal(String val ) {
+        this.val = val;
     }
 
     @Override
