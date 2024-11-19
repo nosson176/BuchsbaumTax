@@ -7,6 +7,8 @@ import com.sifradigital.framework.auth.Authenticated;
 import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Authenticated
@@ -21,6 +23,14 @@ public class ContactResource {
     @GET
     public List<Contact> getAllContacts() {
         return Database.dao(ContactDAO.class).getAll();
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateContacts(List<Contact> contacts) {
+        new ContactCRUD().updateContacts(contacts);
+        return Response.ok("{\"status\":\"success\"}").build();
     }
 
     @PUT

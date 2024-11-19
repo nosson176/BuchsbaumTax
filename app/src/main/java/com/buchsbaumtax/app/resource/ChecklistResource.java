@@ -1,10 +1,14 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.ChecklistCRUD;
+import com.buchsbaumtax.app.domain.FeeCRUD;
 import com.buchsbaumtax.core.model.Checklist;
+import com.buchsbaumtax.core.model.Fee;
 import com.sifradigital.framework.auth.Authenticated;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Authenticated
@@ -20,9 +24,17 @@ public class ChecklistResource {
         return new ChecklistCRUD().getAll();
     }
 
+//    @PUT
+//    public List<Checklist> updateChecklists(List<Checklist> checklists) {
+//        return new ChecklistCRUD().update(checklists);
+//    }
+
     @PUT
-    public List<Checklist> updateChecklists(List<Checklist> checklists) {
-        return new ChecklistCRUD().update(checklists);
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateChecklists(List<Checklist> checklists) {
+        new ChecklistCRUD().update(checklists);
+        return Response.ok("{\"status\":\"success\"}").build();
     }
 
     @PUT

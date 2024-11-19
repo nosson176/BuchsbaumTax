@@ -1,10 +1,14 @@
 package com.buchsbaumtax.app.resource;
 
+import com.buchsbaumtax.app.domain.ContactCRUD;
 import com.buchsbaumtax.app.domain.FeeCRUD;
+import com.buchsbaumtax.core.model.Contact;
 import com.buchsbaumtax.core.model.Fee;
 import com.sifradigital.framework.auth.Authenticated;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Authenticated
@@ -20,9 +24,17 @@ public class FeeResource {
         return new FeeCRUD().getAll();
     }
 
+//    @PUT
+//    public List<Fee> updateFees(List<Fee> fees) {
+//        return new FeeCRUD().update(fees);
+//    }
+
     @PUT
-    public List<Fee> updateFees(List<Fee> fees) {
-        return new FeeCRUD().update(fees);
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateFees(List<Fee> fees) {
+        new FeeCRUD().updateFees(fees);
+        return Response.ok("{\"status\":\"success\"}").build();
     }
 
     @PUT

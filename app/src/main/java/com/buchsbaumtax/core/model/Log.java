@@ -17,7 +17,6 @@ public class Log {
     private int id;
     private boolean alerted;
     private int priority;
-    private String alarmTime;
     private int clientId;
     private int secondsSpent;
     private String alarmUserName;
@@ -25,6 +24,8 @@ public class Log {
     private boolean alarmComplete;
     private boolean alert;
     private Date alarmDate;
+    private String alarmTime;
+    private Long alarmCreateChange;
     private Date logDate;
     private String note;
     private boolean archived;
@@ -56,6 +57,14 @@ public class Log {
         return secondsSpent;
     }
 
+    public String getAlarmUserName() {
+        return alarmUserName;
+    }
+
+    public void setAlarmUserName(String alarmUserName) {
+        this.alarmUserName = alarmUserName;
+    }
+
     public Integer getAlarmUserId() {
         return alarmUserId;
     }
@@ -70,6 +79,9 @@ public class Log {
 
     public Date getAlarmDate() {
         return alarmDate;
+    }
+    public Long getAlarmCreateChange() {
+        return alarmCreateChange;
     }
 
     public Date getLogDate() {
@@ -138,6 +150,7 @@ public class Log {
                 ", alarmComplete=" + alarmComplete +
                 ", alert=" + alert +
                 ", alarmDate=" + alarmDate +
+                ", alarmCreateChange=" + alarmCreateChange +
                 ", logDate=" + logDate +
                 ", note='" + note + '\'' +
                 ", archived=" + archived +

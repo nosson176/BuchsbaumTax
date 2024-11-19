@@ -33,10 +33,25 @@ public class IncomeBreakdownCRUD {
         return updatedBreakdown;
     }
 
+//    public List<IncomeBreakdown> update(List<IncomeBreakdown> incomeBreakdowns) {
+//        Database.dao(IncomeBreakdownDAO.class).update(incomeBreakdowns);
+//        return incomeBreakdowns.stream().map(i -> Database.dao(IncomeBreakdownDAO.class).get(i.getId())).collect(Collectors.toList());
+//    }
     public List<IncomeBreakdown> update(List<IncomeBreakdown> incomeBreakdowns) {
-        Database.dao(IncomeBreakdownDAO.class).update(incomeBreakdowns);
-        return incomeBreakdowns.stream().map(i -> Database.dao(IncomeBreakdownDAO.class).get(i.getId())).collect(Collectors.toList());
+        return incomeBreakdowns.stream().map(incomeBreakdown -> {
+            // Check if the income breakdown exists in the database
+            IncomeBreakdown existingBreakdown = Database.dao(IncomeBreakdownDAO.class).get(incomeBreakdown.getId());
+
+            if (existingBreakdown == null) {
+                // If it doesn't exist, create a new one using the existing create method
+                return create(incomeBreakdown);
+            } else {
+                // If it exists, update the existing record using the existing update method
+                return update(incomeBreakdown.getId(), incomeBreakdown);
+            }
+        }).collect(Collectors.toList());
     }
+
 
     private void validate(IncomeBreakdown incomeBreakdown) {
         new Validator()

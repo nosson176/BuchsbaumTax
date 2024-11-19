@@ -8,6 +8,8 @@ import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.*;
 import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Authenticated
 @Path("/logs")
@@ -32,5 +34,19 @@ public class LogResource {
     @Path("/{logId}")
     public Log updateLog(@PathParam("logId") int logId, Log log) {
         return new LogCRUD().update(logId, log);
+    }
+
+    @GET
+    @Path("/today")
+    public List<Log> getTodayLogs() {
+        // Define the date format for the query
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+
+        // Get current time and end of the day
+        String currentTime = LocalDateTime.now().format(formatter);
+        String endOfDay = LocalDateTime.now().withHour(23).withMinute(59).format(formatter);
+
+        // Retrieve logs from DAO
+        return Database.dao(LogDAO.class).getLogsBetweenTimes(currentTime, endOfDay);
     }
 }

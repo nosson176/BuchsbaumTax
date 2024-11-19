@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class FilingCRUD {
-    private static final Logger logger = LoggerFactory.getLogger(BuchsbaumApplication.class);
+    private static final Logger logger = LoggerFactory.getLogger(FilingCRUD.class);
     public List<Filing> getAll() {
         return Database.dao(FilingDAO.class).getAll();
     }
@@ -53,7 +53,9 @@ public class FilingCRUD {
     public Filing update(int filingId, Filing filing) {
         Filing oldFiling = Database.dao(FilingDAO.class).get(filingId);
         if (filing.getId() != filingId || oldFiling == null) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+           return create(filing);
+
+//            throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         if (oldFiling.getSortOrder() != filing.getSortOrder()) {
             List<Filing> filings = Database.dao(FilingDAO.class).getByTaxYear(filing.getTaxYearId());
@@ -69,12 +71,12 @@ public class FilingCRUD {
     }
 
     public  List<Filing> updateFilingsList(List<Filing> filings){
-        logger.info("updateFilingsList1111: {}", filings);
+//        logger.info("updateFilingsList1111: {}", filings);
         for (Filing filing : filings) {
-            logger.info("updateFilingsEach: {}", filing);
+//            logger.info("updateFilingsEach: {}", filing);
             update(filing.getId(),filing);
         }
-        logger.info("updateFilingsList22222: {}", filings);
+//        logger.info("updateFilingsList22222: {}", filings);
 
         return filings;
     }
@@ -104,12 +106,12 @@ public class FilingCRUD {
     }
 
     public List<Filing> updateFilings(int clientId, String oldContectDelivary, String newContectDelivary) {
-        logger.info("Request to update filings - ID: {}, Old Delivery: {}, New Delivery: {}",
-                clientId, oldContectDelivary, newContectDelivary);
+//        logger.info("Request to update filings - ID: {}, Old Delivery: {}, New Delivery: {}",
+//                clientId, oldContectDelivary, newContectDelivary);
 
         // Retrieve the list of filings for the given clientId
         List<Filing> filings = Database.dao(FilingDAO.class).getByClient(clientId);
-        logger.info("Retrieved filings - ID: {}", filings);
+//        logger.info("Retrieved filings - ID: {}", filings);
 
         // Iterate through the filings and update them if they match the old values
         for (Filing filing : filings) {
@@ -126,7 +128,7 @@ public class FilingCRUD {
             // Assuming you have an update method to save the changes to the database
             update(filing.getId(), filing);
         }
-        logger.info("Updated filings - ID: {}", filings);
+//        logger.info("Updated filings - ID: {}", filings);
         return filings;
     }
 

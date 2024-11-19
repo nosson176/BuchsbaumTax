@@ -16,10 +16,10 @@ import java.util.List;
 public interface LogDAO {
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO logs (client_id, years, alarm_user_id, alert, alarm_complete, alarm_date, alarm_time, log_date, priority, note, seconds_spent, archived, alerted, history_log_json, created_by) VALUES (:clientId, :years, :alarmUserId, :alert, :alarmComplete, :alarmDate, :alarmTime, :logDate, :priority, :note, :secondsSpent, :archived, :alerted, :historyLogJson, :createdBy)")
+    @SqlUpdate("INSERT INTO logs (client_id, years, alarm_user_name, alarm_user_id, alert, alarm_complete, alarm_date,alarm_create_change, alarm_time, log_date, priority, note, seconds_spent, archived, alerted, history_log_json, created_by) VALUES (:clientId, :years, :alarmUserName, :alarmUserId, :alert, :alarmComplete, :alarmDate, :alarmCreateChange, :alarmTime, :logDate, :priority, :note, :secondsSpent, :archived, :alerted, :historyLogJson, :createdBy)")
     int create(@BindBean Log log);
 
-    @SqlUpdate("UPDATE logs SET years = :years, alarm_user_id = :alarmUserId, alert = :alert, alarm_complete = :alarmComplete, alarm_date = :alarmDate, alarm_time = :alarmTime, log_date = :logDate, priority = :priority, note = :note, seconds_spent = :secondsSpent, archived = :archived, alerted = :alerted, history_log_json = :historyLogJson, created_by = :createdBy WHERE id = :id")
+    @SqlUpdate("UPDATE logs SET years = :years,alarm_user_name = :alarmUserName, alarm_user_id = :alarmUserId, alert = :alert, alarm_complete = :alarmComplete, alarm_date = :alarmDate,alarm_create_change = :alarmCreateChange, alarm_time = :alarmTime, log_date = :logDate, priority = :priority, note = :note, seconds_spent = :secondsSpent, archived = :archived, alerted = :alerted, history_log_json = :historyLogJson, created_by = :createdBy WHERE id = :id")
     void update(@BindBean Log log);
 
     @RegisterFieldMapper(Log.class)
@@ -34,6 +34,11 @@ public interface LogDAO {
     @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId ORDER BY log_date DESC, id DESC")
     List<Log> getForClient(@Bind("clientId") int clientId);
 
-    @SqlBatch("UPDATE logs SET years = :years, alarm_user_id = :alarmUserId, alert = :alert, alarm_complete = :alarmComplete, alarm_date = :alarmDate, alarm_time = :alarmTime, log_date = :logDate, priority = :priority, note = :note, seconds_spent = :secondsSpent, archived = :archived, alerted = :alerted, history_log_json = :historyLogJson, created_by = :createdBy WHERE id = :id")
+    @SqlBatch("UPDATE logs SET years = :years,alarm_user_name = :alarmUserName, alarm_user_id = :alarmUserId, alert = :alert, alarm_complete = :alarmComplete, alarm_date = :alarmDate, alarm_create_change = :alarmCreateChange, alarm_time = :alarmTime, log_date = :logDate, priority = :priority, note = :note, seconds_spent = :secondsSpent, archived = :archived, alerted = :alerted, history_log_json = :historyLogJson, created_by = :createdBy WHERE id = :id")
     void update(@BindBean List<Log> logs);
+
+    @RegisterFieldMapper(Log.class)
+    @SqlQuery("SELECT * FROM logs WHERE TO_TIMESTAMP(alarm_time, 'DD-MM-YYYY HH24:MI') BETWEEN TO_TIMESTAMP(:currentTime, 'DD-MM-YYYY HH24:MI') AND TO_TIMESTAMP(:endOfDay, 'DD-MM-YYYY HH24:MI')")
+    List<Log> getLogsBetweenTimes(@Bind("currentTime") String currentTime, @Bind("endOfDay") String endOfDay);
+
 }

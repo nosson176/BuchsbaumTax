@@ -16,7 +16,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Authenticated
 @Path("/filings")
@@ -102,17 +104,59 @@ public class FilingResource {
 //        return new FilingCRUD().update(filingId, filing);
 //    }
 
+//    @PUT
+//    @Path("/updateFiling")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response updateFilingDelivary(FilingUpdateRequest request) {
+//        try {
+//            // Update filings based on the request
+//            List<Filing> updatedFilings = new FilingCRUD().updateFilings(
+//                    request.getClientId(),
+//                    request.getOldContectDelivary(),
+//                    request.getNewContectDelivary()
+//            );
+//
+//            // Create a response object to include both the updated filings and the status
+//            Map<String, Object> response = new HashMap<>();
+//            response.put("status", "success");
+//            response.put("updatedFilings", updatedFilings);
+//
+//            // Return the response with OK status (200)
+//            return Response.ok(response).build();
+//        } catch (Exception e) {
+//            // Handle any exception by returning an error response
+//            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+//                    .entity("Error updating filings: " + e.getMessage())
+//                    .build();
+//        }
+//    }
+
     @PUT
     @Path("/updateFiling")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateFilingDelivary(FilingUpdateRequest request) {
-        List<Filing> updatedFilings = new FilingCRUD().updateFilings(
-                request.getClientId(),
-                request.getOldContectDelivary(),
-                request.getNewContectDelivary()
-        );
+        try {
+            // Update filings based on the request
+            new FilingCRUD().updateFilings(
+                    request.getClientId(),
+                    request.getOldContectDelivary(),
+                    request.getNewContectDelivary()
+            );
 
-        return Response.ok(updatedFilings).build();
+            // Return a response with only the status "success"
+            Map<String, String> response = new HashMap<>();
+            response.put("status", "success");
+
+            // Return the success response with OK status (200)
+            return Response.ok(response).build();
+        } catch (Exception e) {
+            // Handle any exception by returning an error response
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"status\":\"error\",\"message\":\"Error updating filings: " + e.getMessage() + "\"}")
+                    .build();
+        }
     }
+
 }

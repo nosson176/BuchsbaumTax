@@ -110,25 +110,13 @@ public class SmartviewCRUD {
     }
 
     public Map<Client, List<Filing>> getSmartViewFiltersResults(SmartviewData smartviewData) {
-//        Smartview oldSmartview = Database.dao(SmartviewDAO.class).get(smartviewId);
-//        if (user.getId() != oldSmartview.getUserId() || smartviewData.getId() != smartviewId) {
-//            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-//        }
-//        logger.info("oldSmartview IS HERE!: {}", oldSmartview);
+
         Smartview smartview = new SmartviewLineUtils().convertToSmartview(smartviewData);
         logger.info("SmartviewLineUtils().convertToSmartview IS HERE!: {}", smartview);
-//
         Smartview updated = Database.dao(SmartviewDAO.class).update(smartview);
 //        logger.info("Smartview updated IS HERE!: {}", updated);
         Map<Client, List<Filing>> data =   new UpdateSmartviews().getSmartviewResult(updated);
         logger.info("Smartview data IS HERE!: {}", data);
         return  data;
-
-//        if (smartviewData.getSortNumber() != oldSmartview.getSortNumber()) {
-//            List<Smartview> smartviews = Database.dao(SmartviewDAO.class).getByUser(user.getId());
-//            smartviews = smartviews.stream().filter(s -> smartviewData.isArchived() == s.isArchived()).collect(Collectors.toList());
-//            reorder(smartviews, oldSmartview.getSortNumber(), smartviewData.getSortNumber());
-//        }
-//        return new SmartviewLineUtils().convertToSmartviewData(Database.dao(SmartviewDAO.class).get(updated.getId()));
     }
 }

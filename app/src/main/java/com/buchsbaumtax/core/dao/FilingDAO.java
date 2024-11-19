@@ -61,43 +61,79 @@ public interface FilingDAO {
     class FilingMapper implements RowMapper<Filing> {
         private static final ObjectMapper objectMapper = new ObjectMapper();
 
-        @Override
-        public Filing map(ResultSet rs, StatementContext ctx) throws SQLException {
-            Filing filing = new Filing();
+//        @Override
+//        public Filing map(ResultSet rs, StatementContext ctx) throws SQLException {
+//            Filing filing = new Filing();
+//
+//            // Map standard fields
+//            filing.setId(rs.getInt("id"));
+//            filing.setTaxForm(stripQuotes(rs.getString("tax_form")));
+//            filing.setStatusDate(getLongFromBigDecimal(rs.getBigDecimal("status_date")));
+//            filing.setMemo(stripQuotes(rs.getString("memo")));
+//            filing.setIncludeInRefund(rs.getBoolean("include_in_refund"));
+//            filing.setOwes(getDoubleFromBigDecimal(rs.getBigDecimal("owes")));
+//            filing.setPaid(getDoubleFromBigDecimal(rs.getBigDecimal("paid")));
+//            filing.setIncludeFee(rs.getBoolean("include_fee"));
+//            filing.setOwesFee(getDoubleFromBigDecimal(rs.getBigDecimal("owes_fee")));
+//            filing.setPaidFee(getDoubleFromBigDecimal(rs.getBigDecimal("paid_fee")));
+//            filing.setRefund(getDoubleFromBigDecimal(rs.getBigDecimal("refund")));
+//            filing.setRebate(getDoubleFromBigDecimal(rs.getBigDecimal("rebate")));
+//            filing.setAmount(getDoubleFromBigDecimal(rs.getBigDecimal("amount")));
+//            filing.setCompleted(rs.getBoolean("completed"));
+//            filing.setFileType(stripQuotes(rs.getString("file_type")));
+//            filing.setDeliveryContact(rs.getString("delivery_contact"));
+//            filing.setSecondDeliveryContact(rs.getString("second_delivery_contact"));
+//            filing.setDateFiled(getLongFromBigDecimal(rs.getBigDecimal("date_filed")));
+//            filing.setCurrency(stripQuotes(rs.getString("currency")));
+//            filing.setFilingType(stripQuotes(rs.getString("filing_type")));
+//            filing.setState(rs.getString("state"));
+//            filing.setTaxYearId(rs.getInt("tax_year_id"));
+//            filing.setSortOrder(rs.getInt("sort_order"));
+//            filing.setClientId(rs.getInt("client_id"));
+//
+//            // Handle JSON fields
+//          filing.setStatus(parseJson(rs.getString("status"), Status.class, "status"));
+//            filing.setStatusDetail(parseJson(rs.getString("status_detail"), Status.class, "status_detail"));
+//
+////            logger.info("bigDecimal : {}", filing);
+//            return filing;
+//        }
+@Override
+public Filing map(ResultSet rs, StatementContext ctx) throws SQLException {
+    Filing filing = new Filing();
 
-            // Map standard fields
-            filing.setId(rs.getInt("id"));
-            filing.setTaxForm(stripQuotes(rs.getString("tax_form")));
-            filing.setStatusDate(getLongFromBigDecimal(rs.getBigDecimal("status_date")));
-            filing.setMemo(stripQuotes(rs.getString("memo")));
-            filing.setIncludeInRefund(rs.getBoolean("include_in_refund"));
-            filing.setOwes(getDoubleFromBigDecimal(rs.getBigDecimal("owes")));
-            filing.setPaid(getDoubleFromBigDecimal(rs.getBigDecimal("paid")));
-            filing.setIncludeFee(rs.getBoolean("include_fee"));
-            filing.setOwesFee(getDoubleFromBigDecimal(rs.getBigDecimal("owes_fee")));
-            filing.setPaidFee(getDoubleFromBigDecimal(rs.getBigDecimal("paid_fee")));
-            filing.setRefund(getDoubleFromBigDecimal(rs.getBigDecimal("refund")));
-            filing.setRebate(getDoubleFromBigDecimal(rs.getBigDecimal("rebate")));
-            filing.setAmount(getDoubleFromBigDecimal(rs.getBigDecimal("amount")));
-            filing.setCompleted(rs.getBoolean("completed"));
-            filing.setFileType(stripQuotes(rs.getString("file_type")));
-            filing.setDeliveryContact(rs.getString("delivery_contact"));
-            filing.setSecondDeliveryContact(rs.getString("second_delivery_contact"));
-            filing.setDateFiled(getLongFromBigDecimal(rs.getBigDecimal("date_filed")));
-            filing.setCurrency(stripQuotes(rs.getString("currency")));
-            filing.setFilingType(stripQuotes(rs.getString("filing_type")));
-            filing.setState(rs.getString("state"));
-            filing.setTaxYearId(rs.getInt("tax_year_id"));
-            filing.setSortOrder(rs.getInt("sort_order"));
-            filing.setClientId(rs.getInt("client_id"));
+    // Map standard fields with null-checks and default values
+    filing.setId(rs.getInt("id"));
+    filing.setTaxForm(rs.getString("tax_form") != null ? stripQuotes(rs.getString("tax_form")) : "");
+    filing.setStatusDate(rs.getBigDecimal("status_date") != null ? getLongFromBigDecimal(rs.getBigDecimal("status_date")) : 0L);
+    filing.setMemo(rs.getString("memo") != null ? stripQuotes(rs.getString("memo")) : "");
+    filing.setIncludeInRefund(rs.getObject("include_in_refund") != null ? rs.getBoolean("include_in_refund") : false);
+    filing.setOwes(rs.getBigDecimal("owes") != null ? getDoubleFromBigDecimal(rs.getBigDecimal("owes")) : 0.0);
+    filing.setPaid(rs.getBigDecimal("paid") != null ? getDoubleFromBigDecimal(rs.getBigDecimal("paid")) : 0.0);
+    filing.setIncludeFee(rs.getObject("include_fee") != null ? rs.getBoolean("include_fee") : false);
+    filing.setOwesFee(rs.getBigDecimal("owes_fee") != null ? getDoubleFromBigDecimal(rs.getBigDecimal("owes_fee")) : 0.0);
+    filing.setPaidFee(rs.getBigDecimal("paid_fee") != null ? getDoubleFromBigDecimal(rs.getBigDecimal("paid_fee")) : 0.0);
+    filing.setRefund(rs.getBigDecimal("refund") != null ? getDoubleFromBigDecimal(rs.getBigDecimal("refund")) : 0.0);
+    filing.setRebate(rs.getBigDecimal("rebate") != null ? getDoubleFromBigDecimal(rs.getBigDecimal("rebate")) : 0.0);
+    filing.setAmount(rs.getBigDecimal("amount") != null ? getDoubleFromBigDecimal(rs.getBigDecimal("amount")) : 0.0);
+    filing.setCompleted(rs.getObject("completed") != null ? rs.getBoolean("completed") : false);
+    filing.setFileType(rs.getString("file_type") != null ? stripQuotes(rs.getString("file_type")) : "");
+    filing.setDeliveryContact(rs.getString("delivery_contact") != null ? rs.getString("delivery_contact") : "");
+    filing.setSecondDeliveryContact(rs.getString("second_delivery_contact") != null ? rs.getString("second_delivery_contact") : "");
+    filing.setDateFiled(rs.getBigDecimal("date_filed") != null ? getLongFromBigDecimal(rs.getBigDecimal("date_filed")) : 0L);
+    filing.setCurrency(rs.getString("currency") != null ? stripQuotes(rs.getString("currency")) : "");
+    filing.setFilingType(rs.getString("filing_type") != null ? stripQuotes(rs.getString("filing_type")) : "");
+    filing.setState(rs.getString("state") != null ? rs.getString("state") : "");
+    filing.setTaxYearId(rs.getObject("tax_year_id") != null ? rs.getInt("tax_year_id") : 0);
+    filing.setSortOrder(rs.getObject("sort_order") != null ? rs.getInt("sort_order") : 0);
+    filing.setClientId(rs.getObject("client_id") != null ? rs.getInt("client_id") : 0);
 
-            // Handle JSON fields
-          filing.setStatus(parseJson(rs.getString("status"), Status.class, "status"));
-            filing.setStatusDetail(parseJson(rs.getString("status_detail"), Status.class, "status_detail"));
+    // Handle JSON fields with null-checks
+    filing.setStatus(parseJson(rs.getString("status"), Status.class, "status"));
+    filing.setStatusDetail(parseJson(rs.getString("status_detail"), Status.class, "status_detail"));
 
-//            logger.info("bigDecimal : {}", filing);
-            return filing;
-        }
+    return filing;
+}
 
         // Utility to convert BigDecimal to long
         private Long getLongFromBigDecimal(BigDecimal value) {

@@ -2,17 +2,18 @@ package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.smartview.SmartviewCRUD;
 import com.buchsbaumtax.app.dto.BaseResponse;
+import com.buchsbaumtax.app.dto.ClientData;
 import com.buchsbaumtax.app.dto.SmartviewData;
 import com.buchsbaumtax.core.dao.SmartviewDAO;
-import com.buchsbaumtax.core.model.Client;
-import com.buchsbaumtax.core.model.Filing;
-import com.buchsbaumtax.core.model.User;
+import com.buchsbaumtax.core.model.*;
 import com.sifradigital.framework.auth.Authenticated;
 import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,17 +38,10 @@ public class SmartviewResource {
     public Response getUserSmartviewsResults(@Authenticated User user, SmartviewData smartviewData) {
         Map<Client, List<Filing>> clientFilingsMap = new SmartviewCRUD().getSmartViewFiltersResults(smartviewData);
 
-        List<Client> result = clientFilingsMap.entrySet().stream()
-                .map(entry -> {
-                    Client client = entry.getKey();
-                    client.setFilings(entry.getValue());
-                    return client;
-                })
-                .collect(Collectors.toList());
+        List<Client> result = new ArrayList<>(clientFilingsMap.keySet());
 
         return Response.ok(result).build();
     }
-
 
     @PUT
     @Path("/{smartviewId}")

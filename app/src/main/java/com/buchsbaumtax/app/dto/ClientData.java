@@ -237,6 +237,7 @@ public class ClientData {
     private final List<TaxPersonal> taxPersonals;
     private final List<Fee> fees;
     private final List<Checklist> checklists;
+    private final Integer gFlag;
     private Integer flag;
     private final double owesDollars;
     private final double paidDollars;
@@ -257,6 +258,7 @@ public class ClientData {
         this.displayName = client.getDisplayName();
         this.displayPhone = client.getDisplayPhone();
         this.created = client.getCreated();
+        this.gFlag = client.getgFlag();
         this.statusChangeDate = client.getStatusChangeDate();
         this.taxYearData = taxYearData;
         this.fbarBreakdowns = Database.dao(FbarBreakdownDAO.class).getForClient(client.getId());
@@ -302,6 +304,8 @@ public class ClientData {
                 .filter(f -> f.getCurrency() != null && f.getCurrency().equals(SHEKELS))
                 .mapToDouble(Fee::getPaidAmount).sum();
     }
+
+
 
     public int getId() {
         return id;
@@ -375,6 +379,10 @@ public class ClientData {
 
     public Integer getFlag() {
         return flag;
+    }
+
+    public Integer getGFlag() {
+        return gFlag;
     }
 
     public void setFlag(Integer flag) {

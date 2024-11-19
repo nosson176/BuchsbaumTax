@@ -117,11 +117,9 @@ package com.buchsbaumtax.app.domain.smartview;
 import com.buchsbaumtax.app.config.BuchsbaumApplication;
 import com.buchsbaumtax.core.dao.ClientDAO;
 import com.buchsbaumtax.core.dao.FilingDAO;
+import com.buchsbaumtax.core.dao.LogDAO;
 import com.buchsbaumtax.core.dao.SmartviewDAO;
-import com.buchsbaumtax.core.model.Client;
-import com.buchsbaumtax.core.model.Filing;
-import com.buchsbaumtax.core.model.Smartview;
-import com.buchsbaumtax.core.model.SmartviewLine;
+import com.buchsbaumtax.core.model.*;
 import com.sifradigital.framework.db.Database;
 
 import java.util.*;
@@ -282,11 +280,14 @@ public class UpdateSmartviews {
         Map<Client, List<Filing>> clientFilingsMap = new HashMap<>();
         if (!finalClientIds.isEmpty()) {
             List<Long> clientIdsAsLong = finalClientIds.stream()
-                    .map(Integer::longValue)  // Convert each Integer to Long
+                    .map(Integer::longValue)
                     .collect(Collectors.toList());
             List<Client> clients = Database.dao(ClientDAO.class).getClientsByIds(clientIdsAsLong);
             for (Client client : clients) {
                 List<Filing> filings = Database.dao(FilingDAO.class).getByClient(client.getId());
+                List<Log> logs = Database.dao(LogDAO.class).getForClient(client.getId());
+                client.setFilings(filings);
+                client.setLogs(logs);
                 clientFilingsMap.put(client, filings);
             }
         }
@@ -294,8 +295,8 @@ public class UpdateSmartviews {
         // Update the smartview with the client IDs
         smartview.setClientIds(new ArrayList<>(finalClientIds));
         Database.dao(SmartviewDAO.class).updateSmartview(smartview);
-//        logger.info("clientFilingsMap IS HERE!: {}", clientFilingsMap);
-        return clientFilingsMap; // Return the map of client data + filings
+
+        return clientFilingsMap;
     }
 
 }

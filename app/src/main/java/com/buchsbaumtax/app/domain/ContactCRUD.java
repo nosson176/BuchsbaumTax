@@ -35,6 +35,26 @@ public class ContactCRUD {
         return Database.dao(ContactDAO.class).get(contactId);
     }
 
+    public List<Contact> updateContacts(List<Contact> contacts) {
+        for (Contact contact : contacts) {
+            Contact existingContact = Database.dao(ContactDAO.class).get(contact.getId());
+
+            if (existingContact != null) {
+                // If the contact exists, update it
+                validate(contact);
+                Database.dao(ContactDAO.class).update(contact);
+            } else {
+                // If the contact doesn't exist, create a new one
+                validate(contact);
+                int newContactId = Database.dao(ContactDAO.class).create(contact);
+            }
+        }
+
+        // Return the updated list of contacts
+        return contacts;
+    }
+
+
     private void validate(Contact contact) {
         new Validator()
                 .required(contact.getClientId(), "Client ID is required")

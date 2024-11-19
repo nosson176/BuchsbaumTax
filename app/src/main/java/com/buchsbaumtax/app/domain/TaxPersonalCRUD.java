@@ -1,6 +1,8 @@
 package com.buchsbaumtax.app.domain;
 
+import com.buchsbaumtax.core.dao.ContactDAO;
 import com.buchsbaumtax.core.dao.TaxPersonalDAO;
+import com.buchsbaumtax.core.model.Contact;
 import com.buchsbaumtax.core.model.TaxPersonal;
 import com.sifradigital.framework.db.Database;
 import com.sifradigital.framework.validation.Validator;
@@ -31,9 +33,28 @@ public class TaxPersonalCRUD {
         return Database.dao(TaxPersonalDAO.class).get(taxPersonalId);
     }
 
+//    public List<TaxPersonal> update(List<TaxPersonal> taxPersonals) {
+//        Database.dao(TaxPersonalDAO.class).update(taxPersonals);
+//        return taxPersonals.stream().map(t -> Database.dao(TaxPersonalDAO.class).get(t.getId())).collect(Collectors.toList());
+//    }
+
     public List<TaxPersonal> update(List<TaxPersonal> taxPersonals) {
-        Database.dao(TaxPersonalDAO.class).update(taxPersonals);
-        return taxPersonals.stream().map(t -> Database.dao(TaxPersonalDAO.class).get(t.getId())).collect(Collectors.toList());
+        for (TaxPersonal taxPersonal : taxPersonals) {
+            TaxPersonal existingContact = Database.dao(TaxPersonalDAO.class).get(taxPersonal.getId());
+
+            if (existingContact != null) {
+                // If the contact exists, update it
+                validate(taxPersonal);
+                Database.dao(TaxPersonalDAO.class).update(taxPersonal);
+            } else {
+                // If the contact doesn't exist, create a new one
+                validate(taxPersonal);
+                int newContactId = Database.dao(TaxPersonalDAO.class).create(taxPersonal);
+            }
+        }
+
+        // Return the updated list of contacts
+        return taxPersonals;
     }
 
     private void validate(TaxPersonal taxPersonal) {

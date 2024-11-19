@@ -26,10 +26,11 @@ public class Client {
     private Date created;
     private Date updated;
     private Long statusChangeDate;
+    private Integer gFlag;
     @JsonView(BasicView.class)
     private List<ClientFlag> flags = new ArrayList<>();
     private List<Filing> filings = new ArrayList<>(); // Add a list of filings
-
+    private List<Log> logs = new ArrayList<>();
     // Getters and Setters for Client fields
 
     public int getId() {
@@ -62,6 +63,13 @@ public class Client {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    public Integer getgFlag() {
+        return gFlag;
+    }
+    public void setFlag(Integer gFlag) {
+        this.gFlag = gFlag;
     }
 
     public String getDisplayPhone() {
@@ -109,6 +117,14 @@ public class Client {
         this.filings = filings;
     }
 
+    public List<Log> getLogs() {
+        return logs;
+    }
+
+    public void setLogs(List<Log> logs) {
+        this.logs = logs;
+    }
+
     @Override
     public String toString() {
         return "Client{" +
@@ -125,6 +141,8 @@ public class Client {
                 ", statusChangeDate=" + statusChangeDate +
                 ", flags=" + flags +
                 ", filings=" + filings + // Include filings in toString method
+                ", logs=" + logs +
+                ", gFlag=" + gFlag +
                 '}';
     }
 }

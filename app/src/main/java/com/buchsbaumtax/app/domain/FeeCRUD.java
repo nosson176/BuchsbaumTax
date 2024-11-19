@@ -1,6 +1,8 @@
 package com.buchsbaumtax.app.domain;
 
+import com.buchsbaumtax.core.dao.ContactDAO;
 import com.buchsbaumtax.core.dao.FeeDAO;
+import com.buchsbaumtax.core.model.Contact;
 import com.buchsbaumtax.core.model.Fee;
 import com.sifradigital.framework.db.Database;
 
@@ -28,8 +30,25 @@ public class FeeCRUD {
         return Database.dao(FeeDAO.class).get(feeId);
     }
 
-    public List<Fee> update(List<Fee> fees) {
-        Database.dao(FeeDAO.class).update(fees);
-        return fees.stream().map(f -> Database.dao(FeeDAO.class).get(f.getId())).collect(Collectors.toList());
+    public List<Fee> updateFees(List<Fee> fees) {
+        for (Fee fee : fees) {
+            Fee existingFee = Database.dao(FeeDAO.class).get(fee.getId());
+
+            if (existingFee != null) {
+                // If the contact exists, update it
+                Database.dao(FeeDAO.class).update(fee);
+            } else {
+                // If the contact doesn't exist, create a new one
+                int newContactId = Database.dao(FeeDAO.class).create(fee);
+            }
+        }
+
+        // Return the updated list of contacts
+        return fees;
     }
+
+//    public List<Fee> update(List<Fee> fees) {
+//        Database.dao(FeeDAO.class).update(fees);
+//        return fees.stream().map(f -> Database.dao(FeeDAO.class).get(f.getId())).collect(Collectors.toList());
+//    }
 }

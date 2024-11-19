@@ -7,7 +7,11 @@ import com.sifradigital.framework.auth.Authenticated;
 import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Authenticated
 @Path("/incomes")
@@ -23,9 +27,26 @@ public class IncomeBreakdownResource {
     }
 
     @PUT
-    public List<IncomeBreakdown> updateIncomeBreakdowns(List<IncomeBreakdown> incomeBreakdowns) {
-        return new IncomeBreakdownCRUD().update(incomeBreakdowns);
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateIncomeBreakdowns(List<IncomeBreakdown> incomeBreakdowns) {
+        try {
+            // Update income breakdowns using the CRUD class
+            new IncomeBreakdownCRUD().update(incomeBreakdowns);
+
+            // Return a response with "status: success"
+            Map<String, String> response = new HashMap<>();
+            response.put("status", "success");
+
+            return Response.ok(response).build();
+        } catch (Exception e) {
+            // Handle any exception by returning an error response
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error updating income breakdowns: " + e.getMessage())
+                    .build();
+        }
     }
+
 
     @PUT
     @Path("/{incomeId}")
