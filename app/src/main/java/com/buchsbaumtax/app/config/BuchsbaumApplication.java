@@ -62,9 +62,8 @@ public class BuchsbaumApplication extends SifraApplication {
                                 s -> Database.dao(UserDAO.class).getByToken(s), new UserAuthorizer())));
                 register(new AuthenticatedProvider.Binder<>(User.class));
 
-                JobsConfig jobsConfig = new JobsConfig("com.buchsbaumtax.app.job", 4);
-                scheduleJobs(jobsConfig);
-
+//                JobsConfig jobsConfig = new JobsConfig("com.buchsbaumtax.app.job", 4);
+//             scheduleJobs(jobsConfig);
                 TwilioSMSService smsService = new TwilioSMSService(
                                 EnvironmentProperty.value(EnvironmentProperty.TWILIO_ACCOUNT_SID),
                                 EnvironmentProperty.value(EnvironmentProperty.TWILIO_AUTH_TOKEN));

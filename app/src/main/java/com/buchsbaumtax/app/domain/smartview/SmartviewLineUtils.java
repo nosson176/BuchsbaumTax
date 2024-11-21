@@ -67,16 +67,13 @@ public class SmartviewLineUtils {
     public Smartview convertToSmartview(SmartviewData smartviewData) {
         List<SmartviewLine> smartviewLines = new ArrayList<>();
 
-        logger.debug("Converting SmartviewData: {}", smartviewData);
 
         for (SmartviewLineData smartviewLineData : smartviewData.getSmartviewLines()) {
-            logger.debug("Processing SmartviewLineData: {}", smartviewLineData);
 
             String fieldName = smartviewLineData.getFieldName();
             SmartviewLineField field = classFieldMap.get(fieldName);
 
             if (field != null) {
-                logger.debug("Found field mapping: {}", field);
 
                 if (field.getTableName2() != null) {
                     SmartviewLine line = new SmartviewLine(smartviewLineData, new SmartviewLineField(field.getTableName2(), field.getFieldName2(), "String"), field.getSearchValue());
@@ -97,7 +94,6 @@ public class SmartviewLineUtils {
             }
         }
 
-        logger.debug("Converted SmartviewLines: {}", smartviewLines);
         return new Smartview(smartviewData, smartviewLines);
     }
 

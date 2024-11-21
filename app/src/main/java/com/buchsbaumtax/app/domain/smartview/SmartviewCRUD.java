@@ -20,29 +20,7 @@ import org.slf4j.LoggerFactory;
 public class SmartviewCRUD {
     private static final Logger logger = LoggerFactory.getLogger(BuchsbaumApplication.class);
 
-//    public SmartviewData create(User user, SmartviewData smartviewData, Integer clientId) {
-//        logger.info("smartviewData IS HERE!: {}", smartviewData);
-//        Smartview smartview = new SmartviewLineUtils().convertToSmartview(smartviewData);
-//        logger.info("SmartviewLineUtils IS HERE!: {}", smartview);
-//
-//        if (clientId != null && clientId > 0) {
-//            smartview.setUserId(clientId);
-//            smartview.setUserName(smartviewData.getUserName());
-//        } else {
-//            smartview.setUserId(user.getId());
-//            smartview.setUserName(user.getUsername());
-//        }
-//
-//        logger.info("setsmartview IS HERE!: {}", smartview);
-//        Smartview created = Database.dao(SmartviewDAO.class).create(smartview);
-//        logger.info("created IS HERE!: {}", created);
-//        new UpdateSmartviews().updateSmartview(created);
-//
-//        return new SmartviewLineUtils().convertToSmartviewData(Database.dao(SmartviewDAO.class).get(created.getId()));
-//    }
-
     public SmartviewData create(User user, SmartviewData smartviewData, Integer clientId) {
-        logger.info("Creating smartview: {}", smartviewData);
 
         Smartview smartview = new SmartviewLineUtils().convertToSmartview(smartviewData);
 
@@ -70,12 +48,9 @@ public class SmartviewCRUD {
         if (user.getId() != oldSmartview.getUserId() || smartviewData.getId() != smartviewId) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
-        logger.info("oldSmartview IS HERE!: {}", oldSmartview);
         Smartview smartview = new SmartviewLineUtils().convertToSmartview(smartviewData);
-        logger.info("SmartviewLineUtils().convertToSmartview IS HERE!: {}", smartview);
 
         Smartview updated = Database.dao(SmartviewDAO.class).update(smartview);
-        logger.info("Smartview updated IS HERE!: {}", updated);
         new UpdateSmartviews().updateSmartview(updated);
 
         if (smartviewData.getSortNumber() != oldSmartview.getSortNumber()) {
@@ -112,11 +87,9 @@ public class SmartviewCRUD {
     public Map<Client, List<Filing>> getSmartViewFiltersResults(SmartviewData smartviewData) {
 
         Smartview smartview = new SmartviewLineUtils().convertToSmartview(smartviewData);
-        logger.info("SmartviewLineUtils().convertToSmartview IS HERE!: {}", smartview);
         Smartview updated = Database.dao(SmartviewDAO.class).update(smartview);
 //        logger.info("Smartview updated IS HERE!: {}", updated);
         Map<Client, List<Filing>> data =   new UpdateSmartviews().getSmartviewResult(updated);
-        logger.info("Smartview data IS HERE!: {}", data);
         return  data;
     }
 }

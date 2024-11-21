@@ -17,7 +17,7 @@ import java.util.List;
 
 @Dao
 public interface SmartviewDAO {
-    static final Logger logger = LoggerFactory.getLogger(BuchsbaumApplication.class);
+    static final Logger logger = LoggerFactory.getLogger(SmartviewDAO.class);
 
     @RegisterFieldMapper(value = Smartview.class, prefix = "s")
     @RegisterFieldMapper(SmartviewLine.class)
@@ -62,9 +62,7 @@ public interface SmartviewDAO {
     void delete(@Bind("id") int id);
 
     default Smartview create(Smartview smartview) {
-        logger.info("smartviewDAO IS HERE!: {}", smartview);
         int id = createSmartview(smartview);
-        logger.info("idDAO IS HERE!: {}", id);
         for (SmartviewLine smartviewLine : smartview.getSmartviewLines()) {
             smartviewLine.setSmartviewId(id);
             createSmartviewLine(smartviewLine);

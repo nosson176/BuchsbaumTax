@@ -1,5 +1,6 @@
 package com.buchsbaumtax.app.domain;
 
+import com.buchsbaumtax.app.domain.smartview.UpdateSmartviews;
 import com.buchsbaumtax.core.dao.ContactDAO;
 import com.buchsbaumtax.core.dao.FeeDAO;
 import com.buchsbaumtax.core.model.Contact;
@@ -10,8 +11,11 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FeeCRUD {
+    private static final Logger logger = LoggerFactory.getLogger(FeeCRUD.class);
     public Fee create(Fee fee) {
         int id = Database.dao(FeeDAO.class).create(fee);
         return Database.dao(FeeDAO.class).get(id);
@@ -22,11 +26,15 @@ public class FeeCRUD {
     }
 
     public Fee update(Fee fee, int feeId) {
+        logger.info("Fee update {}: {}");
         Fee oldFee = Database.dao(FeeDAO.class).get(feeId);
+        logger.info("Fee update {}: {}", oldFee);
         if (feeId != fee.getId() || oldFee == null) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
+        logger.info("Fee update finish {}: {}", oldFee);
         Database.dao(FeeDAO.class).update(fee);
+        logger.info("Fee update finish2222 {}: {}", oldFee);
         return Database.dao(FeeDAO.class).get(feeId);
     }
 
