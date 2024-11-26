@@ -3,10 +3,7 @@ package com.buchsbaumtax.app.domain.smartview;
 import com.buchsbaumtax.app.config.BuchsbaumApplication;
 import com.buchsbaumtax.app.dto.SmartviewData;
 import com.buchsbaumtax.core.dao.SmartviewDAO;
-import com.buchsbaumtax.core.model.Client;
-import com.buchsbaumtax.core.model.Filing;
-import com.buchsbaumtax.core.model.Smartview;
-import com.buchsbaumtax.core.model.User;
+import com.buchsbaumtax.core.model.*;
 import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.WebApplicationException;
@@ -84,12 +81,48 @@ public class SmartviewCRUD {
         Database.dao(SmartviewDAO.class).updateSmartviews(smartviews);
     }
 
-    public Map<Client, List<Filing>> getSmartViewFiltersResults(SmartviewData smartviewData) {
+//    public Map<Client, List<Filing>> getSmartViewFiltersResults(SmartviewData smartviewData) {
+//        logger.info("smartviewData: {}", smartviewData);
+//        Smartview smartview = new SmartviewLineUtils().convertToSmartview(smartviewData);
+//        logger.info("smartview: {}", smartview);
+//        Smartview updated = Database.dao(SmartviewDAO.class).update(smartview);
+//        logger.info("smartview updated: {}", updated);
+//
+////        logger.info("Smartview updated IS HERE!: {}", updated);
+//        Map<Client, List<Filing>> data =   new UpdateSmartviews().getSmartviewResult(updated);
+//        logger.info("smartview data: {}", data);
+//        return  data;
+//    }
 
+    public Map<Client, List<Filing>> getSmartViewFiltersResults(SmartviewData smartviewData) {
+        logger.info("smartviewData: {}", smartviewData);
+
+        // Convert SmartviewData to Smartview object
         Smartview smartview = new SmartviewLineUtils().convertToSmartview(smartviewData);
+        logger.info("smartview: {}", smartview);
+
+        // Initialize the local variable for active
+        boolean active = false;
+
+        // Check if there is a smartviewLine with field 'active' and set the value
+        for (SmartviewLine line : smartview.getSmartviewLines()) {
+            if ("active".equals(line.getField())) {
+                active = Boolean.parseBoolean(line.getSearchValue());
+                break;  // Exit the loop once we find the 'active' field
+            }
+        }
+
+        logger.info("Active status determined: {}", active);
+
+        // Update the smartview in the database
         Smartview updated = Database.dao(SmartviewDAO.class).update(smartview);
-//        logger.info("Smartview updated IS HERE!: {}", updated);
-        Map<Client, List<Filing>> data =   new UpdateSmartviews().getSmartviewResult(updated);
-        return  data;
+        logger.info("smartview updated: {}", updated);
+
+        // Call the function to get results with the active value
+        Map<Client, List<Filing>> data = new UpdateSmartviews().getSmartviewResult(updated, active);
+        logger.info("smartview data: {}", data);
+
+        return data;
     }
+
 }

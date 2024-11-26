@@ -54,7 +54,8 @@ public class UpdateSmartviews {
             List<Long> clientIdsAsLong = finalClientIds.stream()
                     .map(Integer::longValue)  // Convert each Integer to Long
                     .collect(Collectors.toList());
-            List<Client> clients = Database.dao(ClientDAO.class).getClientsByIds(clientIdsAsLong);
+            boolean active;
+            List<Client> clients = Database.dao(ClientDAO.class).getClientsByIds(clientIdsAsLong,active = false);
             for (Client client : clients) {
                 List<Filing> filings = Database.dao(FilingDAO.class).getByClient(client.getId());
                 clientFilingsMap.put(client, filings);
@@ -134,7 +135,7 @@ public class UpdateSmartviews {
         return new HashSet<>();
     }
 
-    public Map<Client, List<Filing>> getSmartviewResult(Smartview smartview) {
+    public Map<Client, List<Filing>> getSmartviewResult(Smartview smartview, boolean active) {
         List<SmartviewLine> smartviewLines = smartview.getSmartviewLines();
         Set<Integer> finalClientIds = new HashSet<>();
 
@@ -172,7 +173,7 @@ public class UpdateSmartviews {
             List<Long> clientIdsAsLong = finalClientIds.stream()
                     .map(Integer::longValue)
                     .collect(Collectors.toList());
-            List<Client> clients = Database.dao(ClientDAO.class).getClientsByIds(clientIdsAsLong);
+            List<Client> clients = Database.dao(ClientDAO.class).getClientsByIds(clientIdsAsLong,active);
             for (Client client : clients) {
                 List<Filing> filings = Database.dao(FilingDAO.class).getByClient(client.getId());
                 List<Log> logs = Database.dao(LogDAO.class).getForClient(client.getId());

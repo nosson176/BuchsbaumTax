@@ -4,7 +4,6 @@ import com.buchsbaumtax.core.dao.ClientDAO;
 import com.buchsbaumtax.core.dao.SmartviewDAO;
 import com.buchsbaumtax.core.model.Client;
 import com.buchsbaumtax.core.model.CustomerContactInfo;
-import com.buchsbaumtax.core.model.Filing;
 import com.buchsbaumtax.core.model.Smartview;
 import com.buchsbaumtax.core.util.NaturalOrderComparator;
 import com.sifradigital.framework.db.Database;
@@ -20,26 +19,33 @@ import org.slf4j.LoggerFactory;
 
 public class GetClients {
     static final Logger logger = LoggerFactory.getLogger(GetClients.class);
-    public List<Client> getAll() {
-        List<Client> clients = Database.dao(ClientDAO.class).getAll();
+    public List<Client> getAll(Boolean active) {
+        List<Client> clients;
+        if (active != null) {
+            clients = Database.dao(ClientDAO.class).getAll(active); // Pass active flag to DAO
+        } else {
+            clients = Database.dao(ClientDAO.class).getAll(false); // Default to inactive clients if active is null
+        }
         sort(clients);
         return clients;
     }
 
-    public List<Client> getForSmartview(int smartviewId) {
+    public List<Client> getForSmartview(int smartviewId, Boolean active) {
         Smartview smartview = Database.dao(SmartviewDAO.class).get(smartviewId);
-        List<Client> clients = Database.dao(ClientDAO.class).getBulk(smartview.getClientIds());
+        List<Client> clients = Database.dao(ClientDAO.class).getBulk(smartview.getClientIds(), active);
+//        sort(clients);
+        return clients;
+    }
+
+    // Get clients based on a default search query, filter by active status
+    public List<Client> getForDefaultSearch(String q, Boolean active) {
+        List<Client> clients = Database.dao(ClientDAO.class).getFiltered(q, active); // Pass active flag to DAO
         sort(clients);
         return clients;
     }
 
-    public List<Client> getForDefaultSearch(String q) {
-        List<Client> clients = Database.dao(ClientDAO.class).getFiltered(q);
-        sort(clients);
-        return clients;
-    }
-
-    public List<Client> getForFieldSearch(String q, String field) {
+    // Get clients based on a specific field search, filter by active status
+    public List<Client> getForFieldSearch(String q, String field, Boolean active) {
         String[] fieldArray = field.split("::");
         if (fieldArray.length < 2) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
@@ -54,12 +60,19 @@ public class GetClients {
         else {
             query.append(String.format("WHERE %s ILIKE '%%%s%%'", fieldName, q));
         }
-        query.append("ORDER BY c.last_name");
+
+        // Add active filter condition if active parameter is passed
+        if (active != null) {
+            query.append(" AND c.active = ").append(active);
+        }
+
+        query.append(" ORDER BY c.last_name");
         String queryString = query.toString();
         List<Client> clients = Database.dao(ClientDAO.class).getFilteredWithFields(queryString);
-        sort(clients);
+//        sort(clients);
         return clients;
     }
+
 
     private void sort(List<Client> clients) {
         clients.sort(Comparator.comparing(Client::getLastName, new NaturalOrderComparator()));

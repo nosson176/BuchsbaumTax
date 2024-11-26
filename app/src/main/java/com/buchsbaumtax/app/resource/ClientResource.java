@@ -39,24 +39,43 @@ public class ClientResource {
     }
 
     @GET
-    public List<Client> getAllClients(@QueryParam("smartview") Integer smartviewId, @QueryParam("q") String q, @QueryParam("field") String field) {
+    public List<Client> getAllClients(@QueryParam("smartview") Integer smartviewId,
+                                      @QueryParam("q") String q,
+                                      @QueryParam("field") String field,
+                                      @QueryParam("active") Boolean active) {
+        logger.info("Fetching clients with parameters - smartviewId: {}, query: {}, field: {}, active: {}",
+                smartviewId, q, field, active);
+
         GetClients getClients = new GetClients();
+
+        // Filter by smartview if provided
         if (smartviewId != null) {
-            return getClients.getForSmartview(smartviewId);
+            logger.info("Fetching clients for smartviewId: {}", smartviewId);
+            return getClients.getForSmartview(smartviewId,active);
         }
+
+        // Perform a search query
         if (q != null) {
+            logger.info("Searching clients with query: {}", q);
             if (field != null) {
-                return getClients.getForFieldSearch(q, field);
+                logger.info("Searching clients by field: {}", field);
+                return getClients.getForFieldSearch(q, field,active);
             }
-            return getClients.getForDefaultSearch(q);
+            return getClients.getForDefaultSearch(q,active);
         }
-        return getClients.getAll();
+
+        // Handle filtering by active status
+        boolean isActive = active == null ? true : active; // Default to false if active is not provided
+        logger.info("Fetching clients with active status: {}", isActive);
+        return Database.dao(ClientDAO.class).getAll(isActive);
     }
+
+
 
     @GET
     @Path("/{clientId}")
-    public Client getClient(@PathParam("clientId") int clientId) {
-        return Database.dao(ClientDAO.class).get(clientId);
+    public Client getClient(@PathParam("clientId") int clientId, @QueryParam("active") Boolean active) {
+        return Database.dao(ClientDAO.class).get(clientId,active);
     }
 
     @GET

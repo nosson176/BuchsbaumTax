@@ -27,6 +27,7 @@ public class Client {
     private Date updated;
     private Long statusChangeDate;
     private Integer gFlag;
+    private boolean active;
     @JsonView(BasicView.class)
     private List<ClientFlag> flags = new ArrayList<>();
     private List<Filing> filings = new ArrayList<>(); // Add a list of filings
@@ -70,6 +71,12 @@ public class Client {
     }
     public void setFlag(Integer gFlag) {
         this.gFlag = gFlag;
+    }
+    public boolean getActive() {
+        return active;
+    }
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public String getDisplayPhone() {

@@ -14,7 +14,8 @@ import java.util.Objects;
 public class DisplayFields {
 
     public void setDisplayName(int clientId) {
-        Client client = Database.dao(ClientDAO.class).get(clientId);
+        boolean active = true;
+        Client client = Database.dao(ClientDAO.class).get(clientId,active);
         List<TaxPersonal> taxPersonals = Database.dao(TaxPersonalDAO.class).getForClient(clientId);
         String displayName = getDisplayName(taxPersonals);
 
@@ -40,7 +41,8 @@ public class DisplayFields {
     }
 
     public void setDisplayPhone(int clientId) {
-        Client client = Database.dao(ClientDAO.class).get(clientId);
+        boolean active = true;
+        Client client = Database.dao(ClientDAO.class).get(clientId,active);
         List<Contact> contacts = Database.dao(ContactDAO.class).getForClient(clientId);
         String displayPhone = getDisplayPhone(contacts);
         client.setDisplayPhone(displayPhone);

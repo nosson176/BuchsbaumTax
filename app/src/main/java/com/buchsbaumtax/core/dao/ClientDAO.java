@@ -30,14 +30,15 @@ public interface ClientDAO {
     @RegisterFieldMapper(Client.class)
     @RegisterFieldMapper(ClientFlag.class)
     @UseRowReducer(ClientReducer.class)
-    @SqlQuery("SELECT * FROM clients c LEFT JOIN client_flags cf on c.id = cf.client_id ORDER BY c.last_name")
-    List<Client> getAll();
+    @SqlQuery("SELECT * FROM clients c LEFT JOIN client_flags cf ON c.id = cf.client_id WHERE (:active IS FALSE OR c.active = :active) ORDER BY c.last_name")
+    List<Client> getAll(@Bind("active") boolean active);
 
     @RegisterFieldMapper(Client.class)
     @RegisterFieldMapper(ClientFlag.class)
     @UseRowReducer(ClientReducer.class)
-    @SqlQuery("SELECT * FROM clients c LEFT JOIN client_flags cf on c.id = cf.client_id WHERE c.id = :id")
-    Client get(@Bind("id") int id);
+    @SqlQuery("SELECT * FROM clients c LEFT JOIN client_flags cf ON c.id = cf.client_id WHERE c.id = :id AND (:active IS FALSE OR c.active = :active)")
+    Client get(@Bind("id") int id, @Bind("active") boolean active);
+
 
     @RegisterFieldMapper(Client.class)
     @SqlQuery("SELECT * FROM clients WHERE id = :id")
@@ -46,14 +47,16 @@ public interface ClientDAO {
     @RegisterFieldMapper(Client.class)
     @RegisterFieldMapper(ClientFlag.class)
     @UseRowReducer(ClientReducer.class)
-    @SqlQuery("SELECT * FROM clients c LEFT JOIN client_flags cf on c.id = cf.client_id AND c.id IN (<ids>) ORDER BY c.last_name")
-    List<Client> getBulk(@BindList("ids") List<Integer> ids);
+    @SqlQuery("SELECT * FROM clients c LEFT JOIN client_flags cf ON c.id = cf.client_id WHERE c.id IN (<ids>) AND (:active IS FALSE OR c.active = :active) ORDER BY c.last_name")
+    List<Client> getBulk(@BindList("ids") List<Integer> ids, @Bind("active") boolean active);
+
 
     @RegisterFieldMapper(Client.class)
     @RegisterFieldMapper(ClientFlag.class)
     @UseRowReducer(ClientReducer.class)
-    @SqlQuery(WITH + SELECT)
-    List<Client> getFiltered(@Bind("q") String q);
+    @SqlQuery("SELECT * FROM clients c LEFT JOIN client_flags cf ON c.id = cf.client_id WHERE (:active IS FALSE OR c.active = :active) AND (c.last_name ILIKE CONCAT('%', :q, '%')) ORDER BY c.last_name")
+    List<Client> getFiltered(@Bind("q") String q, @Bind("active") boolean active);
+
 
     @RegisterFieldMapper(Client.class)
     @RegisterFieldMapper(ClientFlag.class)
@@ -67,14 +70,11 @@ public interface ClientDAO {
     Set<Integer> getClientIdsByQuery(@Define("query") String query);
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO clients (status, owes_status, periodical, last_name, archived, display_name, display_phone, g_flag, status_change_date) VALUES (:status, :owesStatus, :periodical, :lastName, :archived, :displayName, :displayPhone, :gFlag, :statusChangeDate)")
+    @SqlUpdate("INSERT INTO clients (status, owes_status, periodical, last_name, archived, display_name, display_phone, g_flag, status_change_date, active) VALUES (:status, :owesStatus, :periodical, :lastName, :archived, :displayName, :displayPhone, :gFlag, :statusChangeDate, :active)")
     int create(@BindBean Client client);
 
-    @SqlUpdate("UPDATE clients SET status = :status, owes_status = :owesStatus, periodical = :periodical, last_name = :lastName, archived = :archived, display_name = :displayName, display_phone = :displayPhone, g_flag = :gFlag, status_change_date = :statusChangeDate, updated = now() WHERE id = :id")
+    @SqlUpdate("UPDATE clients SET status = :status, owes_status = :owesStatus, periodical = :periodical, last_name = :lastName, archived = :archived, display_name = :displayName, display_phone = :displayPhone, g_flag = :gFlag, status_change_date = :statusChangeDate, active = :active, updated = now() WHERE id = :id")
     void update(@BindBean Client client);
-
-//    @SqlUpdate("UPDATE clients SET status = :status, owes_status = :owesStatus, periodical = :periodical, last_name = :lastName, archived = :archived, display_name = :displayName, display_phone = :displayPhone, g_flag = :g_flag, status_change_date = :statusChangeDate, updated = now() WHERE id = :id")
-//    void update(@BindBean Client client);
 
     @SqlUpdate("DELETE FROM clients WHERE id = :id")
     void delete(@Bind("id") int id);
@@ -87,6 +87,7 @@ public interface ClientDAO {
     @RegisterFieldMapper(Client.class)
     @RegisterFieldMapper(ClientFlag.class)
     @UseRowReducer(ClientReducer.class)
-    @SqlQuery("SELECT * FROM clients c LEFT JOIN client_flags cf on c.id = cf.client_id WHERE c.id IN (<ids>)")
-    List<Client> getClientsByIds(@BindList("ids") List<Long> ids);
+    @SqlQuery("SELECT * FROM clients c LEFT JOIN client_flags cf ON c.id = cf.client_id WHERE c.id IN (<ids>) AND (:active IS FALSE OR c.active = :active)")
+    List<Client> getClientsByIds(@BindList("ids") List<Long> ids, @Bind("active") boolean active);
+
 }

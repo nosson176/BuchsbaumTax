@@ -50,7 +50,7 @@ public class BuchsbaumApplication extends SifraApplication {
                         connection = new DatabaseConfig.Connection("jdbc/BTDB",
                                         "jdbc:postgresql://localhost:5432/buchsbaum",
                                         "postgres",
-                                        "sifra123");
+                                        "123515");
                 }
 
                 DatabaseConfig databaseConfig = new DatabaseConfig(connection, "com.buchsbaumtax.core.dao", false,

@@ -13,12 +13,13 @@ import org.slf4j.LoggerFactory;
 public class UpdateClient {
     static final Logger logger = LoggerFactory.getLogger(UpdateClient.class);
     public Client updateClient(int clientId, Client client) {
-//        logger.info("client: {} client id {}", client,clientId);
-        Client oldClient = Database.dao(ClientDAO.class).get(clientId);
+        logger.info("client: {} client id {}", client,clientId);
+        boolean active =true;
+        Client oldClient = Database.dao(ClientDAO.class).get(clientId,active);
         if (oldClient == null || clientId != client.getId()) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         Database.dao(ClientDAO.class).update(client);
-        return Database.dao(ClientDAO.class).get(clientId);
+        return Database.dao(ClientDAO.class).get(clientId,active);
     }
 }

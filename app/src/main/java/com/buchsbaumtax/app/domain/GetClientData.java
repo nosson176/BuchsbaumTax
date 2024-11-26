@@ -19,7 +19,8 @@ public class GetClientData {
     private static final Logger logger = LoggerFactory.getLogger(BuchsbaumApplication.class);
 
     public ClientData getByClient(User user, int clientId) {
-        Client client = Database.dao(ClientDAO.class).get(clientId);
+        boolean active = true;
+        Client client = Database.dao(ClientDAO.class).get(clientId,active);
 //        logger.info("Client data retrieved successfully for ccccccc {}: {}", client);
         List<TaxYear> taxYears = Database.dao(TaxYearDAO.class).getByClient(client.getId());
 //        logger.info("Client 1111111111111111111111 {}: {}",taxYears);
@@ -60,8 +61,9 @@ public class GetClientData {
 
         if (clientId == null) {
             // Fetch all clients with a limit of 10 if clientId is null
+            boolean active = true;
             clients = Database.dao(ClientDAO.class)
-                    .getAll()
+                    .getAll(active)
                     .stream()
                     .limit(10)
                     .collect(Collectors.toList());

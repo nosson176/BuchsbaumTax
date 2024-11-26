@@ -19,6 +19,11 @@
     "fieldName": "status",
     "type": "String"
   },
+  "CLIENT::active": {
+    "tableName": "clients",
+    "fieldName": "active",
+    "type": "String"
+  },
   "CLIENT::year_of_last_log": {
     "tableName": "clients",
     "fieldName": "year_of_last_log",
