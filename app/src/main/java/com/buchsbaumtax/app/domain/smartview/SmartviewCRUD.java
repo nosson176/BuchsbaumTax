@@ -1,6 +1,7 @@
 package com.buchsbaumtax.app.domain.smartview;
 
 import com.buchsbaumtax.app.config.BuchsbaumApplication;
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.SmartviewData;
 import com.buchsbaumtax.core.dao.SmartviewDAO;
 import com.buchsbaumtax.core.model.*;
@@ -15,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SmartviewCRUD {
-    private static final Logger logger = LoggerFactory.getLogger(BuchsbaumApplication.class);
+    private static final Logger logger = LoggerFactory.getLogger(SmartviewCRUD.class);
 
     public SmartviewData create(User user, SmartviewData smartviewData, Integer clientId) {
 
@@ -36,7 +37,9 @@ public class SmartviewCRUD {
 
     public List<SmartviewData> getForUser(User user) {
         List<Smartview> smartviews = Database.dao(SmartviewDAO.class).getByUser(user.getId());
+        logger.info("smartviews user here!!! :{}",smartviews.size());
         SmartviewLineUtils smartviewLineUtils = new SmartviewLineUtils();
+        logger.info("smartviews final!!! :{}",smartviews.stream().map(smartviewLineUtils::convertToSmartviewData).collect(Collectors.toList()).size());
         return smartviews.stream().map(smartviewLineUtils::convertToSmartviewData).collect(Collectors.toList());
     }
 
@@ -56,6 +59,20 @@ public class SmartviewCRUD {
             reorder(smartviews, oldSmartview.getSortNumber(), smartviewData.getSortNumber());
         }
         return new SmartviewLineUtils().convertToSmartviewData(Database.dao(SmartviewDAO.class).get(updated.getId()));
+    }
+
+    public void updateBatch(User user,List<Smartview>smartviews){
+        logger.info("smartviews here!!! :{}",smartviews);
+//        List<Smartview> clientSmartview = Database.dao(SmartviewDAO.class).getByUser(user.getId());
+//        if (clientSmartview == null || clientSmartview.isEmpty()) {
+//            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+//        }
+//        for (int i = 0; i < smartviews.size(); i++){
+//            if(smartviews.get(i).getId() = clientSmartview.get(i).getId() ){
+//                cl
+//            }
+//        }
+            Database.dao(SmartviewDAO.class).updateSmartviewsOrder(smartviews);
     }
 
     private void reorder(List<Smartview> smartviews, int oldSort, int newSort) {

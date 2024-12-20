@@ -8,7 +8,7 @@ public class CreateClient {
 
     public Client createClient(Client client) {
         int id = Database.dao(ClientDAO.class).create(client);
-        boolean active =true;
+        boolean active = true;
         return Database.dao(ClientDAO.class).get(id,active);
     }
 }

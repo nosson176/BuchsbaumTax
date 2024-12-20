@@ -18,6 +18,7 @@ public class User implements Principal {
     private String userType;
     private Date created;
     private Date updated;
+    private static String email;
 
     public int getId() {
         return id;
@@ -62,7 +63,12 @@ public class User implements Principal {
     public String getUserType() {
         return userType;
     }
-
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
     public Date getCreated() {
         return created;
     }

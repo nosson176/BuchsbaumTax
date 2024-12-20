@@ -2,6 +2,7 @@ package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.config.Role;
 import com.buchsbaumtax.app.domain.user.*;
+import com.buchsbaumtax.app.dto.Credentials;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.UpdatePasswordRequest;
 import com.buchsbaumtax.app.dto.UserMessageObject;
@@ -14,15 +15,19 @@ import com.buchsbaumtax.core.model.UserMessage;
 import com.buchsbaumtax.core.model.create.UserCreate;
 import com.sifradigital.framework.auth.Authenticated;
 import com.sifradigital.framework.db.Database;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Authenticated
 @Path("/users")
 public class UserResource {
-
+    private static final Logger logger = LoggerFactory.getLogger(UserResource.class);
     @GET
     public List<User> getAllUsers() {
         return new UserCRUD().getAll();
@@ -54,6 +59,8 @@ public class UserResource {
     public BaseResponse updatePassword(@PathParam("userId") int userId, UpdatePasswordRequest updatePasswordRequest) {
         return new UserCRUD().updatePassword(userId, updatePasswordRequest);
     }
+
+
 
     @GET
     @Path("/current")

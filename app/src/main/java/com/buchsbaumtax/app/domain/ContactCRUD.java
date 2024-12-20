@@ -19,7 +19,7 @@ public class ContactCRUD {
         return Database.dao(ContactDAO.class).get(contactId);
     }
 
-    public Contact update(int contactId, Contact contact) {
+    public boolean update(int contactId, Contact contact) {
         validate(contact);
         Contact oldContact = Database.dao(ContactDAO.class).get(contactId);
         if (contact.getId() != contactId || oldContact == null) {
@@ -32,7 +32,9 @@ public class ContactCRUD {
         Database.dao(ContactDAO.class).update(contact);
         Contact updatedContact = Database.dao(ContactDAO.class).get(contactId);
         new DisplayFields().setDisplayPhone(updatedContact.getClientId());
-        return Database.dao(ContactDAO.class).get(contactId);
+//        return Database.dao(ContactDAO.class).get(contactId);
+        return  true;
+
     }
 
     public List<Contact> updateContacts(List<Contact> contacts) {

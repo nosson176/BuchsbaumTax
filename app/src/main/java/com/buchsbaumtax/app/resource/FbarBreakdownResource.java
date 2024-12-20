@@ -2,6 +2,7 @@ package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.FbarBreakdownCRUD;
 import com.buchsbaumtax.app.domain.IncomeBreakdownCRUD;
+import com.buchsbaumtax.app.dto.Either;
 import com.buchsbaumtax.core.dao.FbarBreakdownDAO;
 import com.buchsbaumtax.core.model.FbarBreakdown;
 import com.buchsbaumtax.core.model.IncomeBreakdown;
@@ -49,9 +50,23 @@ public class FbarBreakdownResource {
         }
     }
 
+//    @PUT
+//    @Path("/{fbarId}")
+//    public FbarBreakdown updateFbarBreakdown(@PathParam("fbarId") int fbarBreakdownId, FbarBreakdown fbarBreakdown) {
+//        return new FbarBreakdownCRUD().update(fbarBreakdownId, fbarBreakdown);
+//    }
+
     @PUT
     @Path("/{fbarId}")
-    public FbarBreakdown updateFbarBreakdown(@PathParam("fbarId") int fbarBreakdownId, FbarBreakdown fbarBreakdown) {
-        return new FbarBreakdownCRUD().update(fbarBreakdownId, fbarBreakdown);
+    public Either<String, FbarBreakdown> updateFbarBreakdown(
+            @PathParam("fbarId") int fbarBreakdownId,
+            FbarBreakdown fbarBreakdown,
+            @QueryParam("returnData") @DefaultValue("true") boolean returnData
+    ) {
+        FbarBreakdown updatedBreakdown = new FbarBreakdownCRUD().update(fbarBreakdownId, fbarBreakdown);
+
+        return returnData
+                ? Either.right(updatedBreakdown)
+                : Either.left("Fbar Breakdown updated successfully");
     }
 }

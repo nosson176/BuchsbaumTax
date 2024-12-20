@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class WorkTimesCRUD {
-    private static final Logger logger = LoggerFactory.getLogger(BuchsbaumApplication.class);
+    private static final Logger logger = LoggerFactory.getLogger(WorkTimesCRUD.class);
 
     public WorkTimes create(WorkTimes workTimes) {
         logger.info("APP_MODE is set to: {}", workTimes.getDate());

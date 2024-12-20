@@ -22,6 +22,11 @@ public class Smartview {
     public Smartview() {
     }
 
+    public Smartview(Integer id, int sortNumber) {
+        this.id = id;
+        this.sortNumber = sortNumber;
+    }
+
     public Smartview(SmartviewData smartviewData, List<SmartviewLine> smartviewLines) {
         this.id = smartviewData.getId();
         this.userName = smartviewData.getUserName();

@@ -3,6 +3,7 @@ package com.buchsbaumtax.app.resource;
 import com.buchsbaumtax.app.domain.smartview.SmartviewCRUD;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.ClientData;
+import com.buchsbaumtax.app.dto.Either;
 import com.buchsbaumtax.app.dto.SmartviewData;
 import com.buchsbaumtax.core.dao.SmartviewDAO;
 import com.buchsbaumtax.core.model.*;
@@ -17,10 +18,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Authenticated
 @Path("/smartviews")
 public class SmartviewResource {
+    private static final Logger logger = LoggerFactory.getLogger(SmartviewResource.class);
+
 
     @POST
     public SmartviewData createSmartview(@Authenticated User user, SmartviewData smartview, @QueryParam("clientId") Integer clientId) {
@@ -45,9 +50,44 @@ public class SmartviewResource {
 
     @PUT
     @Path("/{smartviewId}")
-    public SmartviewData updateSmartview(@Authenticated User user, @PathParam("smartviewId") int smartviewId, SmartviewData smartview) {
-        return new SmartviewCRUD().update(user, smartviewId, smartview);
+    public Either<String, SmartviewData> updateSmartview(
+            @Authenticated User user,
+            @PathParam("smartviewId") int smartviewId,
+            SmartviewData smartview,
+            @QueryParam("returnData") @DefaultValue("false") boolean returnData
+    ) {
+        SmartviewData updatedData = new SmartviewCRUD().update(user, smartviewId, smartview);
+
+        return returnData
+                ? Either.right(updatedData)
+                : Either.left("Smartview updated successfully");
     }
+
+    @PUT
+    @Path("/batchUpdate")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateBatchSmartviews(@Authenticated User user, List<Smartview> smartviews) {
+        logger.info("smartviewsRESOURCE here!!! :{}",smartviews);
+        if (smartviews == null || smartviews.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new BaseResponse(false, "No smartviews provided for update"))
+                    .build();
+        }
+
+        try {
+            // Delegate the update to the CRUD service
+           new SmartviewCRUD().updateBatch(user, smartviews);
+
+            return Response.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the error
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new BaseResponse(false, "Failed to update smartviews: " + e.getMessage()))
+                    .build();
+        }
+    }
+
 
     @DELETE
     @Path("/{smartviewId}")

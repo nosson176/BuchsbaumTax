@@ -33,9 +33,30 @@ public class ContactResource {
         return Response.ok("{\"status\":\"success\"}").build();
     }
 
+//    @PUT
+//    @Path("/{contactId}")
+//    public Contact updateContact(@PathParam("contactId") int contactId, Contact contact) {
+//        return new ContactCRUD().update(contactId, contact);
+//    }
+
     @PUT
     @Path("/{contactId}")
-    public Contact updateContact(@PathParam("contactId") int contactId, Contact contact) {
-        return new ContactCRUD().update(contactId, contact);
+    public Response updateContact(@PathParam("contactId") int contactId, Contact contact) {
+        try {
+            boolean isUpdated = new ContactCRUD().update(contactId, contact);
+
+            if (isUpdated) {
+                return Response.ok("Contact updated successfully").build(); // HTTP 200
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("Failed to update contact")
+                        .build(); // HTTP 400
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("An error occurred: " + e.getMessage())
+                    .build(); // HTTP 500
+        }
     }
+
 }
