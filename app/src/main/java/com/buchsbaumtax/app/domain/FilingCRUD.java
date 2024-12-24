@@ -138,7 +138,5 @@ public class FilingCRUD {
         return new ArrayList<>(); // Return the actual list from the database
     }
 
-    private void updateD(int filingId, Filing filing) {
-        // Implement this method to update the filing in the database
-    }
+
 }

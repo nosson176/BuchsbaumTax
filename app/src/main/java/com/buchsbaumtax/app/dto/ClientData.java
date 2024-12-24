@@ -239,14 +239,14 @@ public class ClientData {
     private final List<Checklist> checklists;
     private final Integer gFlag;
     private Integer flag;
-    private final double owesDollars;
-    private final double paidDollars;
-    private final double owesShekels;
-    private final double paidShekels;
-    private final double feesOwesDollars;
-    private final double feesPaidDollars;
-    private final double feesOwesShekels;
-    private final double feesPaidShekels;
+//    private final double owesDollars;
+//    private final double paidDollars;
+//    private final double owesShekels;
+//    private final double paidShekels;
+//    private final double feesOwesDollars;
+//    private final double feesPaidDollars;
+//    private final double feesOwesShekels;
+//    private final double feesPaidShekels;
 
     public ClientData(Client client, List<TaxYearData> taxYearData) {
         this.id = client.getId();
@@ -269,40 +269,40 @@ public class ClientData {
         this.fees = Database.dao(FeeDAO.class).getForClient(client.getId());
         this.checklists = Database.dao(ChecklistDAO.class).getForClient(client.getId());
 
-        List<Filing> filings = taxYearData.stream().flatMap(t -> t.getFilings().stream()).collect(Collectors.toList());
-        this.owesDollars = filings.stream()
-                .filter(Filing::isIncludeInRefund)
-                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(DOLLARS))
-                .mapToDouble(f -> f.getOwes() + f.getOwesFee()).sum();
-        this.paidDollars = filings.stream()
-                .filter(Filing::isIncludeInRefund)
-                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(DOLLARS))
-                .mapToDouble(f -> f.getPaid() + f.getPaidFee()).sum();
-        this.owesShekels = filings.stream()
-                .filter(Filing::isIncludeInRefund)
-                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(SHEKELS))
-                .mapToDouble(f -> f.getOwes() + f.getOwesFee()).sum();
-        this.paidShekels = filings.stream()
-                .filter(Filing::isIncludeInRefund)
-                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(SHEKELS))
-                .mapToDouble(f -> f.getPaid() + f.getPaidFee()).sum();
-
-        this.feesOwesDollars = fees.stream()
-                .filter(Fee::isInclude)
-                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(DOLLARS))
-                .mapToDouble(Fee::getManualAmount).sum();
-        this.feesPaidDollars = fees.stream()
-                .filter(Fee::isInclude)
-                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(DOLLARS))
-                .mapToDouble(Fee::getPaidAmount).sum();
-        this.feesOwesShekels = fees.stream()
-                .filter(Fee::isInclude)
-                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(SHEKELS))
-                .mapToDouble(Fee::getManualAmount).sum();
-        this.feesPaidShekels = fees.stream()
-                .filter(Fee::isInclude)
-                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(SHEKELS))
-                .mapToDouble(Fee::getPaidAmount).sum();
+//        List<Filing> filings = taxYearData.stream().flatMap(t -> t.getFilings().stream()).collect(Collectors.toList());
+//        this.owesDollars = filings.stream()
+//                .filter(Filing::isIncludeInRefund)
+//                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(DOLLARS))
+//                .mapToDouble(f -> f.getOwes() + f.getOwesFee()).sum();
+//        this.paidDollars = filings.stream()
+//                .filter(Filing::isIncludeInRefund)
+//                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(DOLLARS))
+//                .mapToDouble(f -> f.getPaid() + f.getPaidFee()).sum();
+//        this.owesShekels = filings.stream()
+//                .filter(Filing::isIncludeInRefund)
+//                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(SHEKELS))
+//                .mapToDouble(f -> f.getOwes() + f.getOwesFee()).sum();
+//        this.paidShekels = filings.stream()
+//                .filter(Filing::isIncludeInRefund)
+//                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(SHEKELS))
+//                .mapToDouble(f -> f.getPaid() + f.getPaidFee()).sum();
+//
+//        this.feesOwesDollars = fees.stream()
+//                .filter(Fee::isInclude)
+//                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(DOLLARS))
+//                .mapToDouble(Fee::getManualAmount).sum();
+//        this.feesPaidDollars = fees.stream()
+//                .filter(Fee::isInclude)
+//                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(DOLLARS))
+//                .mapToDouble(Fee::getPaidAmount).sum();
+//        this.feesOwesShekels = fees.stream()
+//                .filter(Fee::isInclude)
+//                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(SHEKELS))
+//                .mapToDouble(Fee::getManualAmount).sum();
+//        this.feesPaidShekels = fees.stream()
+//                .filter(Fee::isInclude)
+//                .filter(f -> f.getCurrency() != null && f.getCurrency().equals(SHEKELS))
+//                .mapToDouble(Fee::getPaidAmount).sum();
     }
 
 
@@ -389,37 +389,37 @@ public class ClientData {
         this.flag = flag;
     }
 
-    public double getOwesDollars() {
-        return owesDollars;
-    }
-
-    public double getPaidDollars() {
-        return paidDollars;
-    }
-
-    public double getOwesShekels() {
-        return owesShekels;
-    }
-
-    public double getPaidShekels() {
-        return paidShekels;
-    }
-
-    public double getFeesOwesDollars() {
-        return feesOwesDollars;
-    }
-
-    public double getFeesPaidDollars() {
-        return feesPaidDollars;
-    }
-
-    public double getFeesOwesShekels() {
-        return feesOwesShekels;
-    }
-
-    public double getFeesPaidShekels() {
-        return feesPaidShekels;
-    }
+//    public double getOwesDollars() {
+//        return owesDollars;
+//    }
+//
+//    public double getPaidDollars() {
+//        return paidDollars;
+//    }
+//
+//    public double getOwesShekels() {
+//        return owesShekels;
+//    }
+//
+//    public double getPaidShekels() {
+//        return paidShekels;
+//    }
+//
+//    public double getFeesOwesDollars() {
+//        return feesOwesDollars;
+//    }
+//
+//    public double getFeesPaidDollars() {
+//        return feesPaidDollars;
+//    }
+//
+//    public double getFeesOwesShekels() {
+//        return feesOwesShekels;
+//    }
+//
+//    public double getFeesPaidShekels() {
+//        return feesPaidShekels;
+//    }
 
     @Override
     public String toString() {
@@ -443,14 +443,14 @@ public class ClientData {
                 ", fees=" + fees +
                 ", checklists=" + checklists +
                 ", flag=" + flag +
-                ", owesDollars=" + owesDollars +
-                ", paidDollars=" + paidDollars +
-                ", owesShekels=" + owesShekels +
-                ", paidShekels=" + paidShekels +
-                ", feesOwesDollars=" + feesOwesDollars +
-                ", feesPaidDollars=" + feesPaidDollars +
-                ", feesOwesShekels=" + feesOwesShekels +
-                ", feesPaidShekels=" + feesPaidShekels +
+//                ", owesDollars=" + owesDollars +
+//                ", paidDollars=" + paidDollars +
+//                ", owesShekels=" + owesShekels +
+//                ", paidShekels=" + paidShekels +
+//                ", feesOwesDollars=" + feesOwesDollars +
+//                ", feesPaidDollars=" + feesPaidDollars +
+//                ", feesOwesShekels=" + feesOwesShekels +
+//                ", feesPaidShekels=" + feesPaidShekels +
                 '}';
     }
 }
