@@ -1,18 +1,18 @@
-package com.buchsbaumtax.app.job;
-
-import com.buchsbaumtax.app.domain.smartview.UpdateSmartviews;
-import com.buchsbaumtax.core.dao.SmartviewDAO;
-import com.buchsbaumtax.core.model.Smartview;
-import com.sifradigital.framework.db.Database;
-import org.knowm.sundial.Job;
-import org.knowm.sundial.annotations.CronTrigger;
-import org.knowm.sundial.exceptions.JobInterruptException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+//package com.buchsbaumtax.app.job;
+//
+//import com.buchsbaumtax.app.domain.smartview.UpdateSmartviews;
+//import com.buchsbaumtax.core.dao.SmartviewDAO;
+//import com.buchsbaumtax.core.model.Smartview;
+//import com.sifradigital.framework.db.Database;
+//import org.knowm.sundial.Job;
+//import org.knowm.sundial.annotations.CronTrigger;
+//import org.knowm.sundial.exceptions.JobInterruptException;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+//
 //import java.util.List;
 //
-//@CronTrigger(cron = "0 */1 * * * ?")
+//@CronTrigger(cron = "0 */1 8-18 ? * 1-5")
 //public class UpdateSmartviewsJob extends Job {
 //
 //    private static final Logger Log = LoggerFactory.getLogger(UpdateSmartviewsJob.class);
@@ -24,9 +24,15 @@ import org.slf4j.LoggerFactory;
 //
 //        List<Smartview> smartviews = Database.dao(SmartviewDAO.class).getAll();
 //        for (Smartview smartview : smartviews) {
-//           updateSmartviews.updateSmartview(smartview);
+//            try {
+//                Log.info("UpdateSmartviews Job completed. :{}", smartview);
+//                updateSmartviews.updateSmartview(smartview);
+//            } catch (Exception e) {
+//                Log.error("Failed to update Smartview with ID {}: {}", smartview.getId(), e.getMessage());
+//            }
 //        }
 //
 //        Log.info("UpdateSmartviews Job completed.");
 //    }
 //}
+//

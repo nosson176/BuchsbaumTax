@@ -43,9 +43,9 @@ public class EmailService {
             // שליחת המייל
             Transport.send(message);
 
-            LOGGER.info("Email sent successfully to: " + to);
+//            LOGGER.info("Email sent successfully to: " + to);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error sending email to: " + to, e);
+//            LOGGER.log(Level.SEVERE, "Error sending email to: " + to, e);
             throw new RuntimeException("Failed to send email", e);
         }
     }

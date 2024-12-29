@@ -80,7 +80,7 @@ public class GetClients {
 
     public List<CustomerContactInfo> getExportClients(List<Client> clients) throws SQLException {
         List<CustomerContactInfo> customerContactInfos = new ArrayList<>();
-        logger.info("get parameter clients: {}", clients);
+//        logger.info("get parameter clients: {}", clients);
 
         for (Client client : clients) {
             CustomerContactInfo contactInfo = Database.dao(ClientDAO.class).getContactInfoForClient(client.getId());
@@ -99,7 +99,7 @@ public class GetClients {
                 ));
             }
         }
-        logger.info("Retrieved customerContactInfos: {}", customerContactInfos);
+//        logger.info("Retrieved customerContactInfos: {}", customerContactInfos);
         return customerContactInfos;
     }
 

@@ -35,23 +35,23 @@ public class LogCRUD {
     }
 
     public List<Log> update(List<Log> logs) {
-        logger.info("update it run!!!: {}", logs);
+//        logger.info("update it run!!!: {}", logs);
         Database.dao(LogDAO.class).update(logs);
         return logs.stream().map(l -> Database.dao(LogDAO.class).get(l.getId())).collect(Collectors.toList());
     }
 
     public List<Log> saveOrUpdateLogs(List<Log> logs) {
-        logger.info("saveOrUpdateLogs it run!!!: {}", logs);
+//        logger.info("saveOrUpdateLogs it run!!!: {}", logs);
 
         for (Log log : logs) {
-            logger.info("current log!!!: {}", logExists(log));
+//            logger.info("current log!!!: {}", logExists(log));
             if (logExists(log)) {
                 // Update the log if it exists
-                logger.info("exits it run!!!: {}", log);
+//                logger.info("exits it run!!!: {}", log);
                 Database.dao(LogDAO.class).update(log);
             } else {
                 // Insert the log if it doesn't exist
-                logger.info("no exits it run!!!: {}", log);
+//                logger.info("no exits it run!!!: {}", log);
                 Database.dao(LogDAO.class).create(log);
             }
         }
@@ -63,7 +63,7 @@ public class LogCRUD {
     private boolean logExists(Log log) {
         if (log.getId() > 0) {
             Log existingLog = Database.dao(LogDAO.class).get(log.getId());
-            logger.info("logExists???: {}", existingLog);
+//            logger.info("logExists???: {}", existingLog);
 
             // Check if the log is actually null or a valid log object
             if (existingLog != null && existingLog.getId() == log.getId()) {

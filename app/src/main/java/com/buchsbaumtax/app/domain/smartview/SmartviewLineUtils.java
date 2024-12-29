@@ -90,7 +90,7 @@ public class SmartviewLineUtils {
                 SmartviewLine line = new SmartviewLine(smartviewLineData, field, searchValue);
                 smartviewLines.add(line);
             } else {
-                logger.warn("No field mapping found for: {}", fieldName);
+//                logger.warn("No field mapping found for: {}", fieldName);
             }
         }
 

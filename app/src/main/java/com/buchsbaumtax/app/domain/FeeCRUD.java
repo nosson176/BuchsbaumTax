@@ -26,15 +26,15 @@ public class FeeCRUD {
     }
 
     public Fee update(Fee fee, int feeId) {
-        logger.info("Fee update {}: {}");
+//        logger.info("Fee update {}: {}");
         Fee oldFee = Database.dao(FeeDAO.class).get(feeId);
-        logger.info("Fee update {}: {}", oldFee);
+//        logger.info("Fee update {}: {}", oldFee);
         if (feeId != fee.getId() || oldFee == null) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
-        logger.info("Fee update finish {}: {}", oldFee);
+//        logger.info("Fee update finish {}: {}", oldFee);
         Database.dao(FeeDAO.class).update(fee);
-        logger.info("Fee update finish2222 {}: {}", oldFee);
+//        logger.info("Fee update finish2222 {}: {}", oldFee);
         return Database.dao(FeeDAO.class).get(feeId);
     }
 

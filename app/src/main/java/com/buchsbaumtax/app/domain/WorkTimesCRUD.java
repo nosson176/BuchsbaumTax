@@ -16,7 +16,7 @@ public class WorkTimesCRUD {
     private static final Logger logger = LoggerFactory.getLogger(WorkTimesCRUD.class);
 
     public WorkTimes create(WorkTimes workTimes) {
-        logger.info("APP_MODE is set to: {}", workTimes.getDate());
+//        logger.info("APP_MODE is set to: {}", workTimes.getDate());
         validate(workTimes);
         long now = System.currentTimeMillis(); // Current time in milliseconds
         workTimes.setStartTime(now);
@@ -27,12 +27,12 @@ public class WorkTimesCRUD {
     public WorkTimes update(int workTimesId, WorkTimes workTimes) {
         validate(workTimes);
 
-        logger.info("Request to update work times - ID: {}, Start Time: {}, End Time: {}, Sum Hours Work: {}",
-                workTimesId, workTimes.getStartTime(), workTimes.getEndTime(), workTimes.getSumHoursWork());
+//        logger.info("Request to update work times - ID: {}, Start Time: {}, End Time: {}, Sum Hours Work: {}",
+//                workTimesId, workTimes.getStartTime(), workTimes.getEndTime(), workTimes.getSumHoursWork());
 
         WorkTimes oldWorkTimes = Database.dao(WorkTimeDAO.class).getById(workTimesId);
-        logger.info("Existing work times - ID: {}, Start Time: {}, End Time: {}, Sum Hours Work: {}",
-                oldWorkTimes.getId(), oldWorkTimes.getStartTime(), oldWorkTimes.getEndTime(), oldWorkTimes.getSumHoursWork());
+//        logger.info("Existing work times - ID: {}, Start Time: {}, End Time: {}, Sum Hours Work: {}",
+//                oldWorkTimes.getId(), oldWorkTimes.getStartTime(), oldWorkTimes.getEndTime(), oldWorkTimes.getSumHoursWork());
 
         if (workTimes.getId() != workTimesId || oldWorkTimes == null) {
             throw new WebApplicationException("Invalid work times ID or record not found.", Response.Status.BAD_REQUEST);
@@ -41,8 +41,8 @@ public class WorkTimesCRUD {
         Database.dao(WorkTimeDAO.class).update(workTimes);
 
         WorkTimes updatedWorkTimes = Database.dao(WorkTimeDAO.class).getById(workTimesId);
-        logger.info("Updated work times - ID: {}, Start Time: {}, End Time: {}, Sum Hours Work: {}",
-                updatedWorkTimes.getId(), updatedWorkTimes.getStartTime(), updatedWorkTimes.getEndTime(), updatedWorkTimes.getSumHoursWork());
+//        logger.info("Updated work times - ID: {}, Start Time: {}, End Time: {}, Sum Hours Work: {}",
+//                updatedWorkTimes.getId(), updatedWorkTimes.getStartTime(), updatedWorkTimes.getEndTime(), updatedWorkTimes.getSumHoursWork());
 
         return updatedWorkTimes;
     }
@@ -60,7 +60,7 @@ public class WorkTimesCRUD {
     }
 
     public WorkTimes clockIn(int userId, String username) {
-        logger.info("APP_MODE is set to: {}", username);
+//        logger.info("APP_MODE is set to: {}", username);
         WorkTimes workTimes = new WorkTimes();
         workTimes.setUserId(userId);
         workTimes.setUsername(username);
@@ -72,7 +72,7 @@ public class WorkTimesCRUD {
     }
 
     public WorkTimes clockOut(int userId, long date) {
-        logger.info("Attempting to clock out userId: {} on date: {}", userId, date);
+//        logger.info("Attempting to clock out userId: {} on date: {}", userId, date);
 
         // Find the most recent work entry for the user on the specified date with endTime = 0
         WorkTimes workTimes = Database.dao(WorkTimeDAO.class).getAllByUserIdAndDateWithNoEndTime(userId, date);
@@ -85,12 +85,12 @@ public class WorkTimesCRUD {
         workTimes.setEndTime(now);
 
         // Debug logs
-        logger.info("Start time: {}", workTimes.getStartTime());
-        logger.info("End time: {}", workTimes.getEndTime());
+//        logger.info("Start time: {}", workTimes.getStartTime());
+//        logger.info("End time: {}", workTimes.getEndTime());
 
         // Calculate total hours worked
         long durationMillis = workTimes.getEndTime() - workTimes.getStartTime();
-        logger.info("Duration in milliseconds: {}", durationMillis);
+//        logger.info("Duration in milliseconds: {}", durationMillis);
 
         workTimes.setSumHoursWork(durationMillis); // Store total hours worked
 

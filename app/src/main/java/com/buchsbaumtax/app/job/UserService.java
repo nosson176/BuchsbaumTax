@@ -34,9 +34,9 @@ public class UserService {
             // Send email
             sendPasswordResetEmailToUser(email, resetLink);
 
-            logger.info("Password reset email sent to: {}", email);
+//            logger.info("Password reset email sent to: {}", email);
         } catch (Exception e) {
-            logger.error("Error sending password reset email to: {}", email, e);
+//            logger.error("Error sending password reset email to: {}", email, e);
             throw new RuntimeException("Failed to send password reset email", e);
         }
     }
@@ -64,7 +64,7 @@ public class UserService {
         PasswordResetToken resetToken = Database.dao(ResetPasswordTokenDAO.class).findValidToken(token);
 
         if (resetToken == null) {
-            logger.info("Token not found or invalid: {}", token);
+//            logger.info("Token not found or invalid: {}", token);
             return new TokenValidationResult(false, null);
         }
 

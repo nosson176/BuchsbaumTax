@@ -37,9 +37,9 @@ public class SmartviewCRUD {
 
     public List<SmartviewData> getForUser(User user) {
         List<Smartview> smartviews = Database.dao(SmartviewDAO.class).getByUser(user.getId());
-        logger.info("smartviews user here!!! :{}",smartviews.size());
+//        logger.info("smartviews user here!!! :{}",smartviews.size());
         SmartviewLineUtils smartviewLineUtils = new SmartviewLineUtils();
-        logger.info("smartviews final!!! :{}",smartviews.stream().map(smartviewLineUtils::convertToSmartviewData).collect(Collectors.toList()).size());
+//        logger.info("smartviews final!!! :{}",smartviews.stream().map(smartviewLineUtils::convertToSmartviewData).collect(Collectors.toList()).size());
         return smartviews.stream().map(smartviewLineUtils::convertToSmartviewData).collect(Collectors.toList());
     }
 
@@ -62,7 +62,7 @@ public class SmartviewCRUD {
     }
 
     public void updateBatch(User user,List<Smartview>smartviews){
-        logger.info("smartviews here!!! :{}",smartviews);
+//        logger.info("smartviews here!!! :{}",smartviews);
 //        List<Smartview> clientSmartview = Database.dao(SmartviewDAO.class).getByUser(user.getId());
 //        if (clientSmartview == null || clientSmartview.isEmpty()) {
 //            throw new WebApplicationException(Response.Status.BAD_REQUEST);
@@ -112,11 +112,11 @@ public class SmartviewCRUD {
 //    }
 
     public Map<Client, List<Filing>> getSmartViewFiltersResults(SmartviewData smartviewData) {
-        logger.info("smartviewData: {}", smartviewData);
+//        logger.info("smartviewData: {}", smartviewData);
 
         // Convert SmartviewData to Smartview object
         Smartview smartview = new SmartviewLineUtils().convertToSmartview(smartviewData);
-        logger.info("smartview: {}", smartview);
+//        logger.info("smartview: {}", smartview);
 
         // Initialize the local variable for active
         boolean active = false;
@@ -129,15 +129,15 @@ public class SmartviewCRUD {
             }
         }
 
-        logger.info("Active status determined: {}", active);
+//        logger.info("Active status determined: {}", active);
 
         // Update the smartview in the database
         Smartview updated = Database.dao(SmartviewDAO.class).update(smartview);
-        logger.info("smartview updated: {}", updated);
+//        logger.info("smartview updated: {}", updated);
 
         // Call the function to get results with the active value
         Map<Client, List<Filing>> data = new UpdateSmartviews().getSmartviewResult(updated, active);
-        logger.info("smartview data: {}", data);
+//        logger.info("smartview data: {}", data);
 
         return data;
     }

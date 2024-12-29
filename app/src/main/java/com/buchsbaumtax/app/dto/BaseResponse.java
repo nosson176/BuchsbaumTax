@@ -1,22 +1,32 @@
 package com.buchsbaumtax.app.dto;
 
 public class BaseResponse {
-    private String success;
-    private String msg;
+    private String success; // "Success" or "Failure"
+    private String msg;     // Optional message
+    private Object data;    // Optional additional data
 
-    // Constructor with message
+    // Constructor with message and data
+    public BaseResponse(String success, String msg, Object data) {
+        this.success = success;
+        this.msg = msg;
+        this.data = data;
+    }
+
+    // Constructor with message only
     public BaseResponse(boolean success, String msg) {
         this.success = success ? "Success" : "Failure";
         this.msg = msg;
+        this.data = null;
     }
 
-    // Constructor without message
+    // Constructor with success only
     public BaseResponse(boolean success) {
         this.success = success ? "Success" : "Failure";
-        this.msg = null; // or provide a default value, e.g., "No message provided"
+        this.msg = null;
+        this.data = null;
     }
 
-    // Getters and Setters (optional)
+    // Getters and Setters
     public String getSuccess() {
         return success;
     }
@@ -31,5 +41,13 @@ public class BaseResponse {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
     }
 }

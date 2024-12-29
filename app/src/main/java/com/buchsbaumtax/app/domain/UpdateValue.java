@@ -31,13 +31,25 @@ public class UpdateValue {
         return new ValueObject(Database.dao(ValueDAO.class).get(value.getId()));
     }
 
-    private void resetOrder(List<Value> values) {
-        values.sort(Comparator.comparing(Value::getValue));
-        for (int i = 0; i < values.size(); i++) {
-            values.get(i).setSortOrder(i + 1);
-        }
-        Database.dao(ValueDAO.class).update(values);
+//    private void resetOrder(List<Value> values) {
+//        values.sort(Comparator.comparing(Value::getValue));
+//        for (int i = 0; i < values.size(); i++) {
+//            values.get(i).setSortOrder(i + 1);
+//        }
+//        Database.dao(ValueDAO.class).update(values);
+//    }
+private void resetOrder(List<Value> values) {
+    // Sort values alphabetically, ignoring case
+    values.sort(Comparator.comparing(v -> v.getValue().toLowerCase()));
+
+    // Update sortOrder for each value
+    for (int i = 0; i < values.size(); i++) {
+        values.get(i).setSortOrder(i + 1);
     }
+
+    // Update the database
+    Database.dao(ValueDAO.class).update(values);
+}
 
     private void reorder(List<Value> values, int oldSort, int newSort) {
 
