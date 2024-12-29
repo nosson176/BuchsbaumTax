@@ -39,8 +39,19 @@ public class UpdateValue {
 //        Database.dao(ValueDAO.class).update(values);
 //    }
 private void resetOrder(List<Value> values) {
-    // Sort values alphabetically, ignoring case
-    values.sort(Comparator.comparing(v -> v.getValue().toLowerCase()));
+    // Sort values alphabetically, ignoring case. Null or empty values will be pushed to the end.
+    values.sort((v1, v2) -> {
+        // Handle null or empty values by sending them to the end
+        if (v1.getValue() == null || v1.getValue().isEmpty()) {
+            return 1; // v1 is considered greater than v2 (goes to the end)
+        }
+        if (v2.getValue() == null || v2.getValue().isEmpty()) {
+            return -1; // v2 is considered greater than v1 (v2 goes to the end)
+        }
+
+        // Compare non-null values alphabetically, ignoring case
+        return v1.getValue().toLowerCase().compareTo(v2.getValue().toLowerCase());
+    });
 
     // Update sortOrder for each value
     for (int i = 0; i < values.size(); i++) {
@@ -50,6 +61,7 @@ private void resetOrder(List<Value> values) {
     // Update the database
     Database.dao(ValueDAO.class).update(values);
 }
+
 
     private void reorder(List<Value> values, int oldSort, int newSort) {
 
