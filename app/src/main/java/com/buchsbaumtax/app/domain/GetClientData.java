@@ -18,10 +18,9 @@ import java.util.stream.Collectors;
 public class GetClientData {
     private static final Logger logger = LoggerFactory.getLogger(BuchsbaumApplication.class);
 
-    public ClientData getByClient(User user, int clientId) {
-        boolean active = true;
+    public ClientData getByClient(User user, int clientId,boolean active) {
         Client client = Database.dao(ClientDAO.class).get(clientId,active);
-//        logger.info("Client data retrieved successfully for ccccccc {}: {}", client);
+//        logger.info("Client data retrieved successfully for ccccccc {}, {} ", client,active);
         List<TaxYear> taxYears = Database.dao(TaxYearDAO.class).getByClient(client.getId());
 //        logger.info("Client 1111111111111111111111 {}: {}",taxYears);
         List<TaxYearData> taxYearData = taxYears.stream()

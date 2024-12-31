@@ -113,11 +113,11 @@ public class ClientResource {
     @GET
     @Path("/{clientId}/data")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTaxYearsByClient(@Authenticated User user, @PathParam("clientId") int clientId) {
-//        logger.debug("Received request to get client data for clientId {} by user {}", clientId, user.getId());
+    public Response getTaxYearsByClient(@Authenticated User user, @PathParam("clientId") int clientId,@QueryParam("active") Boolean active) {
+        logger.debug("Received request to get client data for clientId {} by user {}", clientId, user.getId());
 
         GetClientData getClientData = new GetClientData();
-        ClientData clientData = getClientData.getByClient(user, clientId);
+        ClientData clientData = getClientData.getByClient(user, clientId,active);
 //        logger.debug("Received clientData {}", clientData);
         if (clientData == null) {
             logger.warn("No data found for clientId {}", clientId);
