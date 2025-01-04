@@ -1,26 +1,31 @@
-package com.buchsbaumtax.app.dto;
+package com.buchsbaumtax.core.model;
 
 import com.buchsbaumtax.core.dao.UserMessageDAO;
-import com.buchsbaumtax.core.model.UserMessage;
 import com.sifradigital.framework.db.Database;
 
 import java.util.Date;
 import java.util.List;
 
-public class UserMessageObject {
+public class UserMessageWebSocket {
 
+    public static final String STATUS_UNREAD = "unread";
+    public static final String STATUS_READ = "read";
+
+    private String type;
     private int id;
     private int senderId;
     private int recipientId;
     private String message;
     private String status;
     private Date created;
+    private Integer parentId;
+    private Integer threadId;
     private List<UserMessage> responses;
 
-    public UserMessageObject() {
+    public UserMessageWebSocket() {
     }
 
-    public UserMessageObject(UserMessage userMessage) {
+    public UserMessageWebSocket(UserMessage userMessage) {
         this.id = userMessage.getId();
         this.senderId = userMessage.getSenderId();
         this.recipientId = userMessage.getRecipientId();
@@ -32,10 +37,6 @@ public class UserMessageObject {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getSenderId() {
@@ -57,6 +58,12 @@ public class UserMessageObject {
     public String getMessage() {
         return message;
     }
+    public String getType() {
+        return type;
+    }
+    public String setType() {
+        return type;
+    }
 
     public void setMessage(String message) {
         this.message = message;
@@ -74,8 +81,20 @@ public class UserMessageObject {
         return created;
     }
 
-    public void setCreated(Date created) {
-        this.created = created;
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
+    }
+
+    public Integer getThreadId() {
+        return threadId;
+    }
+
+    public void setThreadId(Integer threadId) {
+        this.threadId = threadId;
     }
 
     public List<UserMessage> getResponses() {
@@ -84,18 +103,5 @@ public class UserMessageObject {
 
     public void setResponses(List<UserMessage> responses) {
         this.responses = responses;
-    }
-
-    @Override
-    public String toString() {
-        return "UserMessageObject{" +
-                "id=" + id +
-                ", senderId=" + senderId +
-                ", recipientId=" + recipientId +
-                ", message='" + message + '\'' +
-                ", status='" + status + '\'' +
-                ", created=" + created +
-                ", responses=" + (responses != null ? responses.size() : 0) +
-                '}';
     }
 }
