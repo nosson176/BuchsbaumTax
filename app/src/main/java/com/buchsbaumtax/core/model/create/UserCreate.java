@@ -8,6 +8,7 @@ public class UserCreate {
     private String userType;
     private String password;
     private String phoneNumber;
+    private String email;
     private boolean sendLoginNotifications;
     private boolean notifyOfLogins;
     private Integer secondsInDay;
@@ -40,6 +41,10 @@ public class UserCreate {
 
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public boolean isSendLoginNotifications() {

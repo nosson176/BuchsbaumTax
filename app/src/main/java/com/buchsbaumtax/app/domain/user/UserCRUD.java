@@ -35,7 +35,7 @@ public class UserCRUD {
 
         String hashedPassword = PasswordUtils.hashPassword(userCreate.getPassword());
         userCreate.setPassword(hashedPassword);
-
+//        logger.info("user create : {}", userCreate);
         int id = Database.dao(UserDAO.class).create(userCreate);
         return Database.dao(UserDAO.class).get(id);
     }

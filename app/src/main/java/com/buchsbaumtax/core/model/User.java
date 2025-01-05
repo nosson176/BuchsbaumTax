@@ -18,7 +18,7 @@ public class User implements Principal {
     private String userType;
     private Date created;
     private Date updated;
-    private static String email;
+    private  String email;
 
     public int getId() {
         return id;
