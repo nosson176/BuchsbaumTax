@@ -225,6 +225,7 @@ public class ClientData {
     private final String owesStatus;
     private final boolean archived;
     private final String periodical;
+    private final Boolean active;
     private final String displayName;
     private final String displayPhone;
     private final Date created;
@@ -254,6 +255,7 @@ public class ClientData {
         this.status = client.getStatus();
         this.owesStatus = client.getOwesStatus();
         this.archived = client.isArchived();
+        this.active = client.getActive();
         this.periodical = client.getPeriodical();
         this.displayName = client.getDisplayName();
         this.displayPhone = client.getDisplayPhone();
@@ -325,6 +327,9 @@ public class ClientData {
 
     public boolean isArchived() {
         return archived;
+    }
+    public boolean isActive() {
+        return active;
     }
 
     public String getPeriodical() {

@@ -18,6 +18,7 @@ public interface ClientHistoryDAO {
     int create(@Bind("userId") int userId, @Bind("clientId") int clientId);
 
     @RegisterFieldMapper(Client.class)
-    @SqlQuery("SELECT * FROM (SELECT DISTINCT ON(c.id) c.*, ch.created as ch_created FROM client_history ch JOIN clients c on c.id = ch.client_id WHERE user_id = :userId) AS cc ORDER BY ch_created DESC LIMIT :limit")
+    @SqlQuery(" SELECT * FROM ( SELECT DISTINCT ON (c.id) c.*, ch.created AS ch_created FROM client_history ch JOIN clients c ON c.id = ch.client_id WHERE user_id = :userId ORDER BY c.id, ch.created DESC) AS cc ORDER BY ch_created DESC LIMIT :limit ")
     List<Client> getRecentByUser(@Bind("userId") int userId, @Bind("limit") int limit);
+
 }
