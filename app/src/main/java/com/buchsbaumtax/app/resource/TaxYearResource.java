@@ -1,7 +1,9 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.taxyear.CreateTaxYear;
+import com.buchsbaumtax.app.domain.taxyear.DeleteTaxYear;
 import com.buchsbaumtax.app.domain.taxyear.UpdateTaxYear;
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.TaxYearData;
 import com.buchsbaumtax.core.dao.TaxYearDAO;
 import com.buchsbaumtax.core.model.TaxYear;
@@ -34,5 +36,11 @@ public class TaxYearResource {
     @Path("/{taxYearId}")
     public TaxYear updateTaxYear(@PathParam("taxYearId") int taxYearId, TaxYear taxYear) {
         return new UpdateTaxYear().updateTaxYear(taxYearId, taxYear);
+    }
+
+    @DELETE
+    @Path("/{taxYearId}")
+    public BaseResponse deleteTaxYear(@PathParam("taxYearId") int taxYearId) {
+        return new DeleteTaxYear().deleteTaxYear(taxYearId);
     }
 }

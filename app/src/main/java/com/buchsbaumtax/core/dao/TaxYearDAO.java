@@ -36,4 +36,7 @@ public interface TaxYearDAO {
 
     @SqlBatch("UPDATE tax_years SET year = :year, archived = :archived, show = :show, irs_history = :irsHistory WHERE id = :id")
     void update(@BindBean List<TaxYear> taxYears);
+
+    @SqlUpdate("DELETE FROM tax_years WHERE id = :id")
+    void delete(@Bind("id") int id);
 }
