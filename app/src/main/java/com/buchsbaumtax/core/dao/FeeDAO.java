@@ -36,4 +36,7 @@ public interface FeeDAO {
 
     @SqlBatch("UPDATE fees SET year = :year, status = :status, status_detail = :statusDetail, fee_type = :feeType, manual_amount = :manualAmount, paid_amount = :paidAmount, include = :include, rate = :rate, date_fee = :dateFee, sum = :sum, archived = :archived, currency = :currency WHERE id = :id")
     void update(@BindBean List<Fee> fees);
+
+    @SqlUpdate("DELETE FROM fees WHERE id = :id")
+    void delete(@Bind("id") int id);
 }

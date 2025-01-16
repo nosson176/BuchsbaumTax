@@ -37,4 +37,7 @@ public interface TaxPersonalDAO {
     @SqlBatch("UPDATE tax_personals SET category = :category, include = :include, language = :language, relation = :relation, first_name = :firstName, middle_initial = :middleInitial, last_name = :lastName, date_of_birth = :dateOfBirth, ssn = :ssn, informal = :informal, archived = :archived WHERE id = :id")
     void update(@BindBean List<TaxPersonal> taxPersonals);
 
+    @SqlUpdate("DELETE FROM tax_personals WHERE id = :id")
+    void delete(@Bind("id") int id);
+
 }

@@ -1,6 +1,8 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.IncomeBreakdownCRUD;
+import com.buchsbaumtax.app.domain.TaxPersonalCRUD;
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.IncomeBreakdownDAO;
 import com.buchsbaumtax.core.model.IncomeBreakdown;
 import com.sifradigital.framework.auth.Authenticated;
@@ -52,5 +54,11 @@ public class IncomeBreakdownResource {
     @Path("/{incomeId}")
     public IncomeBreakdown updateIncomeBreakdown(@PathParam("incomeId") int incomeBreakdownId, IncomeBreakdown incomeBreakdown) {
         return new IncomeBreakdownCRUD().update(incomeBreakdownId, incomeBreakdown);
+    }
+
+    @DELETE
+    @Path("/{incomeId}")
+    public BaseResponse deleteTaxPersonal(@PathParam("incomeId") int incomeId) {
+        return new IncomeBreakdownCRUD().delete(incomeId);
     }
 }

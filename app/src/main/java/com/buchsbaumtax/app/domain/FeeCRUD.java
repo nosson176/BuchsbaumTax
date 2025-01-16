@@ -1,10 +1,13 @@
 package com.buchsbaumtax.app.domain;
 
 import com.buchsbaumtax.app.domain.smartview.UpdateSmartviews;
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.ContactDAO;
 import com.buchsbaumtax.core.dao.FeeDAO;
+import com.buchsbaumtax.core.dao.TaxPersonalDAO;
 import com.buchsbaumtax.core.model.Contact;
 import com.buchsbaumtax.core.model.Fee;
+import com.buchsbaumtax.core.model.TaxPersonal;
 import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.WebApplicationException;
@@ -53,6 +56,27 @@ public class FeeCRUD {
 
         // Return the updated list of contacts
         return fees;
+    }
+
+    public BaseResponse delete(int feeId){
+        try{
+
+            Fee fee = Database.dao(FeeDAO.class).get(feeId);
+            if(fee == null){
+                return new BaseResponse("Error", "fee not found", Response.Status.NOT_FOUND.getStatusCode());
+            }
+            Database.dao(FeeDAO.class).delete(feeId);
+
+            // Return success response
+            return new BaseResponse("Success", "Fee deleted successfully", Response.Status.OK.getStatusCode());
+
+        }catch (Exception e) {
+            // Log the error (optional)
+            e.printStackTrace();
+            // Return failure response if exception occurs
+            return new BaseResponse("Error", "Failed to delete Fee: " + e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        }
+
     }
 
 //    public List<Fee> update(List<Fee> fees) {

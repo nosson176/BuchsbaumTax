@@ -2,6 +2,8 @@ package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.ContactCRUD;
 import com.buchsbaumtax.app.domain.FeeCRUD;
+import com.buchsbaumtax.app.domain.TaxPersonalCRUD;
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.model.Contact;
 import com.buchsbaumtax.core.model.Fee;
 import com.sifradigital.framework.auth.Authenticated;
@@ -42,4 +44,12 @@ public class FeeResource {
     public Fee updateFee(@PathParam("feeId") int feeId, Fee fee) {
         return new FeeCRUD().update(fee, feeId);
     }
+
+    @DELETE
+    @Path("/{feeId}")
+    public BaseResponse deleteFee(@PathParam("feeId") int feeId) {
+        return new FeeCRUD().delete(feeId);
+    }
 }
+
+

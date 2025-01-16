@@ -1,7 +1,9 @@
 package com.buchsbaumtax.app.domain;
 
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.ContactDAO;
 import com.buchsbaumtax.core.dao.TaxPersonalDAO;
+import com.buchsbaumtax.core.dao.TaxYearDAO;
 import com.buchsbaumtax.core.model.Contact;
 import com.buchsbaumtax.core.model.TaxPersonal;
 import com.sifradigital.framework.db.Database;
@@ -55,6 +57,27 @@ public class TaxPersonalCRUD {
 
         // Return the updated list of contacts
         return taxPersonals;
+    }
+
+    public BaseResponse delete(int taxPersonalId){
+        try{
+
+        TaxPersonal taxPersonal = Database.dao(TaxPersonalDAO.class).get(taxPersonalId);
+        if(taxPersonal == null){
+            return new BaseResponse("Error", "taxPersonal not found", Response.Status.NOT_FOUND.getStatusCode());
+        }
+            Database.dao(TaxPersonalDAO.class).delete(taxPersonalId);
+
+            // Return success response
+            return new BaseResponse("Success", "TaxPersonal deleted successfully", Response.Status.OK.getStatusCode());
+
+        }catch (Exception e) {
+            // Log the error (optional)
+            e.printStackTrace();
+            // Return failure response if exception occurs
+            return new BaseResponse("Error", "Failed to delete TaxPersonal: " + e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        }
+
     }
 
     private void validate(TaxPersonal taxPersonal) {

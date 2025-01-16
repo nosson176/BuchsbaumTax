@@ -1,7 +1,9 @@
 package com.buchsbaumtax.app.domain;
 
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.resource.WorkTimesResource;
 import com.buchsbaumtax.core.dao.LogDAO;
+import com.buchsbaumtax.core.dao.TaxYearDAO;
 import com.buchsbaumtax.core.model.Log;
 import com.sifradigital.framework.db.Database;
 import com.sifradigital.framework.validation.Validator;
@@ -32,6 +34,27 @@ public class LogCRUD {
         }
         Database.dao(LogDAO.class).update(log);
         return Database.dao(LogDAO.class).get(logId);
+    }
+
+    public BaseResponse delete(int logId){
+        try {
+
+        Log log = Database.dao(LogDAO.class).get(logId);
+
+        if(log == null){
+            return new BaseResponse("Error", "Log not found", Response.Status.NOT_FOUND.getStatusCode());
+        }
+        // Proceed with deletion if found
+        Database.dao(LogDAO.class).delete(logId);
+
+        // Return success response
+        return new BaseResponse("Success", "Log deleted successfully", Response.Status.OK.getStatusCode());
+    } catch (Exception e) {
+        // Log the error (optional)
+        e.printStackTrace();
+        // Return failure response if exception occurs
+        return new BaseResponse("Error", "Failed to delete Log: " + e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        }
     }
 
     public List<Log> update(List<Log> logs) {

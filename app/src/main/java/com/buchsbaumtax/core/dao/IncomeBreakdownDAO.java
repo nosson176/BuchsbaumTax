@@ -36,4 +36,7 @@ public interface IncomeBreakdownDAO {
 
     @SqlBatch("UPDATE income_breakdowns SET years = :years, category = :category, tax_group = :taxGroup, tax_type = :taxType, job = :job, currency = :currency, frequency = :frequency, documents = :documents, description = :description, amount = :amount, exclusion = :exclusion, include = :include, archived = :archived, depend = :depend WHERE id = :id")
     void update(@BindBean List<IncomeBreakdown> incomeBreakdowns);
+
+    @SqlUpdate("DELETE FROM income_breakdowns WHERE id = :id")
+    void delete(@Bind("id") int id);
 }

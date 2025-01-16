@@ -1,7 +1,10 @@
 package com.buchsbaumtax.app.domain;
 
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.IncomeBreakdownDAO;
+import com.buchsbaumtax.core.dao.TaxPersonalDAO;
 import com.buchsbaumtax.core.model.IncomeBreakdown;
+import com.buchsbaumtax.core.model.TaxPersonal;
 import com.sifradigital.framework.db.Database;
 import com.sifradigital.framework.validation.Validator;
 
@@ -50,6 +53,27 @@ public class IncomeBreakdownCRUD {
                 return update(incomeBreakdown.getId(), incomeBreakdown);
             }
         }).collect(Collectors.toList());
+    }
+
+    public BaseResponse delete(int incomeId){
+        try{
+
+            IncomeBreakdown income = Database.dao(IncomeBreakdownDAO.class).get(incomeId);
+            if(income == null){
+                return new BaseResponse("Error", "Income not found", Response.Status.NOT_FOUND.getStatusCode());
+            }
+            Database.dao(IncomeBreakdownDAO.class).delete(incomeId);
+
+            // Return success response
+            return new BaseResponse("Success", "Income deleted successfully", Response.Status.OK.getStatusCode());
+
+        }catch (Exception e) {
+            // Log the error (optional)
+            e.printStackTrace();
+            // Return failure response if exception occurs
+            return new BaseResponse("Error", "Failed to delete Income: " + e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        }
+
     }
 
 

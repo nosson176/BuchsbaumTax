@@ -1,5 +1,6 @@
 package com.buchsbaumtax.app.domain;
 
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.FbarBreakdownDAO;
 import com.buchsbaumtax.core.dao.IncomeBreakdownDAO;
 import com.buchsbaumtax.core.model.FbarBreakdown;
@@ -53,6 +54,27 @@ public List<FbarBreakdown> update(List<FbarBreakdown> fbarBreakdowns) {
         }
     }).collect(Collectors.toList());
 }
+
+    public BaseResponse delete(int fbarId){
+        try{
+
+            FbarBreakdown fbar = Database.dao(FbarBreakdownDAO.class).get(fbarId);
+            if(fbar == null){
+                return new BaseResponse("Error", "Fbar not found", Response.Status.NOT_FOUND.getStatusCode());
+            }
+            Database.dao(FbarBreakdownDAO.class).delete(fbarId);
+
+            // Return success response
+            return new BaseResponse("Success", "Fbar deleted successfully", Response.Status.OK.getStatusCode());
+
+        }catch (Exception e) {
+            // Log the error (optional)
+            e.printStackTrace();
+            // Return failure response if exception occurs
+            return new BaseResponse("Error", "Failed to delete Fbar: " + e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        }
+
+    }
 
     private void validate(FbarBreakdown fbarBreakdown) {
         new Validator()

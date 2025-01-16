@@ -26,6 +26,9 @@ public interface LogDAO {
     @SqlQuery("SELECT * FROM logs WHERE id = :id")
     Log get(@Bind("id") int id);
 
+    @SqlUpdate("DELETE FROM logs WHERE id = :id")
+    void delete(@Bind("id") int id);
+
     @RegisterFieldMapper(Log.class)
     @SqlQuery("SELECT * FROM logs ORDER BY id")
     List<Log> getAll();

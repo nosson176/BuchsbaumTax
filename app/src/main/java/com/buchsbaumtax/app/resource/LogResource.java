@@ -1,6 +1,7 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.LogCRUD;
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.LogDAO;
 import com.buchsbaumtax.core.model.Log;
 import com.sifradigital.framework.auth.Authenticated;
@@ -34,6 +35,11 @@ public class LogResource {
     @Path("/{logId}")
     public Log updateLog(@PathParam("logId") int logId, Log log) {
         return new LogCRUD().update(logId, log);
+    }
+    @DELETE
+    @Path("/{logId}")
+    public BaseResponse deleteLog(@PathParam("logId") int logId) {
+        return new LogCRUD().delete(logId);
     }
 
     @GET

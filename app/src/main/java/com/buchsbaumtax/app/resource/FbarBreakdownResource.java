@@ -2,6 +2,8 @@ package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.FbarBreakdownCRUD;
 import com.buchsbaumtax.app.domain.IncomeBreakdownCRUD;
+import com.buchsbaumtax.app.domain.TaxPersonalCRUD;
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.Either;
 import com.buchsbaumtax.core.dao.FbarBreakdownDAO;
 import com.buchsbaumtax.core.model.FbarBreakdown;
@@ -68,5 +70,11 @@ public class FbarBreakdownResource {
         return returnData
                 ? Either.right(updatedBreakdown)
                 : Either.left("Fbar Breakdown updated successfully");
+    }
+
+    @DELETE
+    @Path("/{fbarId}")
+    public BaseResponse deleteTaxPersonal(@PathParam("fbarId") int fbarId) {
+        return new FbarBreakdownCRUD().delete(fbarId);
     }
 }

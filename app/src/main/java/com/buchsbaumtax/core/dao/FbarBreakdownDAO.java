@@ -36,4 +36,7 @@ public interface FbarBreakdownDAO {
 
     @SqlBatch("UPDATE fbar_breakdowns SET years = :years, category = :category, tax_group = :taxGroup, tax_type = :taxType, part = :part, currency = :currency, frequency = :frequency, documents = :documents, description = :description, amount = :amount, depend = :depend, include = :include, archived = :archived WHERE id = :id")
     void update(@BindBean List<FbarBreakdown> fbarBreakdowns);
+
+    @SqlUpdate("DELETE FROM fbar_breakdowns WHERE id = :id")
+    void delete(@Bind("id") int id);
 }

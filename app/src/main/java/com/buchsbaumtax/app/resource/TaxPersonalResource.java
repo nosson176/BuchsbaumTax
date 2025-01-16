@@ -2,6 +2,8 @@ package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.ContactCRUD;
 import com.buchsbaumtax.app.domain.TaxPersonalCRUD;
+import com.buchsbaumtax.app.domain.taxyear.DeleteTaxYear;
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.TaxPersonalDAO;
 import com.buchsbaumtax.core.model.Contact;
 import com.buchsbaumtax.core.model.TaxPersonal;
@@ -44,5 +46,11 @@ public class TaxPersonalResource {
     @Path("/{personalId}")
     public TaxPersonal updateTaxPersonal(@PathParam("personalId") int taxPersonalId, TaxPersonal taxPersonal) {
         return new TaxPersonalCRUD().update(taxPersonalId, taxPersonal);
+    }
+
+    @DELETE
+    @Path("/{personalId}")
+    public BaseResponse deleteTaxPersonal(@PathParam("personalId") int personalId) {
+        return new TaxPersonalCRUD().delete(personalId);
     }
 }
