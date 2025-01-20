@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GetClientData {
-    private static final Logger logger = LoggerFactory.getLogger(BuchsbaumApplication.class);
+    private static final Logger logger = LoggerFactory.getLogger(GetClientData.class);
 
     public ClientData getByClient(User user, int clientId,boolean active) {
         Client client = Database.dao(ClientDAO.class).get(clientId,active);
@@ -30,7 +30,9 @@ public class GetClientData {
 //        logger.info("Client 22222222222222222222 {}: {}", taxYearData);
         Database.dao(ClientHistoryDAO.class).create(user.getId(), clientId);
 
+//        logger.info("Client1111  {}: {}", clientId,taxYearData);
         ClientData clientData = new ClientData(client, taxYearData);
+//        logger.info("Client  {}: {}", clientId, clientData);
         List<IncomeBreakdown> incomeBreakdowns = clientData.getIncomeBreakdowns();
         for (IncomeBreakdown breakdown : incomeBreakdowns) {
             Double amountUSD = ConvertToUSD.convertToUSD(breakdown.getAmount(), breakdown.getCurrency(), breakdown.getYears());
@@ -84,6 +86,8 @@ public class GetClientData {
 //        logger.info("Prepared clientsWithLogs data with {} entries", clientsWithLogs.size());
         return clientsWithLogs;
     }
+
+
 
 
 

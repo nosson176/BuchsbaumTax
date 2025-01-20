@@ -143,6 +143,7 @@ public class ClientResource {
         }
     }
 
+
     @GET
     @Path("/history")
     public List<Client> getClientHistory(@Authenticated User user) {

@@ -1,7 +1,10 @@
 package com.buchsbaumtax.app.domain;
 
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.ContactDAO;
+import com.buchsbaumtax.core.dao.TaxPersonalDAO;
 import com.buchsbaumtax.core.model.Contact;
+import com.buchsbaumtax.core.model.TaxPersonal;
 import com.sifradigital.framework.db.Database;
 import com.sifradigital.framework.validation.Validator;
 
@@ -34,6 +37,27 @@ public class ContactCRUD {
         new DisplayFields().setDisplayPhone(updatedContact.getClientId());
 //        return Database.dao(ContactDAO.class).get(contactId);
         return  true;
+
+    }
+
+    public BaseResponse delete(int contactId){
+        try{
+
+            Contact contact = Database.dao(ContactDAO.class).get(contactId);
+            if(contact == null){
+                return new BaseResponse("Error", "contact not found", Response.Status.NOT_FOUND.getStatusCode());
+            }
+            Database.dao(ContactDAO.class).delete(contactId);
+
+            // Return success response
+            return new BaseResponse("Success", "contact deleted successfully", Response.Status.OK.getStatusCode());
+
+        }catch (Exception e) {
+            // Log the error (optional)
+            e.printStackTrace();
+            // Return failure response if exception occurs
+            return new BaseResponse("Error", "Failed to delete contact: " + e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        }
 
     }
 

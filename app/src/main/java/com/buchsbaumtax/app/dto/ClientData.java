@@ -206,15 +206,24 @@
 
 package com.buchsbaumtax.app.dto;
 
+import com.buchsbaumtax.app.domain.GetClientData;
 import com.buchsbaumtax.core.dao.*;
 import com.buchsbaumtax.core.model.*;
 import com.sifradigital.framework.db.Database;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 public class ClientData {
+    private static final Logger logger = LoggerFactory.getLogger(ClientData.class);
 
     public static final String DOLLARS = "USD";
     public static final String SHEKELS = "NIS";
@@ -248,6 +257,13 @@ public class ClientData {
 //    private final double feesPaidDollars;
 //    private final double feesOwesShekels;
 //    private final double feesPaidShekels;
+LocalDateTime threeYearsAgoStartOfYear = LocalDateTime.now()
+        .minusYears(3) // Go back three years
+        .withDayOfYear(1) // Set to the first day of the year
+        .withHour(0).withMinute(0).withSecond(0).withNano(0); // Reset time to midnight
+
+    Instant threeYearsAgoInstant = threeYearsAgoStartOfYear.toInstant(ZoneOffset.UTC);
+    long threeYearsAgoStart = threeYearsAgoInstant.toEpochMilli();
 
     public ClientData(Client client, List<TaxYearData> taxYearData) {
         this.id = client.getId();
@@ -265,7 +281,7 @@ public class ClientData {
         this.taxYearData = taxYearData;
         this.fbarBreakdowns = Database.dao(FbarBreakdownDAO.class).getForClient(client.getId());
         this.incomeBreakdowns = Database.dao(IncomeBreakdownDAO.class).getForClient(client.getId());
-        this.logs = Database.dao(LogDAO.class).getForClient(client.getId());
+        this.logs = Database.dao(LogDAO.class).getLogsFromLastThreeYears(client.getId(),threeYearsAgoStart);
         this.contacts = Database.dao(ContactDAO.class).getForClient(client.getId());
         this.taxPersonals = Database.dao(TaxPersonalDAO.class).getForClient(client.getId());
         this.fees = Database.dao(FeeDAO.class).getForClient(client.getId());

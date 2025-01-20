@@ -36,4 +36,7 @@ public interface ContactDAO {
 
     @SqlBatch("UPDATE contacts SET contact_type = :contactType, memo = :memo, main_detail = :mainDetail, secondary_detail = :secondaryDetail, state = :state, zip = :zip, enabled = :enabled, archived = :archived, sort_order = :sortOrder WHERE id = :id")
     void update(@BindBean List<Contact> contacts);
+
+    @SqlUpdate("DELETE FROM contacts WHERE id = :id")
+    void delete(@Bind("id") int id);
 }

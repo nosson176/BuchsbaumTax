@@ -44,4 +44,15 @@ public interface LogDAO {
     @SqlQuery("SELECT * FROM logs WHERE TO_TIMESTAMP(alarm_time, 'DD-MM-YYYY HH24:MI') BETWEEN TO_TIMESTAMP(:currentTime, 'DD-MM-YYYY HH24:MI') AND TO_TIMESTAMP(:endOfDay, 'DD-MM-YYYY HH24:MI')")
     List<Log> getLogsBetweenTimes(@Bind("currentTime") String currentTime, @Bind("endOfDay") String endOfDay);
 
+    @RegisterFieldMapper(Log.class)
+    @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId AND created_time >= :threeYearsAgoStart ORDER BY created_time DESC")
+    List<Log> getLogsFromLastThreeYears(@Bind("clientId") int clientId, @Bind("threeYearsAgoStart") long threeYearsAgoStart);
+
+
+
+    @RegisterFieldMapper(Log.class)
+    @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId AND created_time < :threeYearsAgoStart ORDER BY created_time DESC")
+    List<Log> getLogsBeforeLastThreeYears(@Bind("clientId") int clientId, @Bind("threeYearsAgoStart") long threeYearsAgoStart);
+
+
 }

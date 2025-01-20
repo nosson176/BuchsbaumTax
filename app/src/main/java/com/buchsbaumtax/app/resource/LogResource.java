@@ -8,6 +8,8 @@ import com.sifradigital.framework.auth.Authenticated;
 import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.*;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,6 +26,25 @@ public class LogResource {
     @GET
     public List<Log> getAllLogs() {
         return Database.dao(LogDAO.class).getAll();
+    }
+
+    @GET
+    @Path("/{clientId}")
+    public List<Log> getAllLogsByClient(@PathParam("clientId") int clientId) {
+        return Database.dao(LogDAO.class).getForClient(clientId);
+    }
+
+    @GET
+    @Path("/restLogs/{clientId}")
+    public List<Log> getARestLogsByClient(@PathParam("clientId") int clientId) {
+        LocalDateTime threeYearsAgoStartOfYear = LocalDateTime.now()
+                .minusYears(3) // Go back three years
+                .withDayOfYear(1) // Set to the first day of the year
+                .withHour(0).withMinute(0).withSecond(0).withNano(0); // Reset time to midnight
+
+        Instant threeYearsAgoInstant = threeYearsAgoStartOfYear.toInstant(ZoneOffset.UTC);
+        long threeYearsAgoStart = threeYearsAgoInstant.toEpochMilli();
+        return Database.dao(LogDAO.class).getLogsBeforeLastThreeYears(clientId,threeYearsAgoStart);
     }
 
     @PUT

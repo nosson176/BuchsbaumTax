@@ -1,6 +1,8 @@
 package com.buchsbaumtax.app.resource;
 
 import com.buchsbaumtax.app.domain.ContactCRUD;
+import com.buchsbaumtax.app.domain.TaxPersonalCRUD;
+import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.core.dao.ContactDAO;
 import com.buchsbaumtax.core.model.Contact;
 import com.sifradigital.framework.auth.Authenticated;
@@ -57,6 +59,12 @@ public class ContactResource {
                     .entity("An error occurred: " + e.getMessage())
                     .build(); // HTTP 500
         }
+    }
+
+    @DELETE
+    @Path("/{contactId}")
+    public BaseResponse deleteContact(@PathParam("contactId") int contactId) {
+        return new ContactCRUD().delete(contactId);
     }
 
 }
