@@ -2,9 +2,10 @@ package com.buchsbaumtax.core.model;
 
 
 public class ExchangeRate {
+    private int id;
     private String currency;
     private String year;
-    private String show;
+    private boolean show;
     private double rate;
 
     public String getCurrency() {
@@ -15,7 +16,7 @@ public class ExchangeRate {
         return year;
     }
 
-    public String getShow() {
+    public boolean getShow() {
         return show;
     }
 

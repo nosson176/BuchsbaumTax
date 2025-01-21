@@ -17,6 +17,9 @@ public class FbarBreakdown {
     private int clientId;
     private String years;
     private Double amountUSD;
+    private String createdBy; // New field
+    private int userId;       // New field
+    private Long createdTime;       // New field
 
     public int getId() {
         return id;
@@ -85,4 +88,22 @@ public class FbarBreakdown {
     public void setAmountUSD(Double amountUSD) {
         this.amountUSD = amountUSD;
     }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void getUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void  setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Long getCreatedTime() {return createdTime;}
 }

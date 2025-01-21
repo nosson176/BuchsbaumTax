@@ -18,6 +18,9 @@ public class IncomeBreakdown {
     private String category;
     private boolean archived;
     private Double amountUSD;
+    private String createdBy; // New field
+    private int userId;       // New field
+    private Long createdTime;       // New field
 
     public int getId() {
         return id;
@@ -90,4 +93,15 @@ public class IncomeBreakdown {
     public void setAmountUSD(Double amountUSD) {
         this.amountUSD = amountUSD;
     }
+
+    public String getCreatedBy() {return createdBy;}
+
+    public int getUserId() {return userId;}
+
+    public Long getCreatedTime() {return createdTime;}
+
+    public void  setCreatedBy(String createdBy) {this.createdBy = createdBy;}
+
+    public void getUserId(int userId) {this.userId = userId;}
+
 }
