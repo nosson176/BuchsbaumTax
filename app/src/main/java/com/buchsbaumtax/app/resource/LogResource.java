@@ -67,7 +67,7 @@ public class LogResource {
     @Path("/today")
     public List<Log> getTodayLogs() {
         // Define the date format for the query
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm");
 
         // Get current time and end of the day
         String currentTime = LocalDateTime.now().format(formatter);
