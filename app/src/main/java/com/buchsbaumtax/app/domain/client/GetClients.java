@@ -53,25 +53,30 @@ public class GetClients {
         String table = fieldArray[0];
         String fieldName = fieldArray[1];
         StringBuilder query = new StringBuilder();
+
+        // Base query with join and filter based on table and fieldName
         query.append("SELECT DISTINCT c.*, cf.* FROM clients c LEFT JOIN client_flags cf ON c.id = cf.client_id ");
         if (!table.equals("clients")) {
             query.append(String.format("JOIN %s t ON c.id = t.client_id WHERE t.%s ILIKE '%%%s%%'", table, fieldName, q));
-        }
-        else {
+        } else {
             query.append(String.format("WHERE %s ILIKE '%%%s%%'", fieldName, q));
         }
 
-        // Add active filter condition if active parameter is passed
+        // Modify active condition logic
         if (active != null) {
-            query.append(" AND c.active = ").append(active);
+            if (active) {
+                query.append(" AND c.active = true");
+            }
         }
 
         query.append(" ORDER BY c.last_name");
+
+        // Convert query to string
         String queryString = query.toString();
         List<Client> clients = Database.dao(ClientDAO.class).getFilteredWithFields(queryString);
-//        sort(clients);
         return clients;
     }
+
 
 
     private void sort(List<Client> clients) {

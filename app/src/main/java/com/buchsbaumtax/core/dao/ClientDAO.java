@@ -18,15 +18,6 @@ import java.util.Set;
 @Dao
 public interface ClientDAO {
 
-    String MATCHING_CLIENTS = "matching_clients(id) AS (SELECT c.* FROM clients c WHERE last_name ILIKE CONCAT('%', :q, '%')), ";
-    String MATCHING_CONTACTS = "matching_contacts AS (SELECT co.* FROM contacts co WHERE (main_detail, memo)::text ILIKE CONCAT('%', :q, '%')), ";
-    String MATCHING_PERSONALS = "matching_personals AS (SELECT tp.* FROM tax_personals tp WHERE (first_name, last_name, ssn, informal)::text ILIKE CONCAT('%', :q, '%'))";
-    String WITH = "WITH " + MATCHING_CLIENTS + MATCHING_CONTACTS + MATCHING_PERSONALS;
-    String SELECT_CLIENTS = "SELECT c.*, cf.* FROM matching_clients c LEFT JOIN client_flags cf ON c.id = cf.client_id UNION ";
-    String SELECT_CONTACTS = "SELECT c.*, cf.* FROM matching_contacts co JOIN clients c ON co.client_id = c.id LEFT JOIN client_flags cf ON c.id = cf.client_id UNION ";
-    String SELECT_PERSONALS = "SELECT c.*, cf.* FROM matching_personals p JOIN clients c ON p.client_id = c.id LEFT JOIN client_flags cf ON c.id = cf.client_id";
-    String SELECT = " SELECT * FROM(" + SELECT_CLIENTS + SELECT_CONTACTS + SELECT_PERSONALS + ") AS result ORDER BY last_name;";
-
     @RegisterFieldMapper(Client.class)
     @RegisterFieldMapper(ClientFlag.class)
     @UseRowReducer(ClientReducer.class)
@@ -39,7 +30,6 @@ public interface ClientDAO {
     @SqlQuery("SELECT * FROM clients c LEFT JOIN client_flags cf ON c.id = cf.client_id WHERE c.id = :id AND (:active IS FALSE OR c.active = :active)")
     Client get(@Bind("id") int id, @Bind("active") boolean active);
 
-
     @RegisterFieldMapper(Client.class)
     @SqlQuery("SELECT * FROM clients WHERE id = :id")
     List<Client> getClientById(@Bind("id") Long id);
@@ -50,13 +40,11 @@ public interface ClientDAO {
     @SqlQuery("SELECT * FROM clients c LEFT JOIN client_flags cf ON c.id = cf.client_id WHERE c.id IN (<ids>) AND (:active IS FALSE OR c.active = :active) ORDER BY c.last_name")
     List<Client> getBulk(@BindList("ids") List<Integer> ids, @Bind("active") boolean active);
 
-
     @RegisterFieldMapper(Client.class)
     @RegisterFieldMapper(ClientFlag.class)
     @UseRowReducer(ClientReducer.class)
     @SqlQuery("SELECT * FROM clients c LEFT JOIN client_flags cf ON c.id = cf.client_id WHERE (:active IS FALSE OR c.active = :active) AND (c.last_name ILIKE CONCAT('%', :q, '%')) ORDER BY c.last_name")
     List<Client> getFiltered(@Bind("q") String q, @Bind("active") boolean active);
-
 
     @RegisterFieldMapper(Client.class)
     @RegisterFieldMapper(ClientFlag.class)
@@ -89,5 +77,4 @@ public interface ClientDAO {
     @UseRowReducer(ClientReducer.class)
     @SqlQuery("SELECT * FROM clients c LEFT JOIN client_flags cf ON c.id = cf.client_id WHERE c.id IN (<ids>) AND (:active IS FALSE OR c.active = :active)")
     List<Client> getClientsByIds(@BindList("ids") List<Long> ids, @Bind("active") boolean active);
-
 }

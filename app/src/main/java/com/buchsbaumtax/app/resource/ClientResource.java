@@ -120,7 +120,7 @@ public class ClientResource {
         ClientData clientData = getClientData.getByClient(user, clientId,active);
 //        logger.debug("Received clientData {}", clientData);
         if (clientData == null) {
-            logger.warn("No data found for clientId {}", clientId);
+//            logger.warn("No data found for clientId {}", clientId);
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("Client data not found")
                     .build();
