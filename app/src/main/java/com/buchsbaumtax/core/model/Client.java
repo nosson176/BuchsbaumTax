@@ -23,6 +23,7 @@ public class Client {
     private String periodical;
     private String displayName;
     private String displayPhone;
+    private String pmtStatus;
     private Date created;
     private Date updated;
     private Long statusChangeDate;
@@ -64,6 +65,13 @@ public class Client {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+    public String getPmtStatus() {
+        return pmtStatus;
+    }
+
+    public void setPmtStatus(String pmtStatus) {
+        this.pmtStatus = pmtStatus;
     }
 
     public Integer getgFlag() {

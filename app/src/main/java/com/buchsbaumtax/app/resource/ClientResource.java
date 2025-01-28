@@ -109,6 +109,18 @@ public class ClientResource {
 //        logger.info("updateClient=> {}" ,client);
         return new UpdateClient().updateClient(clientId, client);
     }
+    @PUT
+    @Path("/pmtStatus/{clientId}")
+    public BaseResponse updatePmtStatusClient(@PathParam("clientId") int clientId, String pmtStatus) {
+//        logger.info("updateClient=> {}" ,client);
+        BaseResponse res = new UpdateClient().updatePmtStatusClient(clientId, pmtStatus);
+
+        if(res.getSuccess().equals("Success")){
+            return new BaseResponse(true , "update");
+        }else{
+            return  new BaseResponse(false , "fail update");
+        }
+    }
 
     @GET
     @Path("/{clientId}/data")

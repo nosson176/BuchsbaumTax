@@ -29,6 +29,8 @@ public class Filing {
     private double refund;
     private boolean includeFee;
     private boolean includeInRefund;
+    private String maam;
+    private String basicPlusPro;
     private double paidFee;
     private double owesFee;
     private double paid;
@@ -127,6 +129,22 @@ public class Filing {
 
     public void setRefund(double refund) {
         this.refund = refund;
+    }
+
+    public String getMaam() {
+        return maam;
+    }
+
+    public void setMaam(String maam) {
+        this.maam = maam;
+    }
+
+    public String getBasicPlusPro() {
+        return basicPlusPro;
+    }
+
+    public void setBasicPlusPro(String basicPlusPro) {
+        this.basicPlusPro = basicPlusPro;
     }
 
     public boolean isIncludeFee() {

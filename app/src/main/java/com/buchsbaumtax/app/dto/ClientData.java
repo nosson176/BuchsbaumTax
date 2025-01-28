@@ -236,6 +236,7 @@ public class ClientData {
     private final String periodical;
     private final Boolean active;
     private final String displayName;
+    private final String pmtStatus;
     private final String displayPhone;
     private final Date created;
     private Long statusChangeDate;
@@ -274,6 +275,7 @@ LocalDateTime threeYearsAgoStartOfYear = LocalDateTime.now()
         this.active = client.getActive();
         this.periodical = client.getPeriodical();
         this.displayName = client.getDisplayName();
+        this.pmtStatus = client.getPmtStatus();
         this.displayPhone = client.getDisplayPhone();
         this.created = client.getCreated();
         this.gFlag = client.getgFlag();
@@ -354,6 +356,9 @@ LocalDateTime threeYearsAgoStartOfYear = LocalDateTime.now()
 
     public String getDisplayName() {
         return displayName;
+    }
+    public String getPmtStatus() {
+        return pmtStatus;
     }
 
     public String getDisplayPhone() {

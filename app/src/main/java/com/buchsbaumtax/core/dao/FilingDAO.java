@@ -33,11 +33,11 @@ public interface FilingDAO {
     Logger logger = LoggerFactory.getLogger(BuchsbaumApplication.class);
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO filings (tax_form, status, status_detail, status_date, memo, include_in_refund, owes, paid, include_fee, owes_fee, paid_fee, file_type, refund, rebate, completed, delivery_contact, second_delivery_contact, date_filed, currency, filing_type, state, tax_year_id, sort_order, amount, client_id) " +
-            "VALUES (:taxForm, :status, :statusDetail, :statusDate, :memo, :includeInRefund, :owes, :paid, :includeFee, :owesFee, :paidFee, :fileType, :refund, :rebate, :completed, :deliveryContact, :secondDeliveryContact, :dateFiled, :currency, :filingType, :state, :taxYearId, :sortOrder, :amount, :clientId)")
+    @SqlUpdate("INSERT INTO filings (tax_form, status, status_detail, status_date, memo, maam, basic_plus_pro, include_in_refund, owes, paid, include_fee, owes_fee, paid_fee, file_type, refund, rebate, completed, delivery_contact, second_delivery_contact, date_filed, currency, filing_type, state, tax_year_id, sort_order, amount, client_id) " +
+            "VALUES (:taxForm, :status, :statusDetail, :statusDate, :memo, :maam, :basicPlusPro :includeInRefund, :owes, :paid, :includeFee, :owesFee, :paidFee, :fileType, :refund, :rebate, :completed, :deliveryContact, :secondDeliveryContact, :dateFiled, :currency, :filingType, :state, :taxYearId, :sortOrder, :amount, :clientId)")
     int create(@BindBean Filing filing);
 
-    @SqlUpdate("UPDATE filings SET tax_form = :taxForm, status = :status, status_detail = :statusDetail, status_date = :statusDate, memo = :memo, include_in_refund = :includeInRefund, owes = :owes, paid = :paid, include_fee = :includeFee, owes_fee = :owesFee, paid_fee = :paidFee, file_type = :fileType, refund = :refund, rebate = :rebate, completed = :completed, delivery_contact = :deliveryContact, second_delivery_contact = :secondDeliveryContact, date_filed = :dateFiled, currency = :currency, filing_type = :filingType, state = :state, tax_year_id = :taxYearId, sort_order = :sortOrder, amount = :amount WHERE id = :id")
+    @SqlUpdate("UPDATE filings SET tax_form = :taxForm, status = :status, status_detail = :statusDetail, status_date = :statusDate, memo = :memo, maam = :maam, basic_plus_pro = :basicPlusPro,  include_in_refund = :includeInRefund, owes = :owes, paid = :paid, include_fee = :includeFee, owes_fee = :owesFee, paid_fee = :paidFee, file_type = :fileType, refund = :refund, rebate = :rebate, completed = :completed, delivery_contact = :deliveryContact, second_delivery_contact = :secondDeliveryContact, date_filed = :dateFiled, currency = :currency, filing_type = :filingType, state = :state, tax_year_id = :taxYearId, sort_order = :sortOrder, amount = :amount WHERE id = :id")
     void update(@BindBean Filing filing);
 
     @SqlQuery("SELECT * FROM filings WHERE id = :id")
@@ -52,7 +52,7 @@ public interface FilingDAO {
     @SqlQuery("SELECT * FROM filings WHERE tax_year_id = :taxYearId ORDER BY sort_order, filing_type")
     List<Filing> getByTaxYear(@Bind("taxYearId") int taxYearId);
 
-    @SqlBatch("UPDATE filings SET tax_form = :taxForm, status = :status, status_detail = :statusDetail, status_date = :statusDate, memo = :memo, include_in_refund = :includeInRefund, owes = :owes, paid = :paid, include_fee = :includeFee, owes_fee = :owesFee, paid_fee = :paidFee, file_type = :fileType, refund = :refund, rebate = :rebate, completed = :completed, delivery_contact = :deliveryContact, second_delivery_contact = :secondDeliveryContact, date_filed = :dateFiled, currency = :currency, filing_type = :filingType, state = :state, tax_year_id = :taxYearId, sort_order = :sortOrder, amount = :amount WHERE id = :id")
+    @SqlBatch("UPDATE filings SET tax_form = :taxForm, status = :status, status_detail = :statusDetail, status_date = :statusDate, memo = :memo, maam = :maam, basic_plus_pro = :basicPlusPro, include_in_refund = :includeInRefund, owes = :owes, paid = :paid, include_fee = :includeFee, owes_fee = :owesFee, paid_fee = :paidFee, file_type = :fileType, refund = :refund, rebate = :rebate, completed = :completed, delivery_contact = :deliveryContact, second_delivery_contact = :secondDeliveryContact, date_filed = :dateFiled, currency = :currency, filing_type = :filingType, state = :state, tax_year_id = :taxYearId, sort_order = :sortOrder, amount = :amount WHERE id = :id")
     void update(@BindBean List<Filing> filings);
 
     @SqlQuery("SELECT * FROM filings WHERE client_id = :clientId")
@@ -107,6 +107,8 @@ public Filing map(ResultSet rs, StatementContext ctx) throws SQLException {
     filing.setTaxForm(rs.getString("tax_form") != null ? stripQuotes(rs.getString("tax_form")) : "");
     filing.setStatusDate(rs.getBigDecimal("status_date") != null ? getLongFromBigDecimal(rs.getBigDecimal("status_date")) : 0L);
     filing.setMemo(rs.getString("memo") != null ? stripQuotes(rs.getString("memo")) : "");
+    filing.setMaam(rs.getString("maam") != null ? stripQuotes(rs.getString("maam")) : "");
+    filing.setBasicPlusPro(rs.getString("basic_plus_pro") != null ? stripQuotes(rs.getString("basic_plus_pro")) : "");
     filing.setIncludeInRefund(rs.getObject("include_in_refund") != null ? rs.getBoolean("include_in_refund") : false);
     filing.setOwes(rs.getBigDecimal("owes") != null ? getDoubleFromBigDecimal(rs.getBigDecimal("owes")) : 0.0);
     filing.setPaid(rs.getBigDecimal("paid") != null ? getDoubleFromBigDecimal(rs.getBigDecimal("paid")) : 0.0);
