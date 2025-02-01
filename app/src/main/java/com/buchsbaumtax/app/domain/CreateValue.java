@@ -12,11 +12,11 @@ import java.util.List;
 public class CreateValue {
 
     public ValueObject createValue(Value value) {
-        List<String> valueTypes = Database.dao(ValueDAO.class).getAllValueTypes();
-
-        if (!valueTypes.contains(value.getKey())) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
+//        List<String> valueTypes = Database.dao(ValueDAO.class).getAllValueTypes();
+//
+//        if (!valueTypes.contains(value.getKey())) {
+//            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+//        }
 
         int id = Database.dao(ValueDAO.class).create(value);
         return new ValueObject(Database.dao(ValueDAO.class).get(id));

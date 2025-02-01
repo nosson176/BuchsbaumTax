@@ -33,16 +33,16 @@ public class GetClientData {
 //        logger.info("Client1111  {}: {}", clientId,taxYearData);
         ClientData clientData = new ClientData(client, taxYearData);
 //        logger.info("Client  {}: {}", clientId, clientData);
-        List<IncomeBreakdown> incomeBreakdowns = clientData.getIncomeBreakdowns();
-        for (IncomeBreakdown breakdown : incomeBreakdowns) {
-            Double amountUSD = ConvertToUSD.convertToUSD(breakdown.getAmount(), breakdown.getCurrency(), breakdown.getYears());
-            breakdown.setAmountUSD(amountUSD);
-        }
-        List<FbarBreakdown> fbarBreakdowns = clientData.getFbarBreakdowns();
-        for (FbarBreakdown breakdown : fbarBreakdowns) {
-            Double amountUSD = ConvertToUSD.convertToUSD(breakdown.getAmount(), breakdown.getCurrency(), breakdown.getYears());
-            breakdown.setAmountUSD(amountUSD);
-        }
+//        List<IncomeBreakdown> incomeBreakdowns = clientData.getIncomeBreakdowns();
+//        for (IncomeBreakdown breakdown : incomeBreakdowns) {
+//            Double amountUSD = ConvertToUSD.convertToUSD(breakdown.getAmount(), breakdown.getCurrency(), breakdown.getYears());
+//            breakdown.setAmountUSD(amountUSD);
+//        }
+//        List<FbarBreakdown> fbarBreakdowns = clientData.getFbarBreakdowns();
+//        for (FbarBreakdown breakdown : fbarBreakdowns) {
+//            Double amountUSD = ConvertToUSD.convertToUSD(breakdown.getAmount(), breakdown.getCurrency(), breakdown.getYears());
+//            breakdown.setAmountUSD(amountUSD);
+//        }
         Integer clientFlag = Database.dao(ClientFlagDAO.class).getFlagForUserClient(user.getId(), clientId);
         clientData.setFlag(clientFlag);
 //        logger.info("Client data for clientId {}: {}", clientId, clientData);

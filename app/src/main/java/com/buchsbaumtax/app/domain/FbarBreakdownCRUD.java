@@ -17,10 +17,11 @@ public class FbarBreakdownCRUD {
     public FbarBreakdown create(FbarBreakdown fbarBreakdown) {
         validate(fbarBreakdown);
         int fbarBreakdownId = Database.dao(FbarBreakdownDAO.class).create(fbarBreakdown);
-        FbarBreakdown createdBreakdown = Database.dao(FbarBreakdownDAO.class).get(fbarBreakdownId);
-        Double amountUSD = ConvertToUSD.convertToUSD(createdBreakdown.getAmount(), createdBreakdown.getCurrency(), createdBreakdown.getYears());
-        createdBreakdown.setAmountUSD(amountUSD);
-        return createdBreakdown;
+//        FbarBreakdown createdBreakdown = Database.dao(FbarBreakdownDAO.class).get(fbarBreakdownId);
+//        Double amountUSD = ConvertToUSD.convertToUSD(createdBreakdown.getAmount(), createdBreakdown.getCurrency(), createdBreakdown.getYears());
+//        createdBreakdown.setAmountUSD(amountUSD);
+//        return createdBreakdown;
+        return fbarBreakdown ;
     }
 
     public FbarBreakdown update(int fbarBreakdownId, FbarBreakdown fbarBreakdown) {
@@ -30,10 +31,12 @@ public class FbarBreakdownCRUD {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
         Database.dao(FbarBreakdownDAO.class).update(fbarBreakdown);
-        FbarBreakdown updatedBreakdown = Database.dao(FbarBreakdownDAO.class).get(fbarBreakdownId);
-        Double amountUSD = ConvertToUSD.convertToUSD(updatedBreakdown.getAmount(), updatedBreakdown.getCurrency(), updatedBreakdown.getYears());
-        updatedBreakdown.setAmountUSD(amountUSD);
-        return updatedBreakdown;
+//        FbarBreakdown updatedBreakdown = Database.dao(FbarBreakdownDAO.class).get(fbarBreakdownId);
+//        Double amountUSD = ConvertToUSD.convertToUSD(updatedBreakdown.getAmount(), updatedBreakdown.getCurrency(), updatedBreakdown.getYears());
+//        updatedBreakdown.setAmountUSD(amountUSD);
+//        return updatedBreakdown;
+        return  fbarBreakdown;
+
     }
 
 //    public List<FbarBreakdown> update(List<FbarBreakdown> fbarBreakdowns) {
