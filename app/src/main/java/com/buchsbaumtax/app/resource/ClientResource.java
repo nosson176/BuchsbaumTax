@@ -43,7 +43,7 @@ public class ClientResource {
                                       @QueryParam("q") String q,
                                       @QueryParam("field") String field,
                                       @QueryParam("active") Boolean active) {
-        logger.info("Fetching clients with parameters - smartviewId: {}, query: z{}, field: {}, active: {}",
+        logger.info("Fetching clients with parameters - smartviewId: {}, query: {}, field: {}, active: {}",
                 smartviewId, q, field, active);
 
         GetClients getClients = new GetClients();

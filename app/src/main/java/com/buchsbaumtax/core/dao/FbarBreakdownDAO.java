@@ -16,7 +16,7 @@ import java.util.List;
 public interface FbarBreakdownDAO {
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO fbar_breakdowns (client_id, years, category, tax_group, tax_type, part, currency, frequency, documents, description, amount, depend, include, archived, created_by, user_id) " +
+    @SqlUpdate("INSERT INTO fbar_breakdowns (client_id, years, category, tax_group, tax_type, part, currency, frequency, documents, description, amount, amountusd, depend, include, archived, created_by, user_id) " +
             "VALUES (:clientId, :years, :category, :taxGroup, :taxType, :part, :currency, :frequency, :documents, :description, :amount, :amountUSD, :depend, :include, :archived, :createdBy, :userId)")
     int create(@BindBean FbarBreakdown fbarBreakdown);
 

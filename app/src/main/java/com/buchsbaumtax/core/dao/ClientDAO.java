@@ -43,8 +43,25 @@ public interface ClientDAO {
     @RegisterFieldMapper(Client.class)
     @RegisterFieldMapper(ClientFlag.class)
     @UseRowReducer(ClientReducer.class)
-    @SqlQuery("SELECT * FROM clients c LEFT JOIN client_flags cf ON c.id = cf.client_id WHERE (:active IS FALSE OR c.active = :active) AND (c.last_name ILIKE CONCAT('%', :q, '%')) ORDER BY c.last_name")
-    List<Client> getFiltered(@Bind("q") String q, @Bind("active") boolean active);
+    @SqlQuery("SELECT DISTINCT c.*, cf.flag FROM clients c " +
+            "LEFT JOIN client_flags cf ON c.id = cf.client_id " +
+            "LEFT JOIN contacts co ON c.id = co.client_id " +
+            "LEFT JOIN tax_personals tp ON c.id = tp.client_id " +
+            "WHERE (:active IS NULL OR c.active = :active) " +
+            "AND (c.last_name ILIKE CONCAT('%', :q, '%') " +
+            "OR co.memo ILIKE CONCAT('%', :q, '%') " +
+            "OR co.main_detail ILIKE CONCAT('%', :q, '%') " +
+            "OR tp.first_name ILIKE CONCAT('%', :q, '%') " +
+            "OR tp.last_name ILIKE CONCAT('%', :q, '%') " +
+            "OR tp.ssn ILIKE CONCAT('%', :q, '%')) " +
+            "ORDER BY c.last_name")
+    List<Client> getFiltered(@Bind("q") String q, @Bind("active") Boolean active);
+
+//    @RegisterFieldMapper(Client.class)
+//    @RegisterFieldMapper(ClientFlag.class)
+//    @UseRowReducer(ClientReducer.class)
+//    @SqlQuery("SELECT * FROM clients c LEFT JOIN client_flags cf ON c.id = cf.client_id WHERE (:active IS FALSE OR c.active = :active) AND (c.last_name ILIKE CONCAT('%', :q, '%')) ORDER BY c.last_name")
+//    List<Client> getFiltered(@Bind("q") String q, @Bind("active") boolean active);
 
     @RegisterFieldMapper(Client.class)
     @RegisterFieldMapper(ClientFlag.class)

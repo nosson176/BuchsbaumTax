@@ -26,6 +26,7 @@ public class Log {
     private Date alarmDate;
     private String alarmTime;
     private Long alarmCreateChange;
+    private Long createdTime;
     private Date logDate;
     private String note;
     private boolean archived;
@@ -82,6 +83,10 @@ public class Log {
     }
     public Long getAlarmCreateChange() {
         return alarmCreateChange;
+    }
+
+    public Long getCreatedTime() {
+        return createdTime;
     }
 
     public Date getLogDate() {
