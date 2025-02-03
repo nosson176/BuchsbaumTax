@@ -3,7 +3,9 @@ package com.buchsbaumtax.app.resource;
 import com.buchsbaumtax.app.domain.IncomeBreakdownCRUD;
 import com.buchsbaumtax.app.domain.TaxPersonalCRUD;
 import com.buchsbaumtax.app.dto.BaseResponse;
+import com.buchsbaumtax.core.dao.FbarBreakdownDAO;
 import com.buchsbaumtax.core.dao.IncomeBreakdownDAO;
+import com.buchsbaumtax.core.model.FbarBreakdown;
 import com.buchsbaumtax.core.model.IncomeBreakdown;
 import com.sifradigital.framework.auth.Authenticated;
 import com.sifradigital.framework.db.Database;
@@ -11,6 +13,9 @@ import com.sifradigital.framework.db.Database;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +31,19 @@ public class IncomeBreakdownResource {
     @GET
     public List<IncomeBreakdown> getAllIncomeBreakdowns() {
         return Database.dao(IncomeBreakdownDAO.class).getAll();
+    }
+
+    @GET
+    @Path("/restIncomes/{clientId}")
+    public List<IncomeBreakdown> getARestIncomesByClient(@PathParam("clientId") int clientId) {
+        LocalDateTime threeYearsAgoStartOfYear = LocalDateTime.now()
+                .minusYears(3) // Go back three years
+                .withDayOfYear(1) // Set to the first day of the year
+                .withHour(0).withMinute(0).withSecond(0).withNano(0); // Reset time to midnight
+
+        Instant threeYearsAgoInstant = threeYearsAgoStartOfYear.toInstant(ZoneOffset.UTC);
+        long threeYearsAgoStart = threeYearsAgoInstant.toEpochMilli();
+        return Database.dao(IncomeBreakdownDAO.class).getIncomeBreakdownsBeforeLastThreeYears(clientId,threeYearsAgoStart);
     }
 
     @PUT

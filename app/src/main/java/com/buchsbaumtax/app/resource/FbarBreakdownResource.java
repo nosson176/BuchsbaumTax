@@ -6,14 +6,19 @@ import com.buchsbaumtax.app.domain.TaxPersonalCRUD;
 import com.buchsbaumtax.app.dto.BaseResponse;
 import com.buchsbaumtax.app.dto.Either;
 import com.buchsbaumtax.core.dao.FbarBreakdownDAO;
+import com.buchsbaumtax.core.dao.LogDAO;
 import com.buchsbaumtax.core.model.FbarBreakdown;
 import com.buchsbaumtax.core.model.IncomeBreakdown;
+import com.buchsbaumtax.core.model.Log;
 import com.sifradigital.framework.auth.Authenticated;
 import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +55,19 @@ public class FbarBreakdownResource {
                     .entity("Error updating fbar breakdowns: " + e.getMessage())
                     .build();
         }
+    }
+
+    @GET
+    @Path("/restFbars/{clientId}")
+    public List<FbarBreakdown> getARestFbarsByClient(@PathParam("clientId") int clientId) {
+        LocalDateTime threeYearsAgoStartOfYear = LocalDateTime.now()
+                .minusYears(3) // Go back three years
+                .withDayOfYear(1) // Set to the first day of the year
+                .withHour(0).withMinute(0).withSecond(0).withNano(0); // Reset time to midnight
+
+        Instant threeYearsAgoInstant = threeYearsAgoStartOfYear.toInstant(ZoneOffset.UTC);
+        long threeYearsAgoStart = threeYearsAgoInstant.toEpochMilli();
+        return Database.dao(FbarBreakdownDAO.class).getFbarBreakdownsBeforeLastThreeYears(clientId,threeYearsAgoStart);
     }
 
 //    @PUT
