@@ -44,15 +44,22 @@ public interface LogDAO {
     @SqlQuery("SELECT * FROM logs WHERE TO_TIMESTAMP(alarm_time, 'MM-DD-YYYY HH24:MI') BETWEEN TO_TIMESTAMP(:currentTime, 'MM-DD-YYYY HH24:MI') AND TO_TIMESTAMP(:endOfDay, 'MM-DD-YYYY HH24:MI')")
     List<Log> getLogsBetweenTimes(@Bind("currentTime") String currentTime, @Bind("endOfDay") String endOfDay);
 
+//    @RegisterFieldMapper(Log.class)
+//    @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId AND created_time >= :threeYearsAgoStart ORDER BY created_time DESC")
+//    List<Log> getLogsFromLastThreeYears(@Bind("clientId") int clientId, @Bind("threeYearsAgoStart") long threeYearsAgoStart);
+//
+//    @RegisterFieldMapper(Log.class)
+//    @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId AND created_time < :threeYearsAgoStart ORDER BY created_time DESC")
+//    List<Log> getLogsBeforeLastThreeYears(@Bind("clientId") int clientId, @Bind("threeYearsAgoStart") long threeYearsAgoStart);
+
     @RegisterFieldMapper(Log.class)
-    @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId AND created_time >= :threeYearsAgoStart ORDER BY created_time DESC")
-    List<Log> getLogsFromLastThreeYears(@Bind("clientId") int clientId, @Bind("threeYearsAgoStart") long threeYearsAgoStart);
-
-
+    @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId ORDER BY log_date DESC LIMIT 50")
+    List<Log> getNewestLogs(@Bind("clientId") int clientId);
 
     @RegisterFieldMapper(Log.class)
-    @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId AND created_time < :threeYearsAgoStart ORDER BY created_time DESC")
-    List<Log> getLogsBeforeLastThreeYears(@Bind("clientId") int clientId, @Bind("threeYearsAgoStart") long threeYearsAgoStart);
+    @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId AND id NOT IN (SELECT id FROM logs WHERE client_id = :clientId ORDER BY log_date DESC LIMIT 50) ORDER BY log_date DESC")
+    List<Log> getRemainingLogs(@Bind("clientId") int clientId);
+
 
 
 }

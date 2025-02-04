@@ -60,14 +60,7 @@ public class FbarBreakdownResource {
     @GET
     @Path("/restFbars/{clientId}")
     public List<FbarBreakdown> getARestFbarsByClient(@PathParam("clientId") int clientId) {
-        LocalDateTime threeYearsAgoStartOfYear = LocalDateTime.now()
-                .minusYears(3) // Go back three years
-                .withDayOfYear(1) // Set to the first day of the year
-                .withHour(0).withMinute(0).withSecond(0).withNano(0); // Reset time to midnight
-
-        Instant threeYearsAgoInstant = threeYearsAgoStartOfYear.toInstant(ZoneOffset.UTC);
-        long threeYearsAgoStart = threeYearsAgoInstant.toEpochMilli();
-        return Database.dao(FbarBreakdownDAO.class).getFbarBreakdownsBeforeLastThreeYears(clientId,threeYearsAgoStart);
+        return Database.dao(FbarBreakdownDAO.class).getRemainingFbarBreakdowns(clientId);
     }
 
 //    @PUT

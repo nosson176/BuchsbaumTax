@@ -37,14 +37,7 @@ public class LogResource {
     @GET
     @Path("/restLogs/{clientId}")
     public List<Log> getARestLogsByClient(@PathParam("clientId") int clientId) {
-        LocalDateTime threeYearsAgoStartOfYear = LocalDateTime.now()
-                .minusYears(3) // Go back three years
-                .withDayOfYear(1) // Set to the first day of the year
-                .withHour(0).withMinute(0).withSecond(0).withNano(0); // Reset time to midnight
-
-        Instant threeYearsAgoInstant = threeYearsAgoStartOfYear.toInstant(ZoneOffset.UTC);
-        long threeYearsAgoStart = threeYearsAgoInstant.toEpochMilli();
-        return Database.dao(LogDAO.class).getLogsBeforeLastThreeYears(clientId,threeYearsAgoStart);
+        return Database.dao(LogDAO.class).getRemainingLogs(clientId);
     }
 
     @PUT

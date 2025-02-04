@@ -42,13 +42,22 @@ public interface IncomeBreakdownDAO {
             "description = :description, amount = :amount, amountUSD = :amountUSD, exclusion = :exclusion, include = :include, archived = :archived, depend = :depend, created_by = :createdBy, user_id = :userId WHERE id = :id")
     void update(@BindBean List<IncomeBreakdown> incomeBreakdowns);
 
-    @RegisterFieldMapper(IncomeBreakdown.class)
-    @SqlQuery("SELECT * FROM income_breakdowns WHERE client_id = :clientId AND created_time >= :threeYearsAgoStart ORDER BY created_time DESC")
-    List<IncomeBreakdown> getIncomeBreakdownsFromLastThreeYears(@Bind("clientId") int clientId, @Bind("threeYearsAgoStart") long threeYearsAgoStart);
+//    @RegisterFieldMapper(IncomeBreakdown.class)
+//    @SqlQuery("SELECT * FROM income_breakdowns WHERE client_id = :clientId AND created_time >= :threeYearsAgoStart ORDER BY created_time DESC")
+//    List<IncomeBreakdown> getIncomeBreakdownsFromLastThreeYears(@Bind("clientId") int clientId, @Bind("threeYearsAgoStart") long threeYearsAgoStart);
+//
+//    @RegisterFieldMapper(IncomeBreakdown.class)
+//    @SqlQuery("SELECT * FROM income_breakdowns WHERE client_id = :clientId AND created_time < :threeYearsAgoStart ORDER BY created_time DESC")
+//    List<IncomeBreakdown> getIncomeBreakdownsBeforeLastThreeYears(@Bind("clientId") int clientId, @Bind("threeYearsAgoStart") long threeYearsAgoStart);
 
     @RegisterFieldMapper(IncomeBreakdown.class)
-    @SqlQuery("SELECT * FROM income_breakdowns WHERE client_id = :clientId AND created_time < :threeYearsAgoStart ORDER BY created_time DESC")
-    List<IncomeBreakdown> getIncomeBreakdownsBeforeLastThreeYears(@Bind("clientId") int clientId, @Bind("threeYearsAgoStart") long threeYearsAgoStart);
+    @SqlQuery("SELECT * FROM income_breakdowns WHERE client_id = :clientId ORDER BY created_time DESC LIMIT 20")
+    List<IncomeBreakdown> getNewestIncomeBreakdowns(@Bind("clientId") int clientId);
+
+    @RegisterFieldMapper(IncomeBreakdown.class)
+    @SqlQuery("SELECT * FROM income_breakdowns WHERE client_id = :clientId AND id NOT IN (SELECT id FROM income_breakdowns WHERE client_id = :clientId ORDER BY created_time DESC LIMIT 20) ORDER BY created_time DESC")
+    List<IncomeBreakdown> getRemainingIncomeBreakdowns(@Bind("clientId") int clientId);
+
 
     @SqlUpdate("DELETE FROM income_breakdowns WHERE id = :id")
     void delete(@Bind("id") int id);

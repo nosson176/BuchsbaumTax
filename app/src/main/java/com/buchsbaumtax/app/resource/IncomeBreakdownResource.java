@@ -36,14 +36,14 @@ public class IncomeBreakdownResource {
     @GET
     @Path("/restIncomes/{clientId}")
     public List<IncomeBreakdown> getARestIncomesByClient(@PathParam("clientId") int clientId) {
-        LocalDateTime threeYearsAgoStartOfYear = LocalDateTime.now()
-                .minusYears(3) // Go back three years
-                .withDayOfYear(1) // Set to the first day of the year
-                .withHour(0).withMinute(0).withSecond(0).withNano(0); // Reset time to midnight
-
-        Instant threeYearsAgoInstant = threeYearsAgoStartOfYear.toInstant(ZoneOffset.UTC);
-        long threeYearsAgoStart = threeYearsAgoInstant.toEpochMilli();
-        return Database.dao(IncomeBreakdownDAO.class).getIncomeBreakdownsBeforeLastThreeYears(clientId,threeYearsAgoStart);
+//        LocalDateTime threeYearsAgoStartOfYear = LocalDateTime.now()
+//                .minusYears(3) // Go back three years
+//                .withDayOfYear(1) // Set to the first day of the year
+//                .withHour(0).withMinute(0).withSecond(0).withNano(0); // Reset time to midnight
+//
+//        Instant threeYearsAgoInstant = threeYearsAgoStartOfYear.toInstant(ZoneOffset.UTC);
+//        long threeYearsAgoStart = threeYearsAgoInstant.toEpochMilli();
+        return Database.dao(IncomeBreakdownDAO.class).getRemainingIncomeBreakdowns(clientId);
     }
 
     @PUT
