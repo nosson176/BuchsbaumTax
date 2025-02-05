@@ -112,6 +112,12 @@
     "fieldName": "alarm_date",
     "type": "Date"
   },
+
+  "LOG::alarm_time": {
+    "tableName": "logs",
+    "fieldName": "alarm_time",
+    "type": "String"
+  },
   "LOG::alarm_complete": {
     "tableName": "logs",
     "fieldName": "alarm_complete",

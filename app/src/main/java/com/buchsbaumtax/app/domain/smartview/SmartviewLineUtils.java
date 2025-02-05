@@ -21,7 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SmartviewLineUtils {
-    private static final Logger logger = LoggerFactory.getLogger(BuchsbaumApplication.class);
+    private static final Logger logger = LoggerFactory.getLogger(SmartviewLineUtils.class);
 
     private static final String TABLE_FILINGS = "filings";
     private static final String FIELD_FILING_TYPE = "filing_type";
@@ -44,6 +44,7 @@ public class SmartviewLineUtils {
         String field = s.getField();
         String type = s.getType();
         String searchValue = s.getSearchValue();
+//        logger.info("table is :{} field is {} type is {} search is {}",table ,field  , type  ,searchValue);
 
         SmartviewLineField smartviewLineField = null;
         if (table.equals(TABLE_FILINGS) && field.equals(FIELD_FILING_TYPE)) {
@@ -98,6 +99,7 @@ public class SmartviewLineUtils {
     }
 
     public SmartviewData convertToSmartviewData(Smartview smartview) {
+        logger.info("converte here");
         List<SmartviewLineData> smartviewLineDataList = smartview.getSmartviewLines().stream()
                 .filter(s -> !(s.getTableName().equals(TABLE_FILINGS) && combinedFilings.contains(s.getField())))
                 .map(s -> new SmartviewLineData(setSearchValue(s), reverseClassFieldMapping(s)))

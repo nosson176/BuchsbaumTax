@@ -112,11 +112,11 @@ public class SmartviewCRUD {
 //    }
 
     public Map<Client, List<Filing>> getSmartViewFiltersResults(SmartviewData smartviewData) {
-//        logger.info("smartviewData: {}", smartviewData);
+        logger.info("smartviewData: {}", smartviewData);
 
         // Convert SmartviewData to Smartview object
         Smartview smartview = new SmartviewLineUtils().convertToSmartview(smartviewData);
-//        logger.info("smartview: {}", smartview);
+        logger.info("smartview: {}", smartview);
 
         // Initialize the local variable for active
         boolean active = false;
@@ -133,11 +133,11 @@ public class SmartviewCRUD {
 
         // Update the smartview in the database
         Smartview updated = Database.dao(SmartviewDAO.class).update(smartview);
-//        logger.info("smartview updated: {}", updated);
+        logger.info("smartview updated: {}", updated);
 
         // Call the function to get results with the active value
         Map<Client, List<Filing>> data = new UpdateSmartviews().getSmartviewResult(updated, active);
-//        logger.info("smartview data: {}", data);
+        logger.info("smartview data: {}", data);
 
         return data;
     }
