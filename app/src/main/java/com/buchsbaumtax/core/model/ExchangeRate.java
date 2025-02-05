@@ -8,6 +8,9 @@ public class ExchangeRate {
     private boolean show;
     private double rate;
 
+    public Integer getId() {
+        return id;
+    }
     public String getCurrency() {
         return currency;
     }
@@ -22,5 +25,9 @@ public class ExchangeRate {
 
     public double getRate() {
         return rate;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

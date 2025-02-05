@@ -48,14 +48,15 @@ public interface ClientDAO {
             "LEFT JOIN contacts co ON c.id = co.client_id " +
             "LEFT JOIN tax_personals tp ON c.id = tp.client_id " +
             "WHERE (:active IS NULL OR c.active = :active) " +
-                    "AND (c.last_name ILIKE CONCAT('%', :q, '%') " +
-                    "OR co.memo ILIKE CONCAT('%', :q, '%') " +
-                    "OR co.main_detail ILIKE CONCAT('%', :q, '%') " +
-                    "OR tp.first_name ILIKE CONCAT('%', :q, '%') " +
-                    "OR tp.last_name ILIKE CONCAT('%', :q, '%') " +
-                    "OR tp.ssn ILIKE CONCAT('%', :q, '%') " +
+            "AND (c.last_name ILIKE CONCAT('%', :q, '%') " +
+            "OR co.memo ILIKE CONCAT('%', :q, '%') " +
+            "OR co.main_detail ILIKE CONCAT('%', :q, '%') " +
+            "OR tp.first_name ILIKE CONCAT('%', :q, '%') " +
+            "OR tp.last_name ILIKE CONCAT('%', :q, '%') " +
+            "OR tp.ssn ILIKE CONCAT('%', :q, '%')) " +  // <-- Added missing closing parenthesis
             "ORDER BY c.last_name")
     List<Client> getFiltered(@Bind("q") String q, @Bind("active") Boolean active);
+
 
 
 //    @RegisterFieldMapper(Client.class)
