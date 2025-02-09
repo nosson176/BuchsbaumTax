@@ -29,12 +29,14 @@ public class Filing {
     private double refund;
     private boolean includeFee;
     private boolean includeInRefund;
+    private boolean includeTax;
     private String maam;
     private String basicPlusPro;
     private double paidFee;
     private double owesFee;
     private double paid;
     private double owes;
+    private double taxEstimated ;
     private String memo;
     private String state;
     private String filingType;
@@ -122,6 +124,13 @@ public class Filing {
     public void setRebate(double rebate) {
         this.rebate = rebate;
     }
+    public double getTaxEstimated() {
+        return taxEstimated;
+    }
+
+    public void setTaxEstimated(double taxEstimated) {
+        this.taxEstimated = taxEstimated;
+    }
 
     public double getRefund() {
         return refund;
@@ -161,6 +170,14 @@ public class Filing {
 
     public void setIncludeInRefund(boolean includeInRefund) {
         this.includeInRefund = includeInRefund;
+    }
+
+    public boolean isIncludeTax() {
+        return includeTax;
+    }
+
+    public void setIncludeTax(boolean includeTax) {
+        this.includeTax = includeTax;
     }
 
     public double getPaidFee() {

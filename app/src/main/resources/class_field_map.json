@@ -44,6 +44,11 @@
     "fieldName": "last_name",
     "type": "String"
   },
+  "CLIENT::pmt_status": {
+    "tableName": "clients",
+    "fieldName": "pmt_status",
+    "type": "String"
+  },
 
   "CONTACT::address_or_number": {
     "tableName": "contacts",
