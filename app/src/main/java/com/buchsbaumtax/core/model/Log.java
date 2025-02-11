@@ -27,6 +27,7 @@ public class Log {
     private String alarmTime;
     private Long alarmCreateChange;
     private Long createdTime;
+    private Long noteDate;
     private Date logDate;
     private String note;
     private boolean archived;
@@ -89,12 +90,20 @@ public class Log {
         return createdTime;
     }
 
+    public Long getNoteDate() {
+        return noteDate;
+    }
+
     public Date getLogDate() {
         return logDate;
     }
 
     public String getNote() {
         return note;
+    }
+
+    public void setNoteDate(Long noteDate){
+        this.noteDate = noteDate;
     }
 
     public boolean isArchived() {
