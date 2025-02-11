@@ -6,14 +6,22 @@ public class CustomerContactInfo {
     private String contactType;
     private String memo;
     private String mainDetail;
+    private boolean enabled; // Add enabled field
 
     public CustomerContactInfo() {}
 
-    public CustomerContactInfo(int id, String name, String contactType, String memo,String mainDetail) {
+    public CustomerContactInfo(int id, String name, String contactType, String memo, String mainDetail, boolean enabled) {
         this.id = id;
         this.name = name;
         this.contactType = contactType;
         this.memo = memo;
+        this.mainDetail = mainDetail;
+        this.enabled = enabled;
+    }
+
+    public CustomerContactInfo( String name, String contactType, String mainDetail) {
+        this.name = name;
+        this.contactType = contactType;
         this.mainDetail = mainDetail;
     }
 
@@ -35,6 +43,14 @@ public class CustomerContactInfo {
 
     public String getMainDetail() {
         return mainDetail;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public void setName(String name) {
@@ -61,7 +77,7 @@ public class CustomerContactInfo {
                 ", contactType='" + contactType + '\'' +
                 ", memo='" + memo + '\'' +
                 ", mainDetail='" + mainDetail + '\'' +
+                ", enabled=" + enabled +
                 '}';
     }
 }
-

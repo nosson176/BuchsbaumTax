@@ -9,8 +9,10 @@ import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,17 +131,24 @@ public class SmartviewCRUD {
             }
         }
 
-//        logger.info("Active status determined: {}", active);
-
         // Update the smartview in the database
         Smartview updated = Database.dao(SmartviewDAO.class).update(smartview);
         logger.info("smartview updated: {}", updated);
 
-        // Call the function to get results with the active value
-        Map<Client, List<Filing>> data = new UpdateSmartviews().getSmartviewResult(updated, active);
+        // Get results including client IDs
+        UpdateSmartviews updateSmartviews = new UpdateSmartviews();
+        Map<Client, List<Filing>> data = updateSmartviews.getSmartviewResult(updated, active);
         logger.info("smartview data: {}", data);
 
         return data;
     }
+
+    private String getTableName(SmartviewLine smartviewLine) {
+        if (smartviewLine.getTableName().equals("filings")) {
+            return "tax_years";
+        }
+        return smartviewLine.getTableName();
+    }
+
 
 }

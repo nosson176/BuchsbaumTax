@@ -86,10 +86,10 @@ public interface ClientDAO {
     @SqlUpdate("DELETE FROM clients WHERE id = :id")
     void delete(@Bind("id") int id);
 
-    // New method to fetch contact info for a specific client
     @RegisterFieldMapper(CustomerContactInfo.class)
-    @SqlQuery("SELECT contact_type, memo, main_detail FROM contacts WHERE client_id = :clientId")
-    CustomerContactInfo getContactInfoForClient(@Bind("clientId") int clientId);
+    @SqlQuery("SELECT contact_type, memo, main_detail, enabled FROM contacts WHERE client_id = :clientId")
+    List<CustomerContactInfo> getContactInfoForClient(@Bind("clientId") int clientId);
+
 
     @RegisterFieldMapper(Client.class)
     @RegisterFieldMapper(ClientFlag.class)

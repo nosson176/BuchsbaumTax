@@ -76,7 +76,7 @@ public class UpdateSmartviews {
         return smartviewLine.getTableName();
     }
 
-    private Set<Integer> getClientIds(List<SmartviewLine> smartviewLines) {
+    Set<Integer> getClientIds(List<SmartviewLine> smartviewLines) {
         String table = smartviewLines.get(0).getTableName();
         StringBuilder query = new StringBuilder();
         query.append("SELECT DISTINCT(c.id) FROM clients c ");

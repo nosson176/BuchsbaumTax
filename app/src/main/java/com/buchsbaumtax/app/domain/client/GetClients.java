@@ -83,30 +83,57 @@ public class GetClients {
         clients.sort(Comparator.comparing(Client::getLastName, new NaturalOrderComparator()));
     }
 
-    public List<CustomerContactInfo> getExportClients(List<Client> clients) throws SQLException {
-        List<CustomerContactInfo> customerContactInfos = new ArrayList<>();
-//        logger.info("get parameter clients: {}", clients);
+//    public List<CustomerContactInfo> getExportClients(List<Client> clients) throws SQLException {
+//        List<CustomerContactInfo> customerContactInfos = new ArrayList<>();
+////        logger.info("get parameter clients: {}", clients);
+//
+//        for (Client client : clients) {
+//            CustomerContactInfo contactInfo = Database.dao(ClientDAO.class).getContactInfoForClient(client.getId());
+//            logger.info("contactinfo : {}" , contactInfo);
+//            if (contactInfo != null) {
+//                String mainDetail = contactInfo.getMainDetail();
+//                // Check if mainDetail is a valid email
+//                String email = isValidEmail(mainDetail) ? mainDetail : "";
+//
+//                customerContactInfos.add(new CustomerContactInfo(
+//                        client.getId(),
+//                        client.getLastName(),
+//                        contactInfo.getContactType(),
+//                        contactInfo.getMemo(),
+//                        email // Use the email or empty string
+//                ));
+//            }
+//        }
+////        logger.info("Retrieved customerContactInfos: {}", customerContactInfos);
+//        return customerContactInfos;
+//    }
+public List<CustomerContactInfo> getExportClients(List<Client> clients) throws SQLException {
+    List<CustomerContactInfo> customerContactInfos = new ArrayList<>();
 
-        for (Client client : clients) {
-            CustomerContactInfo contactInfo = Database.dao(ClientDAO.class).getContactInfoForClient(client.getId());
+    for (Client client : clients) {
+        List<CustomerContactInfo> contactInfos = Database.dao(ClientDAO.class).getContactInfoForClient(client.getId());
 
-            if (contactInfo != null) {
-                String mainDetail = contactInfo.getMainDetail();
-                // Check if mainDetail is a valid email
-                String email = isValidEmail(mainDetail) ? mainDetail : "";
+        if (contactInfos != null) {
+            for (CustomerContactInfo contactInfo : contactInfos) {
+                if (contactInfo.isEnabled() && isValidEmail(contactInfo.getMainDetail())) {
+                    String mainDetail = contactInfo.getMainDetail();
+                    String email = isValidEmail(mainDetail) ? mainDetail : "";
 
-                customerContactInfos.add(new CustomerContactInfo(
-                        client.getId(),
-                        client.getLastName(),
-                        contactInfo.getContactType(),
-                        contactInfo.getMemo(),
-                        email // Use the email or empty string
-                ));
+                    // Only set the fields you want in the response
+                    customerContactInfos.add(new CustomerContactInfo(
+                            client.getLastName(),
+                            contactInfo.getContactType(),
+                            email
+                    ));
+                }
             }
         }
-//        logger.info("Retrieved customerContactInfos: {}", customerContactInfos);
-        return customerContactInfos;
     }
+    return customerContactInfos;
+}
+
+
+
 
     private boolean isValidEmail(String email) {
         // Simple regex to check if the string is an email
