@@ -2,6 +2,7 @@ package com.buchsbaumtax.app.dto;
 
 import com.buchsbaumtax.core.model.SmartviewLine;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class SmartviewLineData {
@@ -60,4 +61,22 @@ public class SmartviewLineData {
     public String getOperator() {
         return operator;
     }
+
+
+    @Override
+public String toString() {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // Format as needed
+
+    return "SmartviewLineData{" +
+            "id=" + id +
+            ", created='" + (created != null ? sdf.format(created) : null) + "'" + // Format date or handle null
+            ", updated='" + (updated != null ? sdf.format(updated) : null) + "'" + // Format date or handle null
+            ", smartviewId=" + smartviewId +
+            ", groupNum=" + groupNum +
+            ", fieldName='" + fieldName + '\'' +
+            ", searchValue='" + searchValue + '\'' +
+            ", operator='" + operator + '\'' +
+            '}';
 }
+}
+

@@ -14,7 +14,7 @@ public class TaxPersonal {
     private String firstName;
     private String middleInitial;
     private String lastName;
-    private Date dateOfBirth;
+    private Long dateOfBirth;
     private String ssn;
     private String informal;
     private String relation;
@@ -49,8 +49,12 @@ public class TaxPersonal {
         return lastName;
     }
 
-    public Date getDateOfBirth() {
+    public Long getDateOfBirth() {
         return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Long dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
     public String getSsn() {

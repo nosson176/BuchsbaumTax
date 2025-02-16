@@ -833,10 +833,17 @@ public class Migration {
         List<Client> clients = clientDAO.getAll();
 
         for (Client client : clients) {
-            Date firstLog = logDAO.getForClient(client.getId()).stream().map(Log::getLogDate).filter(Objects::nonNull)
-                    .min(Date::compareTo).orElse(null);
-            if (firstLog != null) {
-                client.setCreated(firstLog);
+            // Fetch logs for the client and find the earliest log date in Unix timestamp format
+            Long firstLogTimestamp = logDAO.getForClient(client.getId()).stream()
+                    .map(Log::getLogDate) // Assuming getLogDate returns a Long (Unix timestamp)
+                    .filter(Objects::nonNull)
+                    .min(Long::compareTo) // Find the earliest timestamp
+                    .orElse(null);
+
+            if (firstLogTimestamp != null) {
+                // Convert the Unix timestamp to a Date object if needed
+                Date firstLogDate = new Date(firstLogTimestamp);
+                client.setCreated(firstLogDate);
                 clientDAO.update(client);
             }
         }

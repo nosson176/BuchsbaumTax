@@ -21,8 +21,9 @@ public class SmartviewCRUD {
     private static final Logger logger = LoggerFactory.getLogger(SmartviewCRUD.class);
 
     public SmartviewData create(User user, SmartviewData smartviewData, Integer clientId) {
-
+//logger.info("create smartview : {} ",smartviewData );
         Smartview smartview = new SmartviewLineUtils().convertToSmartview(smartviewData);
+//logger.info("2222smartview : {} ",smartview );
 
         if (clientId != null && clientId > 0) {
             smartview.setUserId(clientId);
@@ -33,6 +34,8 @@ public class SmartviewCRUD {
         }
 
         Smartview createdSmartview = Database.dao(SmartviewDAO.class).create(smartview);
+//        logger.info("createdSmartview : {} ",createdSmartview );
+
         new UpdateSmartviews().updateSmartview(createdSmartview);
         return new SmartviewLineUtils().convertToSmartviewData(createdSmartview);
     }

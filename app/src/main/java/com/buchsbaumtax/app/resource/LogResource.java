@@ -9,6 +9,7 @@ import com.sifradigital.framework.db.Database;
 
 import javax.ws.rs.*;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.time.LocalDateTime;
@@ -59,14 +60,13 @@ public class LogResource {
     @GET
     @Path("/today")
     public List<Log> getTodayLogs() {
-        // Define the date format for the query
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm");
-
-        // Get current time and end of the day
-        String currentTime = LocalDateTime.now().format(formatter);
-        String endOfDay = LocalDateTime.now().withHour(23).withMinute(59).format(formatter);
+        // Get the current time and end of the day in Unix timestamp format (milliseconds)
+        long currentTime = System.currentTimeMillis(); // Current time in milliseconds
+        long endOfDay = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999999999)
+                .atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(); // End of day in milliseconds
 
         // Retrieve logs from DAO
         return Database.dao(LogDAO.class).getLogsBetweenTimes(currentTime, endOfDay);
     }
+
 }

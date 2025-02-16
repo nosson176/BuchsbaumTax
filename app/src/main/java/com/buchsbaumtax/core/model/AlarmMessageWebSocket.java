@@ -29,6 +29,8 @@ public class AlarmMessageWebSocket {
     private boolean archived;
     private String years;
     private String createdBy;
+    private Long createdTime;
+    private Long noteDate;
 
     // Getters and setters for each field
 
@@ -170,6 +172,14 @@ public class AlarmMessageWebSocket {
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public Long getCreatedTime() {
+        return createdTime;
+    }
+
+    public Long getNoteDate() {
+        return noteDate;
     }
 
     @Override

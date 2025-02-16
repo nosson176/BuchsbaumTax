@@ -41,8 +41,9 @@ public interface LogDAO {
     void update(@BindBean List<Log> logs);
 
     @RegisterFieldMapper(Log.class)
-    @SqlQuery("SELECT * FROM logs WHERE TO_TIMESTAMP(alarm_time, 'MM-DD-YYYY HH24:MI') BETWEEN TO_TIMESTAMP(:currentTime, 'MM-DD-YYYY HH24:MI') AND TO_TIMESTAMP(:endOfDay, 'MM-DD-YYYY HH24:MI')")
-    List<Log> getLogsBetweenTimes(@Bind("currentTime") String currentTime, @Bind("endOfDay") String endOfDay);
+    @SqlQuery("SELECT * FROM logs WHERE alarm_time BETWEEN :currentTime AND :endOfDay")
+    List<Log> getLogsBetweenTimes(@Bind("currentTime") long currentTime, @Bind("endOfDay") long endOfDay);
+
 
 //    @RegisterFieldMapper(Log.class)
 //    @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId AND created_time >= :threeYearsAgoStart ORDER BY created_time DESC")

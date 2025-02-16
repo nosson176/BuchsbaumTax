@@ -48,7 +48,7 @@ public class BuchsbaumApplication extends SifraApplication {
                 } else {
                         logger.info("APP_MODE is set to: {DEV222!!!}", mode);
                         connection = new DatabaseConfig.Connection("jdbc/BTDB",
-                                        "jdbc:postgresql://localhost:5432/test",
+                                        "jdbc:postgresql://localhost:5432/test2",
                                         "postgres",
                                         "123515");
                 }

@@ -24,11 +24,11 @@ public class Log {
     private boolean alarmComplete;
     private boolean alert;
     private Date alarmDate;
-    private String alarmTime;
+    private Long alarmTime;
     private Long alarmCreateChange;
     private Long createdTime;
     private Long noteDate;
-    private Date logDate;
+    private Long logDate;
     private String note;
     private boolean archived;
     private String years;
@@ -47,7 +47,7 @@ public class Log {
         return priority;
     }
 
-    public String getAlarmTime() {
+    public Long getAlarmTime() {
         return alarmTime;
     }
 
@@ -94,7 +94,7 @@ public class Log {
         return noteDate;
     }
 
-    public Date getLogDate() {
+    public Long getLogDate() {
         return logDate;
     }
 
