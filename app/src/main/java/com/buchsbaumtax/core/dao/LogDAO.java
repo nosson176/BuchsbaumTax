@@ -1,5 +1,6 @@
 package com.buchsbaumtax.core.dao;
 
+import com.buchsbaumtax.core.model.Filing;
 import com.buchsbaumtax.core.model.Log;
 import com.sifradigital.framework.db.Dao;
 import org.jdbi.v3.sqlobject.config.RegisterFieldMapper;
@@ -60,6 +61,10 @@ public interface LogDAO {
     @RegisterFieldMapper(Log.class)
     @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId AND id NOT IN (SELECT id FROM logs WHERE client_id = :clientId ORDER BY log_date DESC LIMIT 50) ORDER BY log_date DESC")
     List<Log> getRemainingLogs(@Bind("clientId") int clientId);
+
+    @RegisterFieldMapper(Log.class)
+    @SqlQuery("SELECT * FROM logs WHERE client_id = ANY(:clientIds)")
+    List<Log> getForClients(@Bind("clientIds") List<Long> clientIds);
 
 
 

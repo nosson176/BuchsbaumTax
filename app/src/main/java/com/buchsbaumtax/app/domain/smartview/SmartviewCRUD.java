@@ -141,7 +141,7 @@ public class SmartviewCRUD {
         // Get results including client IDs
         UpdateSmartviews updateSmartviews = new UpdateSmartviews();
         Map<Client, List<Filing>> data = updateSmartviews.getSmartviewResult(updated, active);
-        logger.info("smartview data: {}", data);
+        logger.info("smartview data: {}");
 
         return data;
     }

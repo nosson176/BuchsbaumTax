@@ -57,25 +57,41 @@ public class UpdateSmartviews {
 
         // Fetch the client data and filings based on the final client IDs
         Map<Client, List<Filing>> clientFilingsMap = new HashMap<>();
-        if (!finalClientIds.isEmpty()) {
-            List<Long> clientIdsAsLong = finalClientIds.stream()
-                    .map(Integer::longValue)  // Convert each Integer to Long
-                    .collect(Collectors.toList());
-            boolean active;
-            List<Client> clients = Database.dao(ClientDAO.class).getClientsByIds(clientIdsAsLong,active = false);
-            for (Client client : clients) {
-                List<Filing> filings = Database.dao(FilingDAO.class).getByClient(client.getId());
-                clientFilingsMap.put(client, filings);
-            }
-        }
+if (!finalClientIds.isEmpty()) {
+    List<Long> clientIdsAsLong = finalClientIds.stream()
+            .map(Integer::longValue)
+            .collect(Collectors.toList());
 
-        // Update the smartview with the client IDs
-        smartview.setClientIds(new ArrayList<>(finalClientIds));
-        Database.dao(SmartviewDAO.class).updateSmartview(smartview);
-//        logger.info("clientFilingsMap IS HERE!: {}", clientFilingsMap);
-        return clientFilingsMap; // Return the map of client data + filings
+    logger.info("Starting to fetch data for {} clients", clientIdsAsLong.size());
+
+    // Fetch all clients in one go
+    long clientFetchStart = System.currentTimeMillis();
+    List<Client> clients = Database.dao(ClientDAO.class).getClientsByIds(clientIdsAsLong, false);
+    logger.info("Client fetch completed in {}ms", System.currentTimeMillis() - clientFetchStart);
+
+    // Fetch all filings for all clients in one query
+    long filingsFetchStart = System.currentTimeMillis();
+    List<Filing> allFilings = Database.dao(FilingDAO.class).getByClients(clientIdsAsLong);
+    logger.info("Bulk filings fetch completed in {}ms", System.currentTimeMillis() - filingsFetchStart);
+
+    // Group filings by client ID
+    long groupingStart = System.currentTimeMillis();
+    Map<Integer, List<Filing>> filingsByClientId = allFilings.stream()
+            .collect(Collectors.groupingBy(Filing::getClientId));
+
+    // Associate filings with clients
+    for (Client client : clients) {
+        List<Filing> clientFilings = filingsByClientId.getOrDefault(client.getId(), new ArrayList<>());
+        clientFilingsMap.put(client, clientFilings);
     }
+    logger.info("Filings grouping completed in {}ms", System.currentTimeMillis() - groupingStart);
+}
 
+// Update the smartview with the client IDs
+smartview.setClientIds(new ArrayList<>(finalClientIds));
+Database.dao(SmartviewDAO.class).updateSmartview(smartview);
+return clientFilingsMap; // Return the map of client data + filings
+    }
     private String getTableName(SmartviewLine smartviewLine) {
         if (smartviewLine.getTableName().equals("filings")) {
             return "tax_years";
@@ -368,18 +384,44 @@ logger.info("1414 : {}",query);
             List<Long> clientIdsAsLong = finalClientIds.stream()
                     .map(Integer::longValue)
                     .collect(Collectors.toList());
-            List<Client> clients = Database.dao(ClientDAO.class).getClientsByIds(clientIdsAsLong,active);
+
+            logger.info("Starting to fetch data for {} clients", clientIdsAsLong.size());
+
+            // Fetch all clients in one batch
+            long clientFetchStart = System.currentTimeMillis();
+            List<Client> clients = Database.dao(ClientDAO.class).getClientsByIds(clientIdsAsLong, active);
+            logger.info("Client fetch completed in {}ms", System.currentTimeMillis() - clientFetchStart);
+
+            // Fetch all filings for all clients in one query
+            long filingsFetchStart = System.currentTimeMillis();
+            List<Filing> allFilings = Database.dao(FilingDAO.class).getByClients(clientIdsAsLong);
+            logger.info("Bulk filings fetch completed in {}ms", System.currentTimeMillis() - filingsFetchStart);
+
+            // Fetch all logs for all clients in one query
+            long logsFetchStart = System.currentTimeMillis();
+            List<Log> allLogs = Database.dao(LogDAO.class).getForClients(clientIdsAsLong);
+            logger.info("Bulk logs fetch completed in {}ms", System.currentTimeMillis() - logsFetchStart);
+
+            // Group filings and logs by client ID
+            long groupingStart = System.currentTimeMillis();
+            Map<Integer, List<Filing>> filingsByClientId = allFilings.stream()
+                    .collect(Collectors.groupingBy(Filing::getClientId));
+//            Map<Integer, List<Log>> logsByClientId = allLogs.stream()
+//                    .collect(Collectors.groupingBy(Log::getClientId));
+
+            // Associate filings and logs with clients
             for (Client client : clients) {
-                List<Filing> filings = Database.dao(FilingDAO.class).getByClient(client.getId());
-                List<Log> logs = Database.dao(LogDAO.class).getForClient(client.getId());
-                client.setFilings(filings);
-                client.setLogs(logs);
-                clientFilingsMap.put(client, filings);
+                List<Filing> clientFilings = filingsByClientId.getOrDefault(client.getId(), new ArrayList<>());
+//                List<Log> clientLogs = logsByClientId.getOrDefault(client.getId(), new ArrayList<>());
+                client.setFilings(clientFilings);
+//                client.setLogs(clientLogs);
+                clientFilingsMap.put(client, clientFilings);
             }
+            logger.info("Data grouping completed in {}ms", System.currentTimeMillis() - groupingStart);
         }
 
         // Update the smartview with the client IDs
-        smartview.setClientIds(new ArrayList<>(finalClientIds));
+//        smartview.setClientIds(new ArrayList<>(finalClientIds));
         Database.dao(SmartviewDAO.class).updateSmartview(smartview);
 
         return clientFilingsMap;

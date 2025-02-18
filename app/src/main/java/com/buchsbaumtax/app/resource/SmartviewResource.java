@@ -41,11 +41,41 @@ public class SmartviewResource {
     @Path("/getFilterClients")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserSmartviewsResults(@Authenticated User user, SmartviewData smartviewData) {
-        Map<Client, List<Filing>> clientFilingsMap = new SmartviewCRUD().getSmartViewFiltersResults(smartviewData);
+        Logger logger = LoggerFactory.getLogger(getClass());
+        long startTime = System.currentTimeMillis();
 
-        List<Client> result = new ArrayList<>(clientFilingsMap.keySet());
+        try {
+            // Log incoming request
+            logger.info("Starting getFilterClients process for user: {}, smartviewData: {}",
+                    user.getId(), smartviewData);
 
-        return Response.ok(result).build();
+            // Step 1: Convert and update smartview
+            long conversionStart = System.currentTimeMillis();
+            SmartviewCRUD smartviewCRUD = new SmartviewCRUD();
+            Map<Client, List<Filing>> clientFilingsMap = smartviewCRUD.getSmartViewFiltersResults(smartviewData);
+            logger.info("Smartview conversion and update completed in {}ms",
+                    System.currentTimeMillis() - conversionStart);
+
+            // Step 2: Transform results
+            long transformStart = System.currentTimeMillis();
+            List<Client> result = new ArrayList<>(clientFilingsMap.keySet());
+            logger.info("Result transformation completed in {}ms. Total clients: {}",
+                    System.currentTimeMillis() - transformStart, result.size());
+
+            // Log overall performance
+            logger.info("Total processing time: {}ms", System.currentTimeMillis() - startTime);
+
+            // Add memory usage logging
+            Runtime runtime = Runtime.getRuntime();
+            long usedMemory = (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024;
+            logger.info("Memory usage after processing: {}MB", usedMemory);
+
+            return Response.ok(result).build();
+
+        } catch (Exception e) {
+            logger.error("Error processing getFilterClients request", e);
+            return Response.serverError().entity("Error processing request: " + e.getMessage()).build();
+        }
     }
 
     @PUT

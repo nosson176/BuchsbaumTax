@@ -59,6 +59,9 @@ public interface FilingDAO {
     @SqlQuery("SELECT * FROM filings WHERE client_id = :clientId")
     List<Filing> getByClient(@Bind("clientId") int clientId);
 
+    @SqlQuery("SELECT * FROM filings WHERE client_id = ANY(:clientIds)")
+    List<Filing> getByClients(@Bind("clientIds") List<Long> clientIds);
+
     class FilingMapper implements RowMapper<Filing> {
         private static final ObjectMapper objectMapper = new ObjectMapper();
 
