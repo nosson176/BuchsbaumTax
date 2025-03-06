@@ -385,7 +385,7 @@ logger.info("1414 : {}",query);
                     .map(Integer::longValue)
                     .collect(Collectors.toList());
 
-            logger.info("Starting to fetch data for {} clients", clientIdsAsLong.size());
+            logger.info("Starting to fetch data for {} clients , {}", clientIdsAsLong.size(), clientIdsAsLong);
 
             // Fetch all clients in one batch
             long clientFetchStart = System.currentTimeMillis();
@@ -421,7 +421,8 @@ logger.info("1414 : {}",query);
         }
 
         // Update the smartview with the client IDs
-//        smartview.setClientIds(new ArrayList<>(finalClientIds));
+        logger.info("Updating smartview with {} client IDs", finalClientIds);
+        smartview.setClientIds(new ArrayList<>(finalClientIds));
         Database.dao(SmartviewDAO.class).updateSmartview(smartview);
 
         return clientFilingsMap;

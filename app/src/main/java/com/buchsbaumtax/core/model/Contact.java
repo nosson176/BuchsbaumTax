@@ -12,6 +12,7 @@ public class Contact {
     private boolean enabled;
     private int clientId;
     private int sortOrder;
+    private boolean overrideSortOrder;
 
     public int getId() {
         return id;
@@ -59,5 +60,13 @@ public class Contact {
 
     public void setSortOrder(int sortOrder) {
         this.sortOrder = sortOrder;
+    }
+
+    public Boolean getOverrideSortOrder() {  // ✅ Added
+        return overrideSortOrder;
+    }
+
+    public void setOverrideSortOrder(Boolean overrideSortOrder) {  // ✅ Added
+        this.overrideSortOrder = overrideSortOrder;
     }
 }

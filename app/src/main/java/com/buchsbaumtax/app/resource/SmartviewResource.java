@@ -59,8 +59,16 @@ public class SmartviewResource {
             // Step 2: Transform results
             long transformStart = System.currentTimeMillis();
             List<Client> result = new ArrayList<>(clientFilingsMap.keySet());
+
+            // Get the updated clientIds from the smartview
+            Smartview smartview =  Database.dao(SmartviewDAO.class).get(smartviewData.getId());
+            List<Integer> updatedClientIds = smartview.getClientIds();
+
+            // Create the response DTO
+            SmartviewResultDTO responseData = new SmartviewResultDTO(result, updatedClientIds);
+
             logger.info("Result transformation completed in {}ms. Total clients: {}",
-                    System.currentTimeMillis() - transformStart, result.size());
+                    System.currentTimeMillis() - transformStart, updatedClientIds);
 
             // Log overall performance
             logger.info("Total processing time: {}ms", System.currentTimeMillis() - startTime);
@@ -69,8 +77,8 @@ public class SmartviewResource {
             Runtime runtime = Runtime.getRuntime();
             long usedMemory = (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024;
             logger.info("Memory usage after processing: {}MB", usedMemory);
-
-            return Response.ok(result).build();
+            logger.info("responseData :{}",responseData);
+            return Response.ok(responseData).build();
 
         } catch (Exception e) {
             logger.error("Error processing getFilterClients request", e);

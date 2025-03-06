@@ -16,10 +16,10 @@ import java.util.List;
 public interface ContactDAO {
 
     @GetGeneratedKeys
-    @SqlUpdate("INSERT INTO contacts (client_id, contact_type, memo, main_detail, secondary_detail, state, zip, enabled, archived, sort_order) VALUES (:clientId, :contactType, :memo, :mainDetail, :secondaryDetail, :state, :zip, :enabled, :archived, :sortOrder)")
+    @SqlUpdate("INSERT INTO contacts (client_id, contact_type, memo, main_detail, secondary_detail, state, zip, enabled, archived, sort_order, override_sort_order) VALUES (:clientId, :contactType, :memo, :mainDetail, :secondaryDetail, :state, :zip, :enabled, :archived, :sortOrder, :overrideSortOrder)")
     int create(@BindBean Contact contact);
 
-    @SqlUpdate("UPDATE contacts SET contact_type = :contactType, memo = :memo, main_detail = :mainDetail, secondary_detail = :secondaryDetail, state = :state, zip = :zip, enabled = :enabled, archived = :archived, sort_order = :sortOrder WHERE id = :id")
+    @SqlUpdate("UPDATE contacts SET contact_type = :contactType, memo = :memo, main_detail = :mainDetail, secondary_detail = :secondaryDetail, state = :state, zip = :zip, enabled = :enabled, archived = :archived, sort_order = :sortOrder, override_sort_order = :overrideSortOrder WHERE id = :id")
     void update(@BindBean Contact contact);
 
     @RegisterFieldMapper(Contact.class)
@@ -34,7 +34,7 @@ public interface ContactDAO {
     @SqlQuery("SELECT c.* FROM contacts c LEFT JOIN value_lists vl ON c.contact_type = vl.value AND vl.key = 'contact_type' WHERE c.client_id = :clientId ORDER BY c.sort_order, vl.sort_order NULLS FIRST")
     List<Contact> getForClient(@Bind("clientId") int clientId);
 
-    @SqlBatch("UPDATE contacts SET contact_type = :contactType, memo = :memo, main_detail = :mainDetail, secondary_detail = :secondaryDetail, state = :state, zip = :zip, enabled = :enabled, archived = :archived, sort_order = :sortOrder WHERE id = :id")
+    @SqlBatch("UPDATE contacts SET contact_type = :contactType, memo = :memo, main_detail = :mainDetail, secondary_detail = :secondaryDetail, state = :state, zip = :zip, enabled = :enabled, archived = :archived, sort_order = :sortOrder, override_sort_order = :overrideSortOrder WHERE id = :id")
     void update(@BindBean List<Contact> contacts);
 
     @SqlUpdate("DELETE FROM contacts WHERE id = :id")
