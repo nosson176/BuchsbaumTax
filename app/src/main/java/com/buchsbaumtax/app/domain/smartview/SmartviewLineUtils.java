@@ -99,7 +99,7 @@ public class SmartviewLineUtils {
     }
 
     public SmartviewData convertToSmartviewData(Smartview smartview) {
-        logger.info("converte here");
+//        logger.info("converte here");
         List<SmartviewLineData> smartviewLineDataList = smartview.getSmartviewLines().stream()
                 .filter(s -> !(s.getTableName().equals(TABLE_FILINGS) && combinedFilings.contains(s.getField())))
                 .map(s -> new SmartviewLineData(setSearchValue(s), reverseClassFieldMapping(s)))
