@@ -55,12 +55,12 @@ public interface LogDAO {
 //    List<Log> getLogsBeforeLastThreeYears(@Bind("clientId") int clientId, @Bind("threeYearsAgoStart") long threeYearsAgoStart);
 
     @RegisterFieldMapper(Log.class)
-    @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId ORDER BY created_time DESC LIMIT 50")
+    @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId ORDER BY log_date DESC LIMIT 50")
 //    @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId ORDER BY log_date DESC LIMIT 50")
     List<Log> getNewestLogs(@Bind("clientId") int clientId);
 
     @RegisterFieldMapper(Log.class)
-    @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId AND id NOT IN (SELECT id FROM logs WHERE client_id = :clientId ORDER BY created_time DESC LIMIT 50) ORDER BY created_time DESC")
+    @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId AND id NOT IN (SELECT id FROM logs WHERE client_id = :clientId ORDER BY log_date DESC LIMIT 50) ORDER BY log_date DESC")
 //    @SqlQuery("SELECT * FROM logs WHERE client_id = :clientId AND id NOT IN (SELECT id FROM logs WHERE client_id = :clientId ORDER BY log_date DESC LIMIT 50) ORDER BY log_date DESC")
     List<Log> getRemainingLogs(@Bind("clientId") int clientId);
 
